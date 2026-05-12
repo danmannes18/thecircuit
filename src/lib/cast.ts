@@ -8,6 +8,9 @@ interface Bio {
   achievements: string;
   bio: string[];
   narrativeFunction: string;
+  discipline?: string;
+  instagram?: string;
+  wikipedia?: string;
 }
 
 type BioMap = Record<string, Bio>;
@@ -33,11 +36,28 @@ function renderBio(bio: Bio): string {
     )
     .join('');
   const bodyHtml = bio.bio.map((p) => `<p>${escapeHtml(p)}</p>`).join('');
+
+  const socialLinks: string[] = [];
+  if (bio.instagram) {
+    socialLinks.push(
+      `<a class="bio__social-link" href="https://instagram.com/${escapeHtml(bio.instagram)}" target="_blank" rel="noopener noreferrer">@${escapeHtml(bio.instagram)} ↗</a>`,
+    );
+  }
+  if (bio.wikipedia) {
+    socialLinks.push(
+      `<a class="bio__social-link" href="${escapeHtml(bio.wikipedia)}" target="_blank" rel="noopener noreferrer">Wikipedia ↗</a>`,
+    );
+  }
+  const socialHtml = socialLinks.length
+    ? `<div class="bio__social">${socialLinks.join('')}</div>`
+    : '';
+
   return `
     <div class="bio__inner">
       <p class="bio__name">${escapeHtml(bio.name)}</p>
       <dl class="bio__meta">${metaHtml}</dl>
       <div class="bio__body">${bodyHtml}</div>
+      ${socialHtml}
       <p class="bio__function">
         <span class="bio__function-label">Narrative function</span>
         ${escapeHtml(bio.narrativeFunction)}

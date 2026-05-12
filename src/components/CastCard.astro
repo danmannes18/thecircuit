@@ -1,11 +1,22 @@
 ---
+import type { Discipline } from '../data/cast';
+
 interface Props {
   id: string;
   number: string;
   name: string;
   role: string;
+  discipline: Discipline;
 }
-const { id, number, name, role } = Astro.props;
+const { id, number, name, role, discipline } = Astro.props;
+
+const disciplineLabels: Record<Discipline, string> = {
+  'show-jumping': 'Show Jumping',
+  'dressage': 'Dressage',
+  'eventing': 'Eventing',
+  'institutional': '',
+};
+const disciplineLabel = disciplineLabels[discipline];
 ---
 
 <button
@@ -22,6 +33,7 @@ const { id, number, name, role } = Astro.props;
   </span>
   <span class="name">{name}</span>
   <span class="role">{role}</span>
+  {disciplineLabel && <span class="discipline">{disciplineLabel.toUpperCase()}</span>}
 </button>
 
 <style>
@@ -70,6 +82,14 @@ const { id, number, name, role } = Astro.props;
     font-size: 0.9375rem;
     color: var(--color-bay);
     line-height: 1.3;
+  }
+  .discipline {
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    letter-spacing: 0.14em;
+    color: var(--color-ink-mute);
+    margin-top: auto;
+    padding-top: 0.5rem;
   }
   .plus {
     position: absolute;
