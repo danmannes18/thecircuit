@@ -1,0 +1,24 @@
+---
+const year = new Date().getFullYear();
+---
+
+<footer class="footer gutter-x">
+  <span>The Circuit</span>
+  <span>© {year} — In Development</span>
+</footer>
+
+<style>
+  .footer {
+    background: var(--color-ink);
+    color: rgba(245, 241, 232, 0.4);
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+</style>

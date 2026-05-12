@@ -1,0 +1,99 @@
+---
+// Act One — The Open
+---
+
+<section id="top" class="hero">
+  <div class="hero__bg" aria-hidden="true"></div>
+
+  <div class="hero__center">
+    <h1 class="hero__title display" data-anim="title">
+      The <em>Circuit</em>
+    </h1>
+    <p class="hero__subtitle display-italic" data-anim="subtitle">
+      A premium documentary series.
+    </p>
+  </div>
+
+  <div class="hero__meta" data-anim="meta">
+    <span>Two seasons</span>
+    <span>The road to Los Angeles 2028</span>
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    min-height: 100svh;
+    display: grid;
+    grid-template-rows: 1fr auto;
+    padding: 6rem var(--gutter) 2.5rem;
+    background: var(--color-bay-deep);
+    color: var(--color-paper);
+    overflow: hidden;
+  }
+  .hero__bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background:
+      linear-gradient(180deg,
+        rgba(15, 8, 5, 0.55) 0%,
+        rgba(15, 8, 5, 0.15) 35%,
+        rgba(15, 8, 5, 0.65) 100%),
+      radial-gradient(ellipse at 30% 70%, rgba(201, 168, 118, 0.35) 0%, transparent 60%),
+      linear-gradient(135deg, #2a1a0e 0%, #1a0f08 100%);
+  }
+  .hero__center {
+    position: relative;
+    z-index: 1;
+    align-self: center;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+  .hero__title {
+    font-size: clamp(4rem, 14vw, 14rem);
+    color: var(--color-sand-deep);
+  }
+  .hero__title em {
+    color: var(--color-sand-deep);
+  }
+  .hero__subtitle {
+    font-family: var(--font-display);
+    font-size: clamp(1.25rem, 2vw, 1.75rem);
+    color: rgba(245, 241, 232, 0.75);
+    font-variation-settings: "opsz" 60, "SOFT" 50, "WONK" 1;
+    font-style: italic;
+    font-weight: 350;
+  }
+  .hero__meta {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(245, 241, 232, 0.55);
+  }
+
+  /* Staggered entrance — Phase 4 will polish */
+  [data-anim] {
+    opacity: 0;
+    transform: translateY(1rem);
+    animation: rise 1.2s var(--ease) forwards;
+  }
+  [data-anim="title"]    { animation-delay: 0.1s; }
+  [data-anim="subtitle"] { animation-delay: 0.5s; }
+  [data-anim="meta"]     { animation-delay: 0.9s; }
+  @keyframes rise {
+    to { opacity: 1; transform: none; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    [data-anim] { opacity: 1; transform: none; animation: none; }
+  }
+</style>

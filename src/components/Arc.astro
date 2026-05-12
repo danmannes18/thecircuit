@@ -1,0 +1,60 @@
+---
+// Act Five — The Arc. Phase 2 populates seasons.
+import Season from './Season.astro';
+import { seasons } from '../data/episodes';
+---
+
+<section class="arc section-y gutter-x">
+  <header class="head" data-reveal>
+    <p class="meta">The Arc</p>
+    <h2 class="display-md title">
+      Two seasons. <em>Sixteen episodes. One stadium.</em>
+    </h2>
+    <p class="lede prose-measure">
+      A complete creative spine built around the only Olympic year that
+      matters for American equestrian sport in a generation.
+    </p>
+  </header>
+
+  <div class="grid" data-reveal>
+    {seasons.length === 0 ? (
+      <p class="meta">Episodes — to be populated in Phase 2.</p>
+    ) : (
+      seasons.map((s) => <Season season={s} />)
+    )}
+  </div>
+</section>
+
+<style>
+  .arc {
+    background: var(--color-bay-deep);
+    color: var(--color-paper);
+  }
+  .head {
+    max-width: 56rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    margin-bottom: 4rem;
+  }
+  .head .meta {
+    color: rgba(245, 241, 232, 0.6);
+  }
+  .title {
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    color: var(--color-paper);
+  }
+  .title em {
+    color: var(--color-sand-deep);
+  }
+  .head .lede {
+    color: rgba(245, 241, 232, 0.75);
+  }
+  .grid {
+    display: grid;
+    gap: 4rem;
+  }
+  @media (min-width: 900px) {
+    .grid { grid-template-columns: 1fr 1fr; gap: 5rem; }
+  }
+</style>

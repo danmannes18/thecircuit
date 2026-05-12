@@ -1,0 +1,82 @@
+---
+// Act Seven — Why Now. Phase 2 will lock final body copy verbatim.
+const points = [
+  {
+    n: '01',
+    claim: 'Documentary sports has become <em>prestige television.</em>',
+    body: 'Drive to Survive. Full Swing. Break Point. Quarterback. Beckham. Race for the Crown. Tour de France: Unchained. The genre has matured into the most reliable subscriber-driver in streaming. Show jumping — the most photogenic, most globally distributed of all horse sports — has never been given the premium-doc treatment.',
+  },
+  {
+    n: '02',
+    claim: 'The 2028 Los Angeles Olympics is a <em>fixed, marketable finale.</em>',
+    body: "The first home Olympics for American equestrians since 1984. A two-season series that climaxes there is a buyer's dream: a clean structure, a fixed delivery date, and a guaranteed cultural moment to release into.",
+  },
+  {
+    n: '03',
+    claim: 'The cast is <em>already famous.</em>',
+    body: 'Springsteen, Jobs, Gates, Bloomberg, Selleck, Cuoco. The children of the people who built modern America are already in this world. So are the working-class kids from Texas and Chicago who out-rode them. The collision is the show.',
+  },
+  {
+    n: '04',
+    claim: 'No one else has <em>the access.</em>',
+    body: 'This is a world that runs on relationships, generational trust, and quiet introductions. Whoever gets in first owns this story.',
+  },
+];
+---
+
+<section class="why section-y gutter-x">
+  <header class="head" data-reveal>
+    <p class="meta">The Case</p>
+    <h2 class="display-md title">
+      Why this series. <em>Why now.</em>
+    </h2>
+  </header>
+
+  <ol class="points" role="list">
+    {points.map((p) => (
+      <li class="point rule-t" data-reveal>
+        <span class="point__n display-md">{p.n}</span>
+        <div class="point__body">
+          <h3 class="point__claim display-md" set:html={p.claim} />
+          <p class="point__copy">{p.body}</p>
+        </div>
+      </li>
+    ))}
+  </ol>
+</section>
+
+<style>
+  .why { background: var(--color-paper-warm); }
+  .head {
+    max-width: 56rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    margin-bottom: 3rem;
+  }
+  .title { font-size: clamp(2rem, 4vw, 3.5rem); }
+  .title em { color: var(--color-bay); }
+  .points { display: flex; flex-direction: column; }
+  .point {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    padding: 2.5rem 0;
+  }
+  @media (min-width: 768px) {
+    .point { grid-template-columns: 6rem 1fr; gap: 3rem; }
+  }
+  .point__n {
+    font-size: 2.25rem;
+    color: var(--color-ink-mute);
+  }
+  .point__claim {
+    font-size: clamp(1.375rem, 2vw, 1.75rem);
+    margin-bottom: 0.75rem;
+  }
+  .point__claim em { color: var(--color-bay); }
+  .point__copy {
+    color: var(--color-ink-soft);
+    max-width: 60ch;
+  }
+</style>

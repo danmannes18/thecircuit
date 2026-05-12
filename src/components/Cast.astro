@@ -1,0 +1,88 @@
+---
+// Act Four — The Cast. Phase 2 populates from src/data/cast.ts. Phase 4 wires expansion.
+import CastCard from './CastCard.astro';
+import { castGroups } from '../data/cast';
+---
+
+<section id="cast" class="cast section-y gutter-x">
+  <header class="head" data-reveal>
+    <p class="meta">The Cast</p>
+    <h2 class="display-md title">
+      Fifteen anchors. <em>Four archetypes. One world.</em>
+    </h2>
+    <p class="lede prose-measure">
+      A working ensemble — old American champions, billionaires' children,
+      European nobility, and the working-class crew that keeps it all running.
+    </p>
+  </header>
+
+  {castGroups.map((group) => (
+    <article class="group" data-reveal>
+      <header class="group__head rule-b">
+        <span class="group__numeral meta">{group.numeral}</span>
+        <h3 class="group__name display-md">{group.name}</h3>
+        <span class="group__subtitle">{group.subtitle}</span>
+      </header>
+      <div class="group__grid">
+        {/* Phase 2 will iterate real cast. Placeholder slots: */}
+        <CastCard number="01" name="—" role="placeholder" />
+        <CastCard number="02" name="—" role="placeholder" />
+        <CastCard number="03" name="—" role="placeholder" />
+        <CastCard number="04" name="—" role="placeholder" />
+      </div>
+    </article>
+  ))}
+</section>
+
+<style>
+  .cast {
+    background: var(--color-paper);
+  }
+  .head {
+    max-width: 56rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    margin-bottom: 4rem;
+  }
+  .title {
+    font-size: clamp(2rem, 4vw, 3.5rem);
+  }
+  .title em {
+    color: var(--color-bay);
+  }
+  .group {
+    margin-top: 3.5rem;
+  }
+  .group__head {
+    display: grid;
+    grid-template-columns: 3rem 1fr auto;
+    align-items: baseline;
+    gap: 1.5rem;
+    padding-bottom: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  .group__numeral {
+    font-size: 0.85rem;
+  }
+  .group__name {
+    font-size: 1.75rem;
+  }
+  .group__subtitle {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-variation-settings: "opsz" 60, "SOFT" 50, "WONK" 1;
+    color: var(--color-ink-mute);
+  }
+  .group__grid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: 1fr;
+  }
+  @media (min-width: 768px) {
+    .group__grid { grid-template-columns: repeat(3, 1fr); }
+  }
+  @media (min-width: 1100px) {
+    .group__grid { grid-template-columns: repeat(4, 1fr); }
+  }
+</style>

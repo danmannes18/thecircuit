@@ -1,0 +1,56 @@
+---
+// Act Nine — Contact.
+---
+
+<section id="contact" class="contact section-y gutter-x">
+  <div class="inner" data-reveal>
+    <p class="prompt display-md">
+      For <em>development inquiries.</em>
+    </p>
+    <a class="email" href="mailto:hello@thecircuit.show">hello@thecircuit.show</a>
+    <p class="meta">Available for screening upon request.</p>
+  </div>
+</section>
+
+<style>
+  .contact {
+    position: relative;
+    background: var(--color-bay-deep);
+    color: var(--color-paper);
+    overflow: hidden;
+  }
+  .contact::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 50% 50%, rgba(201, 168, 118, 0.18) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .inner {
+    position: relative;
+    max-width: 48rem;
+    margin: 0 auto;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    align-items: center;
+  }
+  .prompt {
+    font-style: italic;
+    font-variation-settings: "opsz" 144, "SOFT" 50, "WONK" 1;
+    font-size: clamp(2rem, 5vw, 4rem);
+    color: var(--color-sand-deep);
+  }
+  .prompt em { color: var(--color-sand-deep); }
+  .email {
+    font-family: var(--font-mono);
+    font-size: clamp(1rem, 1.4vw, 1.25rem);
+    letter-spacing: 0.1em;
+    border-bottom: 1px solid rgba(245, 241, 232, 0.3);
+    padding-bottom: 0.25rem;
+    transition: border-color 400ms var(--ease);
+  }
+  .email:hover { border-color: var(--color-sand-deep); }
+  .contact .meta { color: rgba(245, 241, 232, 0.5); }
+</style>

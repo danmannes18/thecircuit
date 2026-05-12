@@ -1,0 +1,68 @@
+---
+// Act Three — The World. Phase 2 will populate full prose.
+---
+
+<section class="world section-y gutter-x">
+  <div class="inner">
+    <p class="meta" data-reveal>The World</p>
+    <h2 class="display-md title" data-reveal>
+      There is a world most people <em>have never seen.</em>
+    </h2>
+    <div class="prose" data-reveal>
+      <p class="lede">
+        It moves in a circle. Wellington in winter. Aachen in summer. The
+        Hamptons in late August. Geneva by Christmas. The same eighty or so
+        faces — the riders, the owners, the grooms, the families — show up at
+        each stop, set up their barns, compete for millions, and leave for the
+        next city. They live their entire lives inside this orbit. They call it
+        the circuit.
+      </p>
+    </div>
+    <figure class="pull" data-reveal>
+      <blockquote class="display-md pull__quote">
+        The horse is the only Olympic athlete that doesn't know it's competing.
+        That, more than anything, is what makes this sport <em>cinema.</em>
+      </blockquote>
+    </figure>
+  </div>
+</section>
+
+<style>
+  .world {
+    background: var(--color-paper-warm);
+  }
+  .inner {
+    max-width: 64rem;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+  }
+  .title {
+    font-size: clamp(2rem, 4vw, 3.5rem);
+  }
+  .title em {
+    color: var(--color-bay);
+  }
+  .prose {
+    max-width: 65ch;
+  }
+  .pull {
+    margin: 2rem 0 0;
+    padding: 2.5rem 0;
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    text-align: center;
+  }
+  .pull__quote {
+    font-style: italic;
+    font-variation-settings: "opsz" 60, "SOFT" 50, "WONK" 1;
+    font-size: clamp(1.25rem, 2vw, 1.875rem);
+    color: var(--color-ink-soft);
+    max-width: 50ch;
+    margin: 0 auto;
+  }
+  .pull__quote em {
+    color: var(--color-bay);
+  }
+</style>
