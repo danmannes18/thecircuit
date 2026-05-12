@@ -1,0 +1,64 @@
+---
+const clips = [
+  '/mp4/SnapInsta.to_AQNSaCYPfCq4Ip-1SFGgWbo4CjIsJJVWyoxGnDWv7Vy-2Tu4H9rou5Vk49-lWi4PGVf7whT1IMJ-WA0NvSswZVg.mp4',
+  '/mp4/SnapInsta.to_AQNgd66o2qIGVNd0XxAH4Ml4KHWBGFtMndoLp5eyo7e26TNCpQe1goyMW7eUNqb77i-NjkuHzGaJWzakLo2MOZS1xsSVUROEYPvo0EE.mp4',
+  '/mp4/SnapInsta.to_AQNyb9iDfzZVP1lzP1vvu8Bwzfyo32gaBWQZrW_Er21emwzBHnwGkGrx_2WqsKrnuLJckdbHr4ck9SP2qqRtXbolxvCi8E3IuY6pgx4.mp4',
+  '/mp4/SnapInsta.to_AQO0X26V5ua3eZZf-rUqbxbyk5AuVQobdNDRYl8TUOtmPUZxZ4fIIOHN8Pk4T1mmfQ7cfz7BDF_NAW8Z3fct5-9tgUmNMpe-A1h8fRQ.mp4',
+  '/mp4/SnapInsta.to_AQO1aad5PVffYYkydPtrucvdoINxCIdkZKuajbab8HmQZL8q0AhBHO3palwdG4EpsyU4pUWVmyLWB00ow64wyqUMskJpp5VreC2ap7Y.mp4',
+  '/mp4/SnapInsta.to_AQOQq0QBSW2IICGDwLQXciYE_nXthzVnSTp8jyROtkopraCBu2fIKTexJbJrpMgWju-IrNtRdRnjx418E2AQwm4DnEcuG2llyJzpspg.mp4',
+  '/mp4/SnapInsta.to_AQOUN6K7JpYrkhOPEura0ebRn3-6L5NwMc2boJ7Oid7FxV0hpzDzY65UaBCzEc78N7KtOHmGiJRwDdVgjF2MW3KYhfM4nKeV3Nfa4G0.mp4',
+  '/mp4/SnapInsta.to_AQOfIQYkGKEW14UXLGUCx1Il3KqmwDKLlNtyP7HBzApV3J52ozm9B5D8ZL3QwWUvYL1xNoDNKRvRp8AJKxoJgy-asePQDa9ZxM9Hz6M.mp4',
+  '/mp4/SnapInsta.to_AQP62PhaF7k7GXEYTNPc5swNhLmalD6HD_2SXr-KyjTFpH8fCL4-lKvZ2L9XQZ0aSQJYPNvbz4LDkABSc-BlJ0P2vmYSyv0Dbwuckk0.mp4',
+  '/mp4/SnapInsta.to_AQPEZmVpHNj-HbMhp7TCp4LYMlq3oZIyGls1fWK6uMlZrCe0R9cqpceQeLf7BbD64mIsWGQDjswFT50ayuuijRnCmJ9nymvKvfeomjI.mp4',
+  '/mp4/SnapInsta.to_AQPPBswjYn6Gaoj8oGDnaGQKnFj5W8S8msFpe4xn6FbayloSDUKXeJ5oi_stWsYJUFzXLRDj0g6CX_YSuMugjQgjcH5WIk2Idf5jBZM.mp4',
+  '/mp4/SnapInsta.to_AQPV1TwkaYYw7Jm2nKewyW3JGSOUAs2pyVf1b8oehfKa8k1UAUvKJAK5V9vbkVhq_UPgc0TJGPWfITDBw-YGwx2pEiwuLAyYyn-nCw.mp4',
+  '/mp4/SnapInsta.to_AQPXn0-nkOuJ-Demf_i7iEwpO1mOCjGjv_IFFOtLtFSWyyyuX2kkrjMSybN1hUPkFFnV4ptn0HkQlE3D8V4XeHtlOdw6qLx-ZvLEwSY.mp4',
+  '/mp4/SnapInsta.to_AQPm1lhL3E6DzgI79NfmXE3BL7CGdNYJwGaOVj1yDwQHf6GLQ7P0vc4ommhSKNt7wE9lKQFwee2FXlJq4CENLSbQJ93kfXgqMm8ACaU.mp4',
+  '/mp4/SnapInsta.to_AQPn8qZWAiKX3gnoVStoDw82dzeRAPoMyMUKZyIurE_54tf4kOpY8HcUJGjAUflGaDZ9tPKxu_UsyTLdsX5prJA0TElGoOmsecWnJNo.mp4',
+  '/mp4/SnapInsta.to_AQPuHxItTr4SM0IiOWYwZ7W-5CmNdbpygThQXCwTXtoRkqMqmYGJd-ULWvHwuoVOCaCI898dSjdtAtfVscaHpRWHr2QbGgqUrb2kujM.mp4',
+];
+---
+
+<section class="reel" aria-label="Footage reel">
+  <div class="reel__track" id="reel-track">
+    {clips.map((src) => (
+      <div class="reel__cell">
+        <video class="reel__video" muted loop playsinline preload="none" data-lazy-video>
+          <source data-src={src} type="video/mp4" />
+        </video>
+      </div>
+    ))}
+  </div>
+</section>
+
+<style>
+  .reel {
+    overflow: hidden;
+    background: var(--color-ink);
+    padding: 0;
+  }
+  .reel__track {
+    display: flex;
+    gap: 2px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding: 2px;
+  }
+  .reel__track::-webkit-scrollbar { display: none; }
+  .reel__cell {
+    flex: 0 0 clamp(180px, 22vw, 280px);
+    aspect-ratio: 9 / 16;
+    overflow: hidden;
+    scroll-snap-align: start;
+    background: #0a0604;
+    position: relative;
+  }
+  .reel__video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+</style>
