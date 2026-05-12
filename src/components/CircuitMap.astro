@@ -13,6 +13,7 @@
   <div class="circuit-map__layout gutter-x">
     <div class="circuit-map__map-wrap" id="map-container">
       <svg id="world-map" aria-label="Interactive map of The Circuit show jumping locations" role="img"></svg>
+      <p class="map-hint">Drag to pan &nbsp;·&nbsp; Scroll to zoom</p>
     </div>
 
     <div class="circuit-map__panel" id="info-panel" role="region" aria-live="polite" aria-label="Location details">
@@ -50,6 +51,7 @@
     { id: 'hamburg',      tier: 'KEY',    coords: [9.99, 53.55],    label: 'Hamburg',           months: 'May',               tagline: 'Global Champions Tour',      flag: '🇩🇪', body: 'Derby Park — home of the Hamburg Derby, one of the most technically demanding courses in show jumping. A classic venue with deep history, now also a key GCT stop.' },
     { id: 'thermal',      tier: 'KEY',    coords: [-116.14, 33.64], label: 'Thermal, CA',       months: 'January – March',   tagline: 'Desert International',       flag: '🇺🇸', body: 'The Desert International Horse Park in the Coachella Valley. The West Coast equivalent of Wellington — a growing hub for California\'s equestrian wealth and the tech and entertainment money that has moved into the sport.' },
     { id: 'tryon',        tier: 'KEY',    coords: [-82.23, 35.20],  label: 'Tryon, NC',         months: 'Summer & Fall',     tagline: 'Tryon International',        flag: '🇺🇸', body: 'A massive purpose-built equestrian resort in the Blue Ridge Mountains. Hosted the 2018 World Equestrian Games. A key venue for US domestic championships — the anchor of the American Southeast circuit.' },
+    { id: 'traversecity', tier: 'MAJOR',  coords: [-85.62, 44.76],  label: 'Traverse City, MI', months: 'Summer',            tagline: 'Horse Show By The Bay',      flag: '🇺🇸', body: 'Horse Show By The Bay on the shores of Grand Traverse Bay in northern Michigan — one of the most scenically spectacular venues in American equestrian sport. A destination show where Great Lakes summer and serious competition meet.' },
   ];
 
   const D3_URL = 'https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js';
@@ -116,308 +118,215 @@
 
   function initMap() {
     const container = document.getElementById('map-container');
-    const svg = d3.select('#world-map');
+    const svgEl = document.getElementById('world-map');
+    const svg = d3.select(svgEl);
 
-    let width = container.clientWidth;
-    let height = container.clientHeight;
+    let width, height, projection, path;
 
-    svg.attr('width', width).attr('height', height);
-
-    let projection, path, geoGenerator;
-
-    function setupProjection() {
-      width = container.clientWidth;
+    function setupDims() {
+      width  = container.clientWidth;
       height = container.clientHeight;
       svg.attr('width', width).attr('height', height);
+    }
+    setupDims();
 
-      projection = d3.geoNaturalEarth1()
-        .scale(1)
-        .translate([0, 0]);
-
+    // Projection fits the full world into the container — zoom/pan applied via <g> transform
+    function setupProjection() {
+      projection = d3.geoNaturalEarth1().scale(1).translate([0, 0]);
       const b = d3.geoPath().projection(projection).bounds({ type: 'Sphere' });
-      const scale = 0.95 / Math.max((b[1][0] - b[0][0]) / width, (b[1][1] - b[0][1]) / height);
-      const translate = [
-        (width - scale * (b[1][0] + b[0][0])) / 2,
-        (height - scale * (b[1][1] + b[0][1])) / 2
-      ];
-
-      projection.scale(scale).translate(translate);
+      const s = 0.95 / Math.max((b[1][0] - b[0][0]) / width, (b[1][1] - b[0][1]) / height);
+      projection.scale(s).translate([
+        (width  - s * (b[1][0] + b[0][0])) / 2,
+        (height - s * (b[1][1] + b[0][1])) / 2,
+      ]);
       path = d3.geoPath().projection(projection);
     }
-
     setupProjection();
 
-    // Film grain filter
+    // ── Static layers (outside zoom group) ──────────────────────────
     const defs = svg.append('defs');
-    const filterId = 'film-grain';
     const filter = defs.append('filter')
-      .attr('id', filterId)
+      .attr('id', 'film-grain')
       .attr('x', '0%').attr('y', '0%')
       .attr('width', '100%').attr('height', '100%');
     filter.append('feTurbulence')
-      .attr('type', 'fractalNoise')
-      .attr('baseFrequency', '0.65')
-      .attr('numOctaves', '3')
-      .attr('stitchTiles', 'stitch');
-    filter.append('feColorMatrix')
-      .attr('type', 'saturate')
-      .attr('values', '0');
+      .attr('type', 'fractalNoise').attr('baseFrequency', '0.65')
+      .attr('numOctaves', '3').attr('stitchTiles', 'stitch');
+    filter.append('feColorMatrix').attr('type', 'saturate').attr('values', '0');
 
-    // Clip path for ocean rect
-    defs.append('clipPath')
-      .attr('id', 'sphere-clip')
-      .append('path')
-      .datum({ type: 'Sphere' })
-      .attr('d', path);
+    const bgRect = svg.append('rect')
+      .attr('width', width).attr('height', height).attr('fill', '#0f1e3d');
 
-    svg.selectAll('*:not(defs)').remove();
+    // ── Zoomable group ───────────────────────────────────────────────
+    const mapGroup = svg.append('g').attr('class', 'map-g');
+
+    // ── Grain overlay (above zoom group, pointer-events off) ─────────
+    const grainRect = svg.append('rect')
+      .attr('width', width).attr('height', height)
+      .attr('fill', 'rgba(0,0,0,0.22)')
+      .attr('filter', 'url(#film-grain)')
+      .attr('pointer-events', 'none');
+
+    // ── Zoom behaviour ───────────────────────────────────────────────
+    const zoom = d3.zoom()
+      .scaleExtent([0.5, 12])
+      .on('zoom', (event) => { mapGroup.attr('transform', event.transform); });
+
+    svg.call(zoom).on('dblclick.zoom', null); // disable double-click zoom
+
+    function fitPins(animate) {
+      const mobile = isMobile();
+      const pts = locations
+        .filter(l => !mobile || l.tier === 'ANCHOR')
+        .map(l => projection(l.coords))
+        .filter(Boolean);
+      const xs = pts.map(p => p[0]);
+      const ys = pts.map(p => p[1]);
+      const pad = Math.min(width, height) * 0.10;
+      const x0 = Math.min(...xs) - pad, x1 = Math.max(...xs) + pad;
+      const y0 = Math.min(...ys) - pad, y1 = Math.max(...ys) + pad;
+      const k  = Math.min(width / (x1 - x0), height / (y1 - y0));
+      const tx = width  / 2 - k * (x0 + x1) / 2;
+      const ty = height / 2 - k * (y0 + y1) / 2;
+      const t  = d3.zoomIdentity.translate(tx, ty).scale(k);
+      if (animate && !reducedMotion) {
+        svg.transition().duration(600).ease(d3.easeCubicOut).call(zoom.transform, t);
+      } else {
+        svg.call(zoom.transform, t);
+      }
+    }
 
     function draw(worldData) {
-      svg.selectAll('*:not(defs)').remove();
-
-      // Update sphere clip
-      svg.select('defs').select('#sphere-clip').select('path')
-        .datum({ type: 'Sphere' })
-        .attr('d', path);
-
-      // Ocean
-      svg.append('rect')
-        .attr('width', width)
-        .attr('height', height)
-        .attr('fill', '#0f1e3d')
-        .attr('clip-path', 'url(#sphere-clip)');
-
-      // Sphere border
-      svg.append('path')
-        .datum({ type: 'Sphere' })
-        .attr('d', path)
-        .attr('fill', 'none')
-        .attr('stroke', 'rgba(255,255,255,0.06)')
-        .attr('stroke-width', 0.5);
+      mapGroup.selectAll('*').remove();
 
       // Graticule
-      const graticule = d3.geoGraticule().step([10, 10]);
-      svg.append('path')
-        .datum(graticule())
-        .attr('d', path)
-        .attr('fill', 'none')
-        .attr('stroke', 'rgba(255,255,255,0.04)')
-        .attr('stroke-width', 0.5);
+      mapGroup.append('path')
+        .datum(d3.geoGraticule().step([10, 10])())
+        .attr('d', path).attr('fill', 'none')
+        .attr('stroke', 'rgba(255,255,255,0.04)').attr('stroke-width', 0.5);
 
       // Land
-      const countries = topojson.feature(worldData, worldData.objects.countries);
-      svg.append('path')
-        .datum(countries)
-        .attr('d', path)
-        .attr('fill', '#3f5f3f');
+      mapGroup.append('path')
+        .datum(topojson.feature(worldData, worldData.objects.countries))
+        .attr('d', path).attr('fill', '#3f5f3f');
 
       // Borders
-      const borders = topojson.mesh(worldData, worldData.objects.countries, (a, b) => a !== b);
-      svg.append('path')
-        .datum(borders)
-        .attr('d', path)
-        .attr('fill', 'none')
-        .attr('stroke', '#7b8c5c')
-        .attr('stroke-width', 0.3);
+      mapGroup.append('path')
+        .datum(topojson.mesh(worldData, worldData.objects.countries, (a, b) => a !== b))
+        .attr('d', path).attr('fill', 'none')
+        .attr('stroke', '#7b8c5c').attr('stroke-width', 0.3);
 
-      // Route arcs between all ANCHOR pairs
+      // Route arcs — ANCHOR pairs
       const anchors = locations.filter(l => l.tier === 'ANCHOR');
-      const arcGroup = svg.append('g').attr('class', 'arcs');
+      const arcG = mapGroup.append('g').attr('class', 'arcs');
       for (let i = 0; i < anchors.length; i++) {
         for (let j = i + 1; j < anchors.length; j++) {
-          const line = {
-            type: 'LineString',
-            coordinates: [anchors[i].coords, anchors[j].coords]
-          };
-          arcGroup.append('path')
-            .datum(line)
-            .attr('d', path)
-            .attr('fill', 'none')
-            .attr('stroke', 'rgba(201,168,118,0.15)')
-            .attr('stroke-width', 0.75);
+          arcG.append('path')
+            .datum({ type: 'LineString', coordinates: [anchors[i].coords, anchors[j].coords] })
+            .attr('d', path).attr('fill', 'none')
+            .attr('stroke', 'rgba(201,168,118,0.18)').attr('stroke-width', 0.75);
         }
       }
-
-      // Film grain overlay
-      svg.append('rect')
-        .attr('width', width)
-        .attr('height', height)
-        .attr('fill', 'rgba(0,0,0,0.25)')
-        .attr('filter', `url(#${filterId})`)
-        .attr('pointer-events', 'none');
 
       // Pins
       const mobile = isMobile();
-      const visibleLocations = mobile
-        ? locations.filter(l => l.tier === 'ANCHOR')
-        : locations;
+      const visible = mobile ? locations.filter(l => l.tier === 'ANCHOR') : locations;
+      const pinG = mapGroup.append('g').attr('class', 'pins');
 
-      const pinGroup = svg.append('g').attr('class', 'pins');
-
-      visibleLocations.forEach((loc, i) => {
+      visible.forEach((loc, i) => {
         const [px, py] = projection(loc.coords);
-        const pinRadius = loc.tier === 'ANCHOR' ? 8 : loc.tier === 'MAJOR' ? 6 : 4;
-        const pinFill = loc.tier === 'ANCHOR' ? '#c9a876' : loc.tier === 'MAJOR' ? 'rgba(201,168,118,0.7)' : 'rgba(201,168,118,0.4)';
-        const pinStroke = loc.tier === 'ANCHOR' ? 'white' : 'none';
+        const r    = loc.tier === 'ANCHOR' ? 6 : loc.tier === 'MAJOR' ? 4.5 : 3;
+        const fill = loc.tier === 'ANCHOR' ? '#c9a876' : loc.tier === 'MAJOR' ? 'rgba(201,168,118,0.75)' : 'rgba(201,168,118,0.45)';
 
-        const g = pinGroup.append('g')
+        const g = pinG.append('g')
           .attr('class', `pin pin--${loc.tier.toLowerCase()}`)
           .attr('data-id', loc.id)
           .attr('transform', `translate(${px},${py})`)
-          .attr('tabindex', '0')
-          .attr('role', 'button')
+          .attr('tabindex', '0').attr('role', 'button')
           .attr('aria-label', `View details for ${loc.label}`)
           .style('cursor', 'pointer');
 
-        if (!reducedMotion) {
-          g.style('opacity', '0');
-        }
+        if (!reducedMotion) g.style('opacity', '0');
 
-        // Circle
-        g.append('circle')
-          .attr('r', pinRadius)
-          .attr('fill', pinFill)
-          .attr('stroke', pinStroke)
-          .attr('stroke-width', loc.tier === 'ANCHOR' ? 1 : 0);
+        g.append('circle').attr('r', r).attr('fill', fill)
+          .attr('stroke', loc.tier === 'ANCHOR' ? 'rgba(255,255,255,0.8)' : 'none')
+          .attr('stroke-width', loc.tier === 'ANCHOR' ? 0.8 : 0);
 
-        // Pulse ring (hidden by default)
-        g.append('circle')
-          .attr('class', 'pulse-ring')
-          .attr('r', pinRadius)
-          .attr('fill', 'none')
-          .attr('stroke', '#c9a876')
-          .attr('stroke-width', 1.5)
-          .style('opacity', '0')
-          .style('pointer-events', 'none');
+        g.append('circle').attr('class', 'pulse-ring').attr('r', r)
+          .attr('fill', 'none').attr('stroke', '#c9a876').attr('stroke-width', 1.5)
+          .style('opacity', '0').style('pointer-events', 'none');
 
-        // Label (ANCHOR always, others on hover via CSS)
-        if (loc.tier === 'ANCHOR') {
-          g.append('text')
-            .attr('class', 'pin-label pin-label--always')
-            .attr('y', -(pinRadius + 4))
-            .attr('text-anchor', 'middle')
-            .attr('font-family', 'var(--font-mono, "JetBrains Mono Variable", monospace)')
-            .attr('font-size', '10px')
-            .attr('fill', '#e8d9bd')
-            .attr('letter-spacing', '0.08em')
-            .style('text-transform', 'uppercase')
-            .style('text-shadow', '0 1px 3px rgba(0,0,0,0.8)')
-            .style('pointer-events', 'none')
-            .text(loc.label.toUpperCase());
-        } else {
-          g.append('text')
-            .attr('class', 'pin-label pin-label--hover')
-            .attr('y', -(pinRadius + 4))
-            .attr('text-anchor', 'middle')
-            .attr('font-family', 'var(--font-mono, "JetBrains Mono Variable", monospace)')
-            .attr('font-size', '10px')
-            .attr('fill', '#e8d9bd')
-            .attr('letter-spacing', '0.08em')
-            .style('text-transform', 'uppercase')
-            .style('text-shadow', '0 1px 3px rgba(0,0,0,0.8)')
-            .style('pointer-events', 'none')
-            .style('opacity', '0')
-            .style('transition', reducedMotion ? 'none' : 'opacity 0.15s ease')
-            .text(loc.label.toUpperCase());
-        }
+        // Label — ANCHOR always visible, others on hover
+        const lbl = g.append('text')
+          .attr('class', `pin-label${loc.tier === 'ANCHOR' ? ' pin-label--always' : ' pin-label--hover'}`)
+          .attr('y', -(r + 5)).attr('text-anchor', 'middle')
+          .attr('font-family', 'var(--font-mono,"JetBrains Mono Variable",monospace)')
+          .attr('font-size', '9px').attr('fill', '#e8d9bd')
+          .attr('letter-spacing', '0.07em')
+          .style('text-transform', 'uppercase')
+          .style('text-shadow', '0 1px 4px rgba(0,0,0,0.9)')
+          .style('pointer-events', 'none')
+          .text(loc.label.toUpperCase());
 
-        // Hover show label for non-ANCHOR
         if (loc.tier !== 'ANCHOR') {
-          g.on('mouseenter', function () {
-            d3.select(this).select('.pin-label--hover').style('opacity', '1');
-          }).on('mouseleave', function () {
-            d3.select(this).select('.pin-label--hover').style('opacity', '0');
-          });
+          lbl.style('opacity', '0')
+             .style('transition', reducedMotion ? 'none' : 'opacity 0.15s ease');
+          g.on('mouseenter', () => lbl.style('opacity', '1'))
+           .on('mouseleave', () => lbl.style('opacity', '0'));
         }
 
-        // Click handler
-        g.on('click', function () {
-          handlePinActivate(loc, g, pinRadius);
+        g.on('click', () => handlePin(loc, g, r));
+        g.on('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handlePin(loc, g, r); }
         });
 
-        // Keyboard handler
-        g.on('keydown', function (event) {
-          if (event.key === 'Enter' || event.key === ' ') {
-            event.preventDefault();
-            handlePinActivate(loc, g, pinRadius);
-          }
-        });
-
-        // Stagger fade-in
         if (!reducedMotion) {
-          setTimeout(() => {
-            g.transition()
-              .duration(300)
-              .style('opacity', '1');
-          }, i * 80);
+          setTimeout(() => g.transition().duration(300).style('opacity', '1'), i * 60);
         }
       });
+
+      fitPins(false);
     }
 
-    function handlePinActivate(loc, gSel, pinRadius) {
+    function handlePin(loc, gSel, r) {
       if (activeId === loc.id) {
-        // Close
         activeId = null;
         updatePanel(null);
-        // Reset all pin scales
-        svg.selectAll('.pin circle:first-child').attr('r', function () {
-          const pin = d3.select(this.parentNode);
-          const id = pin.attr('data-id');
-          const l = locations.find(x => x.id === id);
-          return l ? (l.tier === 'ANCHOR' ? 8 : l.tier === 'MAJOR' ? 6 : 4) : 4;
-        });
       } else {
         activeId = loc.id;
         updatePanel(loc);
-
-        // Pulse animation
         if (!reducedMotion) {
           const ring = gSel.select('.pulse-ring');
-          ring.style('opacity', '1')
-            .attr('r', pinRadius);
-          ring.transition()
-            .duration(600)
-            .ease(d3.easeCubicOut)
-            .attr('r', 16)
-            .style('opacity', '0')
-            .on('end', function () {
-              d3.select(this).attr('r', pinRadius);
-            });
+          ring.attr('r', r).style('opacity', '1')
+            .transition().duration(600).ease(d3.easeCubicOut)
+            .attr('r', r + 10).style('opacity', '0')
+            .on('end', function() { d3.select(this).attr('r', r); });
         }
       }
     }
 
-    // Escape key to close panel
-    document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape' && activeId !== null) {
-        activeId = null;
-        updatePanel(null);
-      }
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && activeId !== null) { activeId = null; updatePanel(null); }
     });
 
-    // Fetch world data and draw
     fetch(WORLD_URL)
       .then(r => r.json())
       .then(worldData => {
         draw(worldData);
 
-        // Resize handler (debounced)
         let resizeTimer;
         window.addEventListener('resize', () => {
           clearTimeout(resizeTimer);
           resizeTimer = setTimeout(() => {
+            setupDims();
+            bgRect.attr('width', width).attr('height', height);
+            grainRect.attr('width', width).attr('height', height);
             setupProjection();
             draw(worldData);
-            if (activeId) {
-              const loc = locations.find(l => l.id === activeId);
-              if (loc) updatePanel(loc);
-            }
           }, 150);
         });
       })
-      .catch(err => {
-        console.error('CircuitMap: failed to load world atlas', err);
-      });
+      .catch(err => console.error('CircuitMap: failed to load world atlas', err));
   }
 
   // Load D3, then TopoJSON, then init
@@ -498,6 +407,21 @@
     display: block;
     width: 100%;
     height: 100%;
+    cursor: grab;
+  }
+  #world-map:active { cursor: grabbing; }
+
+  .map-hint {
+    position: absolute;
+    bottom: 0.75rem;
+    right: 0.875rem;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(232, 217, 189, 0.35);
+    pointer-events: none;
+    margin: 0;
   }
 
   /* Info panel */
