@@ -1,0 +1,88 @@
+---
+import type { Season } from '../data/episodes';
+interface Props { season: Season; }
+const { season } = Astro.props;
+---
+
+<article class="season">
+  <p class="label">Season {season.number} — {season.year}</p>
+  <h3 class="title"><em>{season.title}</em></h3>
+  <p class="summary">{season.summary}</p>
+
+  <ol class="episodes" role="list">
+    {season.episodes.map((ep) => (
+      <li class="episode">
+        <span class="episode__number">{ep.number}</span>
+        <div>
+          <p class="episode__title">{ep.title}</p>
+          <p class="episode__synopsis">{ep.synopsis}</p>
+        </div>
+      </li>
+    ))}
+  </ol>
+</article>
+
+<style>
+  .label {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-sand-deep);
+    margin-bottom: 1rem;
+  }
+  .title {
+    font-family: var(--font-display);
+    font-weight: 300;
+    font-style: italic;
+    font-variation-settings: "opsz" 144, "SOFT" 50, "WONK" 1;
+    font-size: clamp(1.75rem, 1.4rem + 1.4vw, 2.75rem);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    margin-bottom: 1.5rem;
+    color: var(--color-sand);
+  }
+  .summary {
+    font-size: 1.0625rem;
+    line-height: 1.65;
+    color: rgba(245, 241, 232, 0.75);
+    margin-bottom: 2.5rem;
+    max-width: 32rem;
+  }
+  .episodes {
+    list-style: none;
+    border-top: 1px solid rgba(245, 241, 232, 0.15);
+    padding: 0;
+    margin: 0;
+  }
+  .episode {
+    padding: 1.5rem 0;
+    border-bottom: 1px solid rgba(245, 241, 232, 0.15);
+    display: grid;
+    grid-template-columns: 2rem 1fr;
+    gap: 1.25rem;
+    align-items: baseline;
+  }
+  .episode__number {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    color: rgba(245, 241, 232, 0.5);
+    padding-top: 0.35rem;
+  }
+  .episode__title {
+    font-family: var(--font-display);
+    font-weight: 350;
+    font-variation-settings: "opsz" 60;
+    font-size: 1.25rem;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    color: var(--color-paper);
+    margin-bottom: 0.35rem;
+  }
+  .episode__synopsis {
+    font-size: 0.9375rem;
+    line-height: 1.5;
+    color: rgba(245, 241, 232, 0.65);
+  }
+</style>

@@ -1,0 +1,111 @@
+---
+// Act Seven — Why Now. Body verbatim from /docs/06.
+const points = [
+  {
+    n: '01',
+    claim: 'Documentary sports has become <em>prestige television.</em>',
+    body: 'Drive to Survive. Full Swing. Break Point. Quarterback. Beckham. Race for the Crown. Tour de France: Unchained. The genre has matured into the most reliable subscriber-driver in streaming. Show jumping — the most photogenic, most globally distributed of all horse sports — has never been given the premium-doc treatment.',
+  },
+  {
+    n: '02',
+    claim: 'The 2028 Los Angeles Olympics is a <em>fixed, marketable finale.</em>',
+    body: "The first home Olympics for American equestrians since 1984. A two-season series that climaxes there is a buyer’s dream: a clean structure, a fixed delivery date, and a guaranteed cultural moment to release into.",
+  },
+  {
+    n: '03',
+    claim: 'The cast is <em>already famous.</em>',
+    body: 'Springsteen, Jobs, Gates, Bloomberg, Selleck, Cuoco. The children of the people who built modern America are already in this world. So are the working-class kids from Texas and Chicago who out-rode them. The collision is the show.',
+  },
+  {
+    n: '04',
+    claim: 'No one else has <em>the access.</em>',
+    body: 'This is a world that runs on relationships, generational trust, and quiet introductions. Whoever gets in first owns this story.',
+  },
+];
+---
+
+<section class="why">
+  <div class="inner">
+    <header class="head" data-reveal>
+      <p class="meta">The Case</p>
+      <h2 class="section-title">
+        Why this series. <em>Why now.</em>
+      </h2>
+    </header>
+
+    <ol class="points" role="list">
+      {points.map((p) => (
+        <li class="point" data-reveal>
+          <span class="point__n">{p.n}</span>
+          <div>
+            <h3 class="point__claim" set:html={p.claim} />
+            <p class="point__body">{p.body}</p>
+          </div>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+<style>
+  .why {
+    padding: var(--section-y) var(--gutter);
+    background: var(--color-paper-warm);
+  }
+  .inner {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .head {
+    margin-bottom: 5rem;
+    max-width: 48rem;
+  }
+  .head .meta { margin-bottom: 1rem; }
+
+  .points {
+    list-style: none;
+    display: grid;
+    gap: 0;
+    border-top: 1px solid var(--rule);
+    padding: 0;
+    margin: 0;
+  }
+  .point {
+    display: grid;
+    grid-template-columns: 6rem 1fr;
+    gap: 2rem;
+    padding: 2.5rem 0;
+    border-bottom: 1px solid var(--rule);
+    align-items: baseline;
+  }
+  @media (max-width: 720px) {
+    .point { grid-template-columns: 1fr; gap: 1rem; }
+  }
+  .point__n {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    color: var(--color-ink-mute);
+  }
+  .point__claim {
+    font-family: var(--font-display);
+    font-weight: 350;
+    font-variation-settings: "opsz" 60, "SOFT" 30;
+    font-size: clamp(1.5rem, 1.2rem + 1.2vw, 2.25rem);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: 1rem;
+    color: var(--color-ink);
+  }
+  .point__claim em {
+    font-style: italic;
+    font-variation-settings: "opsz" 144, "SOFT" 70, "WONK" 1;
+    color: var(--color-bay);
+  }
+  .point__body {
+    font-size: 1.0625rem;
+    line-height: 1.6;
+    color: var(--color-ink-soft);
+    max-width: var(--measure);
+  }
+</style>

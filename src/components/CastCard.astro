@@ -1,0 +1,103 @@
+---
+interface Props {
+  id: string;
+  number: string;
+  name: string;
+  role: string;
+}
+const { id, number, name, role } = Astro.props;
+---
+
+<button
+  type="button"
+  class="card"
+  data-card={id}
+  aria-expanded="false"
+  aria-controls={`bio-${id}`}
+>
+  <span class="num">{number}</span>
+  <span class="plus" aria-hidden="true">
+    <span class="plus__h"></span>
+    <span class="plus__v"></span>
+  </span>
+  <span class="name">{name}</span>
+  <span class="role">{role}</span>
+</button>
+
+<style>
+  .card {
+    position: relative;
+    text-align: left;
+    width: 100%;
+    padding: 2rem 1.5rem;
+    background: transparent;
+    border-right: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    cursor: pointer;
+    transition: background-color 400ms var(--ease);
+  }
+  .card:hover,
+  .card[aria-expanded="true"] {
+    background-color: var(--color-paper-warm);
+  }
+  .card:focus-visible {
+    outline: 2px solid var(--color-bay);
+    outline-offset: -2px;
+  }
+  .num {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    color: var(--color-ink-mute);
+    margin-bottom: 1rem;
+  }
+  .name {
+    font-family: var(--font-display);
+    font-weight: 350;
+    font-variation-settings: "opsz" 60, "SOFT" 30, "WONK" 0;
+    font-size: clamp(1.375rem, 1.2rem + 0.6vw, 1.75rem);
+    line-height: 1.05;
+    letter-spacing: -0.015em;
+    color: var(--color-ink);
+  }
+  .role {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-variation-settings: "opsz" 24, "SOFT" 50, "WONK" 1;
+    font-size: 0.9375rem;
+    color: var(--color-bay);
+    line-height: 1.3;
+  }
+  .plus {
+    position: absolute;
+    top: 1.75rem;
+    right: 1.5rem;
+    width: 1rem;
+    height: 1rem;
+    display: block;
+  }
+  .plus__h,
+  .plus__v {
+    position: absolute;
+    background-color: var(--color-ink);
+    transition: opacity 300ms var(--ease);
+  }
+  .plus__h {
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    transform: translateY(-0.5px);
+  }
+  .plus__v {
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 1px;
+    transform: translateX(-0.5px);
+  }
+  .card[aria-expanded="true"] .plus__v { opacity: 0; }
+</style>

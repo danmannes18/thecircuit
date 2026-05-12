@@ -1,0 +1,44 @@
+---
+// Sticky chrome. mix-blend-mode: difference so it inverts against any section.
+---
+
+<header class="site-header">
+  <a href="#top" class="brand">The Circuit</a>
+  <nav class="nav">
+    <a href="#contact" class="nav-link">Contact</a>
+  </nav>
+</header>
+
+<style>
+  .site-header {
+    position: fixed;
+    inset: 0 0 auto 0;
+    z-index: 100;
+    padding: 1.25rem var(--gutter);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    mix-blend-mode: difference;
+    color: var(--color-paper);
+    pointer-events: none;
+  }
+  .brand,
+  .nav-link {
+    pointer-events: auto;
+  }
+  .brand {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: 1.0625rem;
+    font-variation-settings: "opsz" 14;
+    letter-spacing: 0.01em;
+  }
+  .nav-link {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    transition: opacity 400ms var(--ease);
+  }
+  .nav-link:hover { opacity: 0.7; }
+</style>

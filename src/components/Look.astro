@@ -1,0 +1,148 @@
+---
+// Act Six — The Look. Bento moodboard. Placeholder gradients; tiles are a
+// single attribute swap away from real photography.
+const tiles = [
+  { caption: 'Wellington — golden hour', gradient: 'linear-gradient(135deg, #c9a876 0%, #8b6f47 100%)' },
+  { caption: 'Aachen — grass',           gradient: 'linear-gradient(180deg, #3f5f3f 0%, #1f2f1f 100%)' },
+  { caption: 'Scarlet rails',            gradient: 'linear-gradient(135deg, #b73239 0%, #6f1f24 100%)' },
+  { caption: 'Bay coat, bay mane',       gradient: 'linear-gradient(135deg, #1f0f0a 0%, #5b3520 100%)' },
+  { caption: 'Sky — Geneva morning',     gradient: 'linear-gradient(180deg, #a8c5dc 0%, #6f8fa6 100%)' },
+  { caption: 'Hermès warm-up',           gradient: 'linear-gradient(135deg, #e25822 0%, #a13a14 100%)' },
+  { caption: 'Sand at dusk',             gradient: 'linear-gradient(180deg, #c9a876 0%, #5b3520 100%)' },
+  { caption: 'FEI navy — team kit',      gradient: 'linear-gradient(135deg, #0f1e3d 0%, #1f0f0a 100%)' },
+  { caption: 'Rolex green — the Major',  gradient: 'linear-gradient(180deg, #006039 0%, #003020 100%)' },
+];
+---
+
+<section class="look">
+  <div class="inner">
+    <header class="head" data-reveal>
+      <p class="meta">The Look</p>
+      <h2 class="section-title">
+        Warm. Clean. <em>Colorful.</em> Luxurious.
+      </h2>
+      <p class="frame">
+        Shot in late light. The visual language pulls from Slim Aarons’ Palm
+        Beach, Sebastião Salgado’s reverence for labor, and the editorial
+        restraint of contemporary prestige television. Always documentary.
+      </p>
+    </header>
+
+    <div class="moodboard" data-reveal>
+      {tiles.map((t, i) => (
+        <figure class={`mood mood--${i + 1}`} style={`background:${t.gradient};`}>
+          <div class="mood__fill">
+            <figcaption class="mood__caption">{t.caption}</figcaption>
+          </div>
+        </figure>
+      ))}
+    </div>
+
+    <p class="claim" data-reveal>
+      Premium documentary, <em>not reality television.</em>
+    </p>
+  </div>
+</section>
+
+<style>
+  .look {
+    padding: var(--section-y) var(--gutter);
+    background: var(--color-paper);
+  }
+  .inner {
+    max-width: 1280px;
+    margin: 0 auto;
+  }
+  .head {
+    margin-bottom: 4rem;
+    max-width: 56rem;
+  }
+  .head .meta { margin-bottom: 1rem; }
+  .frame {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-variation-settings: "opsz" 144, "SOFT" 60, "WONK" 1;
+    font-weight: 300;
+    font-size: clamp(1.25rem, 1rem + 1vw, 1.875rem);
+    line-height: 1.35;
+    letter-spacing: -0.015em;
+    color: var(--color-ink-soft);
+    max-width: 42rem;
+    margin-top: 1.5rem;
+  }
+
+  .moodboard {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 0.875rem;
+    margin-bottom: 5rem;
+  }
+  .mood {
+    position: relative;
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    border-radius: 2px;
+  }
+  .mood::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.5 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/></svg>");
+    opacity: 0.35;
+    mix-blend-mode: overlay;
+    pointer-events: none;
+  }
+  .mood__fill {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: flex-end;
+    padding: 1rem;
+    z-index: 1;
+  }
+  .mood__caption {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(245, 241, 232, 0.85);
+    mix-blend-mode: difference;
+  }
+
+  .mood--1 { grid-column: span 5; aspect-ratio: 16 / 11; }
+  .mood--2 { grid-column: span 4; aspect-ratio: 3 / 4;   }
+  .mood--3 { grid-column: span 3; aspect-ratio: 1 / 1;   }
+  .mood--4 { grid-column: span 3; aspect-ratio: 1 / 1;   }
+  .mood--5 { grid-column: span 5; aspect-ratio: 5 / 3;   }
+  .mood--6 { grid-column: span 4; aspect-ratio: 4 / 5;   }
+  .mood--7 { grid-column: span 4; aspect-ratio: 4 / 3;   }
+  .mood--8 { grid-column: span 4; aspect-ratio: 1 / 1;   }
+  .mood--9 { grid-column: span 4; aspect-ratio: 4 / 5;   }
+
+  @media (max-width: 720px) {
+    .moodboard { grid-template-columns: repeat(6, 1fr); }
+    .mood--1, .mood--5 { grid-column: span 6; }
+    .mood--2, .mood--6, .mood--7, .mood--9 { grid-column: span 3; }
+    .mood--3, .mood--4, .mood--8 { grid-column: span 2; }
+  }
+
+  .claim {
+    text-align: center;
+    font-family: var(--font-display);
+    font-weight: 300;
+    font-variation-settings: "opsz" 144, "SOFT" 40;
+    font-size: clamp(1.75rem, 1.3rem + 2vw, 3rem);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--color-ink);
+    max-width: 40rem;
+    margin: 0 auto;
+    padding: 4rem 0 0;
+    border-top: 1px solid var(--rule);
+  }
+  .claim em {
+    font-style: italic;
+    font-variation-settings: "opsz" 144, "SOFT" 70, "WONK" 1;
+    color: var(--color-bay);
+  }
+</style>

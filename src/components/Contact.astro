@@ -1,0 +1,66 @@
+---
+// Act Nine — Contact.
+---
+
+<section id="contact" class="contact">
+  <div class="inner" data-reveal>
+    <p class="prompt">
+      For <em>development inquiries.</em>
+    </p>
+    <a class="email" href="mailto:hello@thecircuit.show">hello@thecircuit.show</a>
+    <p class="detail">Available for screening upon request.</p>
+  </div>
+</section>
+
+<style>
+  .contact {
+    padding: clamp(6rem, 14vh, 10rem) var(--gutter);
+    background: var(--color-bay-deep);
+    color: var(--color-paper);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .contact::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at center, rgba(201, 168, 118, 0.15) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .inner {
+    max-width: 40rem;
+    margin: 0 auto;
+    position: relative;
+  }
+  .prompt {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-variation-settings: "opsz" 144, "SOFT" 60, "WONK" 1;
+    font-weight: 300;
+    font-size: clamp(1.5rem, 1.2rem + 1.2vw, 2.25rem);
+    line-height: 1.2;
+    color: var(--color-sand);
+    margin-bottom: 2.5rem;
+    letter-spacing: -0.015em;
+  }
+  .email {
+    font-family: var(--font-mono);
+    font-size: clamp(1rem, 0.9rem + 0.4vw, 1.25rem);
+    letter-spacing: 0.06em;
+    color: var(--color-paper);
+    display: inline-block;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid rgba(245, 241, 232, 0.3);
+    transition: border-color 400ms var(--ease);
+  }
+  .email:hover { border-bottom-color: var(--color-sand-deep); }
+  .detail {
+    margin-top: 2.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(245, 241, 232, 0.5);
+  }
+</style>
