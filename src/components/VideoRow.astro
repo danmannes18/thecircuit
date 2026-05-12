@@ -1,0 +1,52 @@
+---
+interface Props {
+  srcs: string[];
+}
+const { srcs } = Astro.props;
+const count = srcs.length;
+---
+
+<div class="vrow" data-count={count}>
+  {srcs.map((src) => (
+    <div class="vrow__cell">
+      <video class="vrow__video" muted loop playsinline preload="none" data-lazy-video>
+        <source data-src={src} type="video/mp4" />
+      </video>
+    </div>
+  ))}
+</div>
+
+<style>
+  .vrow {
+    display: grid;
+    grid-template-columns: repeat(var(--cols, 1), 1fr);
+    gap: 2px;
+    background: var(--color-ink);
+  }
+  .vrow[data-count="1"] { --cols: 1; }
+  .vrow[data-count="2"] { --cols: 2; }
+  .vrow[data-count="3"] { --cols: 3; }
+
+  .vrow__cell {
+    position: relative;
+    aspect-ratio: 2 / 1;
+    overflow: hidden;
+    background: #0a0604;
+  }
+  .vrow__video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  @media (max-width: 640px) {
+    .vrow[data-count="3"] { --cols: 1; }
+    .vrow[data-count="2"] { --cols: 1; }
+  }
+  @media (min-width: 641px) and (max-width: 900px) {
+    .vrow[data-count="3"] { --cols: 2; }
+  }
+</style>
