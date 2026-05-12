@@ -1,0 +1,1715 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>The Circuit — A premium documentary series</title>
+  <meta name="description" content="Inside the billion-dollar world of international show jumping. Two seasons. The road to Los Angeles 2028." />
+  <meta name="theme-color" content="#0a0a0a" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="The Circuit" />
+  <meta property="og:description" content="A premium documentary series. Two seasons. The road to Los Angeles 2028." />
+  <meta property="og:type" content="website" />
+
+  <!-- Typography: Fraunces (display serif), Instrument Sans (body), JetBrains Mono (metadata) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,300..700,0..100,0..1&family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=JetBrains+Mono:wght@300..600&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ------------------------------------------------------------------
+       THE CIRCUIT — Pitch Site
+       Single-page. Hand-built. No frameworks.
+       ------------------------------------------------------------------ */
+
+    :root {
+      /* Palette — drawn from the sport itself */
+      --sand:        #e8d9bd;
+      --sand-deep:   #c9a876;
+      --grass:       #3f5f3f;
+      --grass-soft:  #7b8c5c;
+      --rolex:       #006039;
+      --hermes:      #e25822;
+      --fei:         #0f1e3d;
+      --scarlet:     #b73239;
+      --sky:         #a8c5dc;
+      --bay:         #5b3520;
+      --bay-deep:    #1f0f0a;
+
+      /* Neutrals */
+      --paper:       #f5f1e8;   /* off-white background */
+      --paper-warm:  #ede6d4;   /* secondary background */
+      --ink:         #0a0a0a;   /* primary text, black */
+      --ink-soft:    #2a2622;   /* secondary text */
+      --ink-mute:    #5a544c;   /* tertiary, captions */
+      --rule:        rgba(10, 10, 10, 0.12);
+
+      /* Typography */
+      --display: "Fraunces", "Iowan Old Style", "Cormorant Garamond", "Apple Garamond", Georgia, serif;
+      --body:    "Instrument Sans", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
+      --mono:    "JetBrains Mono", "SF Mono", Menlo, monospace;
+
+      /* Rhythm */
+      --measure: 65ch;
+      --gutter: clamp(1.25rem, 4vw, 2.5rem);
+      --section-y: clamp(5rem, 12vh, 9rem);
+
+      /* Motion */
+      --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+    }
+
+    /* ------------------------------------------------------------------
+       RESET
+       ------------------------------------------------------------------ */
+
+    *, *::before, *::after { box-sizing: border-box; }
+    html { -webkit-text-size-adjust: 100%; }
+    body, h1, h2, h3, h4, h5, h6, p, figure, blockquote, dl, dd, ul, ol { margin: 0; padding: 0; }
+    ul[role="list"], ol[role="list"] { list-style: none; }
+    img, picture, svg { max-width: 100%; display: block; }
+    button { font: inherit; cursor: pointer; background: none; border: none; color: inherit; }
+    a { color: inherit; text-decoration: none; }
+
+    /* ------------------------------------------------------------------
+       BASE
+       ------------------------------------------------------------------ */
+
+    html { scroll-behavior: smooth; }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+    body {
+      font-family: var(--body);
+      font-size: clamp(1rem, 0.95rem + 0.2vw, 1.0625rem);
+      line-height: 1.6;
+      color: var(--ink);
+      background: var(--paper);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+      font-feature-settings: "ss01", "ss02";
+    }
+
+    ::selection {
+      background: var(--bay-deep);
+      color: var(--paper);
+    }
+
+    /* ------------------------------------------------------------------
+       TYPOGRAPHY UTILITIES
+       ------------------------------------------------------------------ */
+
+    .display {
+      font-family: var(--display);
+      font-weight: 350;
+      font-variation-settings: "opsz" 144, "SOFT" 30, "WONK" 0;
+      letter-spacing: -0.02em;
+      line-height: 1.02;
+    }
+
+    .display-italic {
+      font-style: italic;
+      font-variation-settings: "opsz" 144, "SOFT" 50, "WONK" 1;
+    }
+
+    .meta {
+      font-family: var(--mono);
+      font-weight: 400;
+      font-size: 0.7rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--ink-mute);
+    }
+
+    .lede {
+      font-family: var(--body);
+      font-size: clamp(1.0625rem, 1rem + 0.4vw, 1.25rem);
+      line-height: 1.55;
+      color: var(--ink-soft);
+    }
+
+    /* ------------------------------------------------------------------
+       HEADER (sticky chrome)
+       ------------------------------------------------------------------ */
+
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      padding: 1.25rem var(--gutter);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      mix-blend-mode: difference;
+      color: var(--paper);
+      transition: opacity 600ms var(--ease);
+    }
+
+    .header__brand {
+      font-family: var(--display);
+      font-weight: 400;
+      font-size: 1.0625rem;
+      letter-spacing: 0.01em;
+      font-variation-settings: "opsz" 14;
+    }
+
+    .header__nav {
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+    }
+
+    .header__link {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    .header__link:hover { opacity: 0.7; }
+
+    /* ------------------------------------------------------------------
+       ACT ONE — THE OPEN
+       ------------------------------------------------------------------ */
+
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      min-height: 100svh;
+      display: grid;
+      grid-template-rows: 1fr auto auto 1fr;
+      padding: 6rem var(--gutter) 2.5rem;
+      background: var(--bay-deep);
+      color: var(--paper);
+      overflow: hidden;
+    }
+
+    .hero__image {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      background:
+        linear-gradient(180deg,
+          rgba(15, 8, 5, 0.55) 0%,
+          rgba(15, 8, 5, 0.25) 35%,
+          rgba(15, 8, 5, 0.65) 100%),
+        radial-gradient(ellipse at 30% 70%, rgba(201, 168, 118, 0.35) 0%, transparent 60%),
+        linear-gradient(135deg, #2a1a0e 0%, #1a0f08 100%);
+    }
+
+    /* Subtle film-grain texture */
+    .hero__image::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.5 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.4'/></svg>");
+      opacity: 0.35;
+      mix-blend-mode: overlay;
+      pointer-events: none;
+    }
+
+    .hero__content {
+      position: relative;
+      z-index: 1;
+      grid-row: 2 / 4;
+      max-width: 1400px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .hero__title {
+      font-family: var(--display);
+      font-weight: 300;
+      font-variation-settings: "opsz" 144, "SOFT" 30, "WONK" 0;
+      font-size: clamp(4rem, 14vw, 14rem);
+      line-height: 0.9;
+      letter-spacing: -0.04em;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero__title em {
+      font-style: italic;
+      font-variation-settings: "opsz" 144, "SOFT" 60, "WONK" 1;
+      color: var(--sand-deep);
+    }
+
+    .hero__subtitle {
+      font-family: var(--display);
+      font-style: italic;
+      font-weight: 300;
+      font-size: clamp(1.125rem, 1rem + 0.6vw, 1.5rem);
+      color: rgba(245, 241, 232, 0.75);
+      max-width: 32rem;
+    }
+
+    .hero__meta {
+      position: relative;
+      z-index: 1;
+      grid-row: 4;
+      align-self: end;
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 2rem;
+      max-width: 1400px;
+      width: 100%;
+      margin: 0 auto;
+      padding-top: 3rem;
+    }
+
+    .hero__meta-item {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(245, 241, 232, 0.7);
+    }
+
+    .hero__scroll {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(245, 241, 232, 0.5);
+      writing-mode: vertical-rl;
+      position: absolute;
+      right: var(--gutter);
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 2;
+    }
+
+    @media (max-width: 720px) {
+      .hero__scroll { display: none; }
+      .hero__meta { flex-direction: column; align-items: flex-start; gap: 0.75rem; }
+    }
+
+    /* ------------------------------------------------------------------
+       ACT TWO — THE LOGLINE
+       ------------------------------------------------------------------ */
+
+    .logline {
+      padding: var(--section-y) var(--gutter);
+      background: var(--paper);
+      display: grid;
+      place-items: center;
+      min-height: 70vh;
+    }
+
+    .logline__inner {
+      max-width: 56rem;
+      text-align: center;
+    }
+
+    .logline__eyebrow {
+      margin-bottom: 3rem;
+    }
+
+    .logline__text {
+      font-family: var(--display);
+      font-weight: 300;
+      font-variation-settings: "opsz" 144, "SOFT" 40;
+      font-size: clamp(1.75rem, 1.2rem + 2.5vw, 3.25rem);
+      line-height: 1.15;
+      letter-spacing: -0.022em;
+      color: var(--ink);
+    }
+
+    .logline__text em {
+      font-style: italic;
+      font-variation-settings: "opsz" 144, "SOFT" 70, "WONK" 1;
+      color: var(--bay);
+    }
+
+    /* ------------------------------------------------------------------
+       ACT THREE — THE WORLD
+       ------------------------------------------------------------------ */
+
+    .world {
+      padding: var(--section-y) var(--gutter);
+      background: var(--paper-warm);
+    }
+
+    .world__inner {
+      max-width: 64rem;
+      margin: 0 auto;
+    }
+
+    .world__header {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin-bottom: 4rem;
+    }
+
+    .section-title {
+      font-family: var(--display);
+      font-weight: 300;
+      font-variation-settings: "opsz" 144, "SOFT" 30;
+      font-size: clamp(2.25rem, 1.5rem + 3vw, 4rem);
+      line-height: 1;
+      letter-spacing: -0.025em;
+    }
+
+    .section-title em {
+      font-style: italic;
+      font-variation-settings: "opsz" 144, "SOFT" 60, "WONK" 1;
+    }
+
+    .world__prose {
+      max-width: var(--measure);
+    }
+
+    .world__prose p {
+      margin-bottom: 1.5em;
+      font-size: clamp(1.0625rem, 1rem + 0.3vw, 1.1875rem);
+      line-height: 1.65;
+      color: var(--ink-soft);
+    }
+
+    .world__prose p:first-child::first-line {
+      font-variant: small-caps;
+      letter-spacing: 0.05em;
+      color: var(--ink);
+    }
+
+    .world__pullquote {
+      font-family: var(--display);
+      font-style: italic;
+      font-variation-settings: "opsz" 144, "SOFT" 80, "WONK" 1;
+      font-weight: 300;
+      font-size: clamp(1.5rem, 1.1rem + 1.6vw, 2.5rem);
+      line-height: 1.2;
+      letter-spacing: -0.015em;
+      color: var(--bay);
+      max-width: 38rem;
+      margin: 5rem auto 0;
+      text-align: center;
+      padding: 3rem 0;
+      border-top: 1px solid var(--rule);
+      border-bottom: 1px solid var(--rule);
+    }
+
+    /* ------------------------------------------------------------------
+       ACT FOUR — THE CAST
+       ------------------------------------------------------------------ */
+
+    .cast {
+      padding: var(--section-y) var(--gutter);
+      background: var(--paper);
+    }
+
+    .cast__inner {
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+
+    .cast__header {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin-bottom: 3.5rem;
+      max-width: 48rem;
+    }
+
+    .cast__intro {
+      font-size: clamp(1.0625rem, 1rem + 0.3vw, 1.1875rem);
+      line-height: 1.6;
+      color: var(--ink-soft);
+      margin-top: 1.5rem;
+    }
+
+    .cast__group {
+      margin-bottom: 4rem;
+    }
+
+    .cast__group-label {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--ink-mute);
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--rule);
+      margin-bottom: 2rem;
+      display: flex;
+      align-items: baseline;
+      gap: 1rem;
+    }
+
+    .cast__group-label span:last-child {
+      font-family: var(--display);
+      font-weight: 300;
+      font-style: italic;
+      text-transform: none;
+      letter-spacing: 0;
+      font-size: 0.875rem;
+      color: var(--ink-mute);
+    }
+
+    .cast__grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 0;
+      border-top: 1px solid var(--rule);
+    }
+
+    .cast__card {
+      position: relative;
+      padding: 2rem 1.5rem;
+      border-right: 1px solid var(--rule);
+      border-bottom: 1px solid var(--rule);
+      cursor: pointer;
+      text-align: left;
+      width: 100%;
+      transition: background-color 400ms var(--ease);
+    }
+
+    .cast__card:hover {
+      background-color: var(--paper-warm);
+    }
+
+    .cast__card[aria-expanded="true"] {
+      background-color: var(--paper-warm);
+    }
+
+    .cast__card-number {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.18em;
+      color: var(--ink-mute);
+      margin-bottom: 1.5rem;
+    }
+
+    .cast__card-name {
+      font-family: var(--display);
+      font-weight: 350;
+      font-variation-settings: "opsz" 60, "SOFT" 30;
+      font-size: clamp(1.375rem, 1.2rem + 0.6vw, 1.75rem);
+      line-height: 1.05;
+      letter-spacing: -0.015em;
+      margin-bottom: 0.75rem;
+    }
+
+    .cast__card-role {
+      font-family: var(--display);
+      font-style: italic;
+      font-variation-settings: "opsz" 24, "SOFT" 50, "WONK" 1;
+      font-size: 0.9375rem;
+      color: var(--bay);
+      line-height: 1.3;
+    }
+
+    .cast__card-expand {
+      position: absolute;
+      top: 1.5rem;
+      right: 1.5rem;
+      width: 1.25rem;
+      height: 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 400ms var(--ease);
+    }
+
+    .cast__card-expand::before,
+    .cast__card-expand::after {
+      content: "";
+      position: absolute;
+      background-color: var(--ink);
+      transition: opacity 300ms var(--ease);
+    }
+
+    .cast__card-expand::before {
+      width: 100%;
+      height: 1px;
+    }
+
+    .cast__card-expand::after {
+      width: 1px;
+      height: 100%;
+    }
+
+    .cast__card[aria-expanded="true"] .cast__card-expand::after {
+      opacity: 0;
+    }
+
+    .cast__card-bio {
+      grid-column: 1 / -1;
+      border-right: 1px solid var(--rule);
+      border-bottom: 1px solid var(--rule);
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 600ms var(--ease);
+    }
+
+    .cast__card-bio.is-open {
+      max-height: 2000px;
+    }
+
+    .cast__card-bio-inner {
+      padding: 2.5rem var(--gutter);
+      max-width: 56rem;
+      margin: 0 auto;
+    }
+
+    .cast__card-bio-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+      margin-bottom: 2rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .cast__card-bio-meta dt {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--ink-mute);
+      margin-bottom: 0.25rem;
+    }
+
+    .cast__card-bio-meta dd {
+      font-family: var(--display);
+      font-weight: 350;
+      font-size: 0.9375rem;
+      color: var(--ink);
+    }
+
+    .cast__card-bio p {
+      font-size: 1.0625rem;
+      line-height: 1.65;
+      color: var(--ink-soft);
+      margin-bottom: 1.25em;
+      max-width: var(--measure);
+    }
+
+    .cast__card-bio .function {
+      font-family: var(--display);
+      font-style: italic;
+      font-size: 1rem;
+      color: var(--bay);
+      padding-top: 1.5rem;
+      margin-top: 1.5rem;
+      border-top: 1px solid var(--rule);
+    }
+
+    .cast__card-bio .function strong {
+      font-style: normal;
+      font-family: var(--mono);
+      font-weight: 400;
+      font-size: 0.65rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--ink-mute);
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+
+    /* ------------------------------------------------------------------
+       ACT FIVE — THE ARC (SEASONS)
+       ------------------------------------------------------------------ */
+
+    .arc {
+      padding: var(--section-y) var(--gutter);
+      background: var(--bay-deep);
+      color: var(--paper);
+    }
+
+    .arc__inner {
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+
+    .arc__header {
+      margin-bottom: 4rem;
+      max-width: 48rem;
+    }
+
+    .arc__header .meta { color: rgba(245, 241, 232, 0.55); }
+    .arc__header .section-title { color: var(--paper); }
+    .arc__header .lede { color: rgba(245, 241, 232, 0.7); margin-top: 1.5rem; }
+
+    .arc__seasons {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+    }
+
+    @media (max-width: 880px) {
+      .arc__seasons { grid-template-columns: 1fr; gap: 5rem; }
+    }
+
+    .season__label {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--sand-deep);
+      margin-bottom: 1rem;
+    }
+
+    .season__title {
+      font-family: var(--display);
+      font-weight: 300;
+      font-variation-settings: "opsz" 144, "SOFT" 50, "WONK" 1;
+      font-style: italic;
+      font-size: clamp(1.75rem, 1.4rem + 1.4vw, 2.75rem);
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      margin-bottom: 1.5rem;
+      color: var(--sand);
+    }
+
+    .season__summary {
+      font-size: 1.0625rem;
+      line-height: 1.65;
+      color: rgba(245, 241, 232, 0.75);
+      margin-bottom: 2.5rem;
+      max-width: 32rem;
+    }
+
+    .episodes {
+      list-style: none;
+      border-top: 1px solid rgba(245, 241, 232, 0.15);
+    }
+
+    .episode {
+      padding: 1.5rem 0;
+      border-bottom: 1px solid rgba(245, 241, 232, 0.15);
+      display: grid;
+      grid-template-columns: 2rem 1fr;
+      gap: 1.25rem;
+      align-items: baseline;
+    }
+
+    .episode__number {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      color: rgba(245, 241, 232, 0.5);
+      padding-top: 0.35rem;
+    }
+
+    .episode__title {
+      font-family: var(--display);
+      font-weight: 350;
+      font-variation-settings: "opsz" 60;
+      font-size: 1.25rem;
+      line-height: 1.2;
+      letter-spacing: -0.01em;
+      color: var(--paper);
+      margin-bottom: 0.35rem;
+    }
+
+    .episode__synopsis {
+      font-family: var(--body);
+      font-size: 0.9375rem;
+      line-height: 1.5;
+      color: rgba(245, 241, 232, 0.65);
+    }
+
+    /* ------------------------------------------------------------------
+       ACT SIX — TONE & VISION
+       ------------------------------------------------------------------ */
+
+    .look {
+      padding: var(--section-y) var(--gutter);
+      background: var(--paper);
+    }
+
+    .look__inner {
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+
+    .look__header {
+      margin-bottom: 4rem;
+      max-width: 56rem;
+    }
+
+    .look__frame {
+      font-family: var(--display);
+      font-style: italic;
+      font-variation-settings: "opsz" 144, "SOFT" 60, "WONK" 1;
+      font-weight: 300;
+      font-size: clamp(1.25rem, 1rem + 1vw, 1.875rem);
+      line-height: 1.35;
+      letter-spacing: -0.015em;
+      color: var(--ink-soft);
+      max-width: 42rem;
+      margin-top: 1.5rem;
+    }
+
+    .moodboard {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 0.875rem;
+      margin-bottom: 5rem;
+    }
+
+    .mood {
+      position: relative;
+      aspect-ratio: 4 / 5;
+      background: var(--paper-warm);
+      overflow: hidden;
+      border-radius: 2px;
+    }
+
+    .mood__fill {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: flex-end;
+      padding: 1rem;
+    }
+
+    .mood__caption {
+      font-family: var(--mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(245, 241, 232, 0.85);
+      mix-blend-mode: difference;
+    }
+
+    /* Compositional bento layout */
+    .mood--1 { grid-column: span 5; aspect-ratio: 16 / 11; background: linear-gradient(135deg, #c9a876 0%, #8b6f47 100%); }
+    .mood--2 { grid-column: span 4; aspect-ratio: 3 / 4; background: linear-gradient(180deg, #3f5f3f 0%, #1f2f1f 100%); }
+    .mood--3 { grid-column: span 3; aspect-ratio: 1 / 1; background: linear-gradient(135deg, #b73239 0%, #6f1f24 100%); }
+    .mood--4 { grid-column: span 3; aspect-ratio: 1 / 1; background: linear-gradient(135deg, #1f0f0a 0%, #5b3520 100%); }
+    .mood--5 { grid-column: span 5; aspect-ratio: 5 / 3; background: linear-gradient(180deg, #a8c5dc 0%, #6f8fa6 100%); }
+    .mood--6 { grid-column: span 4; aspect-ratio: 4 / 5; background: linear-gradient(135deg, #e25822 0%, #a13a14 100%); }
+    .mood--7 { grid-column: span 4; aspect-ratio: 4 / 3; background: linear-gradient(180deg, #c9a876 0%, #5b3520 100%); }
+    .mood--8 { grid-column: span 4; aspect-ratio: 1 / 1; background: linear-gradient(135deg, #0f1e3d 0%, #1f0f0a 100%); }
+    .mood--9 { grid-column: span 4; aspect-ratio: 4 / 5; background: linear-gradient(180deg, #006039 0%, #003020 100%); }
+
+    @media (max-width: 720px) {
+      .moodboard { grid-template-columns: repeat(6, 1fr); }
+      .mood--1, .mood--5 { grid-column: span 6; }
+      .mood--2, .mood--6, .mood--7, .mood--9 { grid-column: span 3; }
+      .mood--3, .mood--4, .mood--8 { grid-column: span 2; }
+    }
+
+    /* Grain overlay on every mood tile */
+    .mood::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.5 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/></svg>");
+      opacity: 0.35;
+      mix-blend-mode: overlay;
+      pointer-events: none;
+    }
+
+    .look__claim {
+      text-align: center;
+      font-family: var(--display);
+      font-weight: 300;
+      font-variation-settings: "opsz" 144, "SOFT" 40;
+      font-size: clamp(1.75rem, 1.3rem + 2vw, 3rem);
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      max-width: 40rem;
+      margin: 0 auto;
+      padding: 4rem 0 0;
+      border-top: 1px solid var(--rule);
+    }
+
+    .look__claim em {
+      font-style: italic;
+      font-variation-settings: "opsz" 144, "SOFT" 70, "WONK" 1;
+      color: var(--bay);
+    }
+
+    /* ------------------------------------------------------------------
+       ACT SEVEN — WHY NOW
+       ------------------------------------------------------------------ */
+
+    .why {
+      padding: var(--section-y) var(--gutter);
+      background: var(--paper-warm);
+    }
+
+    .why__inner {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .why__header {
+      margin-bottom: 5rem;
+      max-width: 48rem;
+    }
+
+    .why__points {
+      display: grid;
+      gap: 0;
+      border-top: 1px solid var(--rule);
+    }
+
+    .why__point {
+      display: grid;
+      grid-template-columns: 6rem 1fr;
+      gap: 2rem;
+      padding: 2.5rem 0;
+      border-bottom: 1px solid var(--rule);
+      align-items: baseline;
+    }
+
+    @media (max-width: 720px) {
+      .why__point { grid-template-columns: 1fr; gap: 1rem; }
+    }
+
+    .why__point-number {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.18em;
+      color: var(--ink-mute);
+    }
+
+    .why__point-claim {
+      font-family: var(--display);
+      font-weight: 350;
+      font-variation-settings: "opsz" 60, "SOFT" 30;
+      font-size: clamp(1.5rem, 1.2rem + 1.2vw, 2.25rem);
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      margin-bottom: 1rem;
+    }
+
+    .why__point-claim em {
+      font-style: italic;
+      font-variation-settings: "opsz" 144, "SOFT" 70, "WONK" 1;
+      color: var(--bay);
+    }
+
+    .why__point-body {
+      font-size: 1.0625rem;
+      line-height: 1.6;
+      color: var(--ink-soft);
+      max-width: var(--measure);
+    }
+
+    /* ------------------------------------------------------------------
+       ACT EIGHT — THE TEAM
+       ------------------------------------------------------------------ */
+
+    .team {
+      padding: var(--section-y) var(--gutter);
+      background: var(--paper);
+    }
+
+    .team__inner {
+      max-width: 56rem;
+      margin: 0 auto;
+    }
+
+    .team__header { margin-bottom: 3rem; }
+
+    .team__body p {
+      font-size: 1.0625rem;
+      line-height: 1.65;
+      color: var(--ink-soft);
+      margin-bottom: 1.5em;
+      max-width: var(--measure);
+    }
+
+    /* ------------------------------------------------------------------
+       ACT NINE — CONTACT
+       ------------------------------------------------------------------ */
+
+    .contact {
+      padding: clamp(6rem, 14vh, 10rem) var(--gutter);
+      background: var(--bay-deep);
+      color: var(--paper);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .contact::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at center, rgba(201, 168, 118, 0.15) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .contact__inner {
+      max-width: 40rem;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    .contact__prompt {
+      font-family: var(--display);
+      font-style: italic;
+      font-variation-settings: "opsz" 144, "SOFT" 60, "WONK" 1;
+      font-weight: 300;
+      font-size: clamp(1.5rem, 1.2rem + 1.2vw, 2.25rem);
+      color: var(--sand);
+      margin-bottom: 2.5rem;
+      letter-spacing: -0.015em;
+    }
+
+    .contact__email {
+      font-family: var(--mono);
+      font-size: clamp(1rem, 0.9rem + 0.4vw, 1.25rem);
+      letter-spacing: 0.06em;
+      color: var(--paper);
+      display: inline-block;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid rgba(245, 241, 232, 0.3);
+      transition: border-color 400ms var(--ease);
+    }
+
+    .contact__email:hover {
+      border-bottom-color: var(--sand-deep);
+    }
+
+    .contact__detail {
+      margin-top: 2.5rem;
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(245, 241, 232, 0.5);
+    }
+
+    /* ------------------------------------------------------------------
+       FOOTER
+       ------------------------------------------------------------------ */
+
+    .footer {
+      padding: 2rem var(--gutter);
+      background: var(--ink);
+      color: rgba(245, 241, 232, 0.4);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    @media (max-width: 540px) {
+      .footer { flex-direction: column; gap: 0.75rem; text-align: center; }
+    }
+
+    /* ------------------------------------------------------------------
+       ENTRANCE ANIMATIONS
+       ------------------------------------------------------------------ */
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(1.5rem); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero__title,
+    .hero__subtitle,
+    .hero__meta-item {
+      opacity: 0;
+      animation: fadeUp 1.2s var(--ease) forwards;
+    }
+
+    .hero__title       { animation-delay: 0.1s; }
+    .hero__subtitle    { animation-delay: 0.5s; }
+    .hero__meta-item   { animation-delay: 0.9s; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .hero__title, .hero__subtitle, .hero__meta-item {
+        opacity: 1; transform: none; animation: none;
+      }
+    }
+
+    /* Scroll-triggered reveal */
+    [data-reveal] {
+      opacity: 0;
+      transform: translateY(1.5rem);
+      transition: opacity 900ms var(--ease), transform 900ms var(--ease);
+    }
+    [data-reveal].is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    @media (prefers-reduced-motion: reduce) {
+      [data-reveal] { opacity: 1; transform: none; transition: none; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ============================================================
+       HEADER
+       ============================================================ -->
+  <header class="header">
+    <a href="#top" class="header__brand">The Circuit</a>
+    <nav class="header__nav">
+      <a href="#contact" class="header__link">Contact</a>
+    </nav>
+  </header>
+
+  <!-- ============================================================
+       ACT ONE — THE OPEN
+       ============================================================ -->
+  <section class="hero" id="top">
+    <div class="hero__image" aria-hidden="true"></div>
+
+    <div class="hero__content">
+      <h1 class="hero__title">The <em>Circuit</em></h1>
+      <p class="hero__subtitle">A premium documentary series.</p>
+    </div>
+
+    <div class="hero__meta">
+      <span class="hero__meta-item">Two seasons</span>
+      <span class="hero__meta-item">The road to Los Angeles 2028</span>
+    </div>
+
+    <span class="hero__scroll" aria-hidden="true">Scroll</span>
+  </section>
+
+  <!-- ============================================================
+       ACT TWO — THE LOGLINE
+       ============================================================ -->
+  <section class="logline">
+    <div class="logline__inner">
+      <p class="meta logline__eyebrow">Logline</p>
+      <p class="logline__text" data-reveal>
+        Inside the billion-dollar world of international show jumping &mdash; where Olympic athletes, dynastic heirs, and the <em>horses that bind them</em> chase the sport's ultimate prize across a year on the road to the 2028 Los Angeles Games.
+      </p>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       ACT THREE — THE WORLD
+       ============================================================ -->
+  <section class="world">
+    <div class="world__inner">
+      <header class="world__header" data-reveal>
+        <p class="meta">The World</p>
+        <h2 class="section-title">There is a world most people <em>have never seen.</em></h2>
+      </header>
+
+      <div class="world__prose">
+        <p data-reveal>It moves in a circle. Wellington in winter. Aachen in summer. The Hamptons in late August. Geneva by Christmas. The same eighty or so faces &mdash; the riders, the owners, the grooms, the families &mdash; show up at each stop, set up their barns, compete for millions, and leave for the next city. They live their entire lives inside this orbit. They call it the circuit.</p>
+
+        <p data-reveal>It is one of the wealthiest professional sports on earth, and one of the least televised. A single horse can sell for fifteen million dollars. A season campaigning at the top level costs more than a Premier League salary. The grooms who care for these animals know them better than any human in their lives. The riders are athletes, but they are also showmen, businesspeople, and in many cases, the children of the most powerful families in the world. Bruce Springsteen's daughter is on the U.S. Olympic team. Bill Gates' daughter married an Egyptian Olympian. Steve Jobs' daughter is a working international rider. They compete against the working professionals who built their careers from nothing &mdash; McLain Ward, Kent Farrington, Laura Kraut &mdash; riders who have spent thirty years getting to where the heirs arrived as teenagers.</p>
+
+        <p data-reveal>In 2028, the Olympics come home. For the first time since 1984, the equestrian Games will be held on American soil, at Galway Downs in Southern California. American show jumping has not produced an individual Olympic gold medalist since Joe Fargis won in Los Angeles forty-four years earlier. Every rider on the circuit &mdash; American, European, Middle Eastern, South American &mdash; is now building toward one stadium and a single weekend in July 2028.</p>
+
+        <p data-reveal><em class="display display-italic" style="font-style: italic; color: var(--ink);">The Circuit</em> is a two-season premium documentary series that follows that journey. Season one, filmed across 2027, builds the world: the year-long tour, the rivalries, the bloodlines, the partnerships between human and horse that define the sport. Season two, filmed across 2028, follows the same characters as their orbit narrows toward Los Angeles &mdash; through team selection, qualification trials, late-breaking injuries, and finally the Olympic stadium itself.</p>
+      </div>
+
+      <p class="world__pullquote" data-reveal>The horse is the only Olympic athlete that doesn't know it's competing. That, more than anything, is what makes this sport cinema.</p>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       ACT FOUR — THE CAST
+       ============================================================ -->
+  <section class="cast">
+    <div class="cast__inner">
+      <header class="cast__header" data-reveal>
+        <p class="meta">The Cast</p>
+        <h2 class="section-title">Fifteen anchors. <em>Four archetypes. One world.</em></h2>
+        <p class="cast__intro">The collision of legends, heirs, rising stars, and power brokers is the show. Every figure here serves a narrative function the series cannot get from anywhere else.</p>
+      </header>
+
+      <!-- GROUP I — LEGENDS -->
+      <div class="cast__group">
+        <div class="cast__group-label">
+          <span>I &mdash; The Legends</span>
+          <span>The working professionals.</span>
+        </div>
+        <div class="cast__grid" data-cast-grid>
+
+          <button class="cast__card" data-card="ward">
+            <div class="cast__card-number">01</div>
+            <div class="cast__card-name">McLain Ward</div>
+            <div class="cast__card-role">The Elder Statesman</div>
+            <div class="cast__card-expand" aria-hidden="true"></div>
+          </button>
+
+          <button class="cast__card" data-card="farrington">
+            <div class="cast__card-number">02</div>
+            <div class="cast__card-name">Kent Farrington</div>
+            <div class="cast__card-role">The World Number One</div>
+            <div class="cast__card-expand" aria-hidden="true"></div>
+          </button>
+
+          <button class="cast__card" data-card="kraut">
+            <div class="cast__card-number">03</div>
+            <div class="cast__card-name">Laura Kraut</div>
+            <div class="cast__card-role">The Matriarch</div>
+            <div class="cast__card-expand" aria-hidden="true"></div>
+          </button>
+
+          <button class="cast__card" data-card="cook">
+            <div class="cast__card-number">04</div>
+            <div class="cast__card-name">Karl Cook</div>
+            <div class="cast__card-role">The Bridge</div>
+            <div class="cast__card-expand" aria-hidden="true"></div>
+          </button>
+        </div>
+      </div>
+
+      <!-- GROUP II — HEIRS -->
+      <div class="cast__group">
+        <div class="cast__group-label">
+          <span>II &mdash; The Heirs</span>
+          <span>Born into the sport. Proving they belong.</span>
+        </div>
+        <div class="cast__grid" data-cast-grid>
+
+          <button class="cast__card" data-card="springsteen">
+            <div class="cast__card-number">05</div>
+            <div class="cast__card-name">Jessica Springsteen</div>
+            <div class="cast__card-role">The Olympic Silver Medalist</div>
+            <div class="cast__card-expand" aria-hidden="true"></div>
+          </button>
+
+          <button class="cast__card" data-card="jobs">
+            <div class="cast__card-number">06</div>
+            <div class="cast__card-name">Eve Jobs</div>
+            <div class="cast__card-role">The Face of the New Generation</div>
+            <div class="cast__card-expand" aria-hidden="true"></div>
+          </button>
+
+          <button class="cast__card" data-card="gates">
+            <div class="cast__card-number">07</div>
+            <div class="cast__card-name">Jennifer Gates Nassar</div>
+            <div class="cast__card-role">The Dynastic Marriage</div>
+            <div class="cast__card-expand" aria-hidden="true"></div>
+          </button>
+
+          <button class="cast__card" data-card="bloomberg">
+            <div class="cast__card-number">08</div>
+            <div class="cast__card-name">Georgina Bloomberg</div>
+            <div class="cast__card-role">The Conscience</div>
+            <div class="cast__card-expand" aria-hidden="true"></div>
+          </button>
+        </div>
+      </div>
+
+      <!-- GROUP III — RISING -->
+      <div class="cast__group">
+        <div class="cast__group-label">
+          <span>III &mdash; The Rising</span>
+          <span>The next decade of American show jumping.</span>
+        </div>
+        <div class="cast__grid" data-cast-grid>
+
+          <button class="cast__card" data-card="keenan">
+            <div class="cast__card-number">09</div>
+            <div class="cast__card-name">Lillie Keenan</div>
+            <div class="cast__card-role">The Prot&eacute;g&eacute;e</div>
+            <div class="cast__card-expand" aria-hidden="true"></div>
+          </button>
+
+          <button class="cast__card" data-card="moggre">
+            <div class="cast__card-number">10</div>
+            <div class="cast__card-name">Brian Moggre</div>
+            <div class="cast__card-role">The Hometown Hero</div>
+            <div class="cast__card-expand" aria-hidden="true"></div>
+          </button>
+
+          <button class="cast__card" data-card="gochman">
+            <div class="cast__card-number">11</div>
+            <div class="cast__card-name">Mimi Gochman</div>
+            <div class="cast__card-role">The Phenom</div>
+            <div class="cast__card-expand" aria-hidden="true"></div>
+          </button>
+        </div>
+      </div>
+
+      <!-- GROUP IV — POWER BROKERS -->
+      <div class="cast__group">
+        <div class="cast__group-label">
+          <span>IV &mdash; The Power Brokers</span>
+          <span>The people who shape the sport from outside the ring.</span>
+        </div>
+        <div class="cast__grid" data-cast-grid>
+
+          <button class="cast__card" data-card="ridland">
+            <div class="cast__card-number">12</div>
+            <div class="cast__card-name">Robert Ridland</div>
+            <div class="cast__card-role">The Gatekeeper</div>
+            <div class="cast__card-expand" aria-hidden="true"></div>
+          </button>
+
+          <button class="cast__card" data-card="tops">
+            <div class="cast__card-number">13</div>
+            <div class="cast__card-name">Jan Tops</div>
+            <div class="cast__card-role">The European Impresario</div>
+            <div class="cast__card-expand" aria-hidden="true"></div>
+          </button>
+
+          <button class="cast__card" data-card="ferder">
+            <div class="cast__card-number">14</div>
+            <div class="cast__card-name">Ilan Ferder</div>
+            <div class="cast__card-role">The Matchmaker</div>
+            <div class="cast__card-expand" aria-hidden="true"></div>
+          </button>
+
+          <button class="cast__card" data-card="shulman">
+            <div class="cast__card-number">15</div>
+            <div class="cast__card-name">Jill &amp; Sydney Shulman</div>
+            <div class="cast__card-role">The Operators</div>
+            <div class="cast__card-expand" aria-hidden="true"></div>
+          </button>
+        </div>
+      </div>
+
+      <!-- BIO PANELS (rendered by JS into a single global panel below the grid) -->
+      <div class="cast__bio-panel" data-bio-panel></div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       ACT FIVE — THE ARC
+       ============================================================ -->
+  <section class="arc">
+    <div class="arc__inner">
+      <header class="arc__header" data-reveal>
+        <p class="meta" style="color: rgba(245, 241, 232, 0.55);">The Arc</p>
+        <h2 class="section-title">Two seasons. <em>Sixteen episodes. One stadium.</em></h2>
+        <p class="lede">A complete creative spine built around the only Olympic year that matters for American equestrian sport in a generation.</p>
+      </header>
+
+      <div class="arc__seasons">
+
+        <article class="season" data-reveal>
+          <p class="season__label">Season One &mdash; 2027</p>
+          <h3 class="season__title">The Circuit</h3>
+          <p class="season__summary">Eight episodes following the year on the road. The world is introduced, the rivalries take shape, and the Olympic year emerges on the horizon.</p>
+          <ol class="episodes">
+            <li class="episode">
+              <span class="episode__number">01</span>
+              <div><div class="episode__title">Wellington</div><div class="episode__synopsis">The migration begins. The world is introduced.</div></div>
+            </li>
+            <li class="episode">
+              <span class="episode__number">02</span>
+              <div><div class="episode__title">Bloodlines</div><div class="episode__synopsis">The heirs prove they belong.</div></div>
+            </li>
+            <li class="episode">
+              <span class="episode__number">03</span>
+              <div><div class="episode__title">The Match</div><div class="episode__synopsis">Where the real money lives &mdash; the global horse trade.</div></div>
+            </li>
+            <li class="episode">
+              <span class="episode__number">04</span>
+              <div><div class="episode__title">The Crossing</div><div class="episode__synopsis">The Atlantic migration. The grooms who travel with the horses.</div></div>
+            </li>
+            <li class="episode">
+              <span class="episode__number">05</span>
+              <div><div class="episode__title">Aachen</div><div class="episode__synopsis">The Americans on the world's most iconic grass arena.</div></div>
+            </li>
+            <li class="episode">
+              <span class="episode__number">06</span>
+              <div><div class="episode__title">Hamptons</div><div class="episode__synopsis">The sport at the center of American cultural life.</div></div>
+            </li>
+            <li class="episode">
+              <span class="episode__number">07</span>
+              <div><div class="episode__title">Rockies</div><div class="episode__synopsis">The rising generation under pressure at Spruce Meadows.</div></div>
+            </li>
+            <li class="episode">
+              <span class="episode__number">08</span>
+              <div><div class="episode__title">Geneva</div><div class="episode__synopsis">The first explicit conversations about Los Angeles.</div></div>
+            </li>
+          </ol>
+        </article>
+
+        <article class="season" data-reveal>
+          <p class="season__label">Season Two &mdash; 2028</p>
+          <h3 class="season__title">Road to Los Angeles</h3>
+          <p class="season__summary">The same circuit, refracted through the lens of Olympic selection. The finale episode is the Games themselves.</p>
+          <ol class="episodes">
+            <li class="episode">
+              <span class="episode__number">01</span>
+              <div><div class="episode__title">Election Year</div><div class="episode__synopsis">Robert Ridland opens the selection process.</div></div>
+            </li>
+            <li class="episode">
+              <span class="episode__number">02</span>
+              <div><div class="episode__title">Inheritance</div><div class="episode__synopsis">The rising generation auditions for the team.</div></div>
+            </li>
+            <li class="episode">
+              <span class="episode__number">03</span>
+              <div><div class="episode__title">Two Flags</div><div class="episode__synopsis">The international selection. Egypt. Israel. The marriages between flags.</div></div>
+            </li>
+            <li class="episode">
+              <span class="episode__number">04</span>
+              <div><div class="episode__title">The European Summer</div><div class="episode__synopsis">The last audition. Aachen as final observation.</div></div>
+            </li>
+            <li class="episode">
+              <span class="episode__number">05</span>
+              <div><div class="episode__title">The List</div><div class="episode__synopsis">Three riders are named. Some lives change. Some careers end.</div></div>
+            </li>
+            <li class="episode">
+              <span class="episode__number">06</span>
+              <div><div class="episode__title">The Horses</div><div class="episode__synopsis">The four-legged athletes in the final weeks before the Games.</div></div>
+            </li>
+            <li class="episode">
+              <span class="episode__number">07</span>
+              <div><div class="episode__title">Los Angeles</div><div class="episode__synopsis">Arrival at Galway Downs. The opening ceremony.</div></div>
+            </li>
+            <li class="episode">
+              <span class="episode__number">08</span>
+              <div><div class="episode__title">Gold</div><div class="episode__synopsis">The Olympic show jumping competition. The first American home Games for the sport since 1984.</div></div>
+            </li>
+          </ol>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       ACT SIX — THE LOOK
+       ============================================================ -->
+  <section class="look">
+    <div class="look__inner">
+      <header class="look__header" data-reveal>
+        <p class="meta">The Look</p>
+        <h2 class="section-title">Warm. Clean. <em>Colorful.</em> Luxurious.</h2>
+        <p class="look__frame">Shot in late light. The visual language pulls from Slim Aarons' Palm Beach, Sebasti&atilde;o Salgado's reverence for labor, and the editorial restraint of contemporary prestige television. Always documentary.</p>
+      </header>
+
+      <div class="moodboard" data-reveal>
+        <div class="mood mood--1"><div class="mood__fill"><span class="mood__caption">Wellington &mdash; golden hour</span></div></div>
+        <div class="mood mood--2"><div class="mood__fill"><span class="mood__caption">Aachen &mdash; grass</span></div></div>
+        <div class="mood mood--3"><div class="mood__fill"><span class="mood__caption">Scarlet rails</span></div></div>
+        <div class="mood mood--4"><div class="mood__fill"><span class="mood__caption">Bay coat, bay mane</span></div></div>
+        <div class="mood mood--5"><div class="mood__fill"><span class="mood__caption">Sky &mdash; Geneva morning</span></div></div>
+        <div class="mood mood--6"><div class="mood__fill"><span class="mood__caption">Herm&egrave;s warm-up</span></div></div>
+        <div class="mood mood--7"><div class="mood__fill"><span class="mood__caption">Sand at dusk</span></div></div>
+        <div class="mood mood--8"><div class="mood__fill"><span class="mood__caption">FEI navy &mdash; team kit</span></div></div>
+        <div class="mood mood--9"><div class="mood__fill"><span class="mood__caption">Rolex green &mdash; the Major</span></div></div>
+      </div>
+
+      <p class="look__claim" data-reveal>Premium documentary, <em>not reality television.</em></p>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       ACT SEVEN — WHY NOW
+       ============================================================ -->
+  <section class="why">
+    <div class="why__inner">
+      <header class="why__header" data-reveal>
+        <p class="meta">The Case</p>
+        <h2 class="section-title">Why this series. <em>Why now.</em></h2>
+      </header>
+
+      <div class="why__points">
+        <div class="why__point" data-reveal>
+          <span class="why__point-number">01</span>
+          <div>
+            <h3 class="why__point-claim">Documentary sports has become <em>prestige television.</em></h3>
+            <p class="why__point-body">Drive to Survive. Full Swing. Break Point. Quarterback. Beckham. Race for the Crown. Tour de France: Unchained. The genre has matured into the most reliable subscriber-driver in streaming. Show jumping &mdash; the most photogenic, most globally distributed of all horse sports &mdash; has never been given the premium-doc treatment.</p>
+          </div>
+        </div>
+
+        <div class="why__point" data-reveal>
+          <span class="why__point-number">02</span>
+          <div>
+            <h3 class="why__point-claim">The 2028 Los Angeles Olympics is a <em>fixed, marketable finale.</em></h3>
+            <p class="why__point-body">The first home Olympics for American equestrians since 1984. A two-season series that climaxes there is a buyer's dream: a clean structure, a fixed delivery date, and a guaranteed cultural moment to release into.</p>
+          </div>
+        </div>
+
+        <div class="why__point" data-reveal>
+          <span class="why__point-number">03</span>
+          <div>
+            <h3 class="why__point-claim">The cast is <em>already famous.</em></h3>
+            <p class="why__point-body">Springsteen, Jobs, Gates, Bloomberg, Selleck, Cuoco. The children of the people who built modern America are already in this world. So are the working-class kids from Texas and Chicago who out-rode them. The collision is the show.</p>
+          </div>
+        </div>
+
+        <div class="why__point" data-reveal>
+          <span class="why__point-number">04</span>
+          <div>
+            <h3 class="why__point-claim">No one else has <em>the access.</em></h3>
+            <p class="why__point-body">This is a world that runs on relationships, generational trust, and quiet introductions. Whoever gets in first owns this story.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       ACT EIGHT — THE TEAM
+       ============================================================ -->
+  <section class="team">
+    <div class="team__inner">
+      <header class="team__header" data-reveal>
+        <p class="meta">The Team</p>
+        <h2 class="section-title">From the people <em>building it.</em></h2>
+      </header>
+
+      <div class="team__body" data-reveal>
+        <p>The Circuit is in development with creative leadership being assembled with care. The project is being structured for partnership with a premium documentary production company in the tradition of Box to Box Films, Religion of Sports, Words + Pictures, and Imagine Documentaries.</p>
+        <p>Access conversations are underway with the cast members listed above and with the federations that govern the sport. The two-season structure is designed to align with the FEI competition calendar and the IOC's broadcast windows around the 2028 Los Angeles Games.</p>
+        <p>Inquiries from streamers, production partners, and creative collaborators are welcomed.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       ACT NINE — CONTACT
+       ============================================================ -->
+  <section class="contact" id="contact">
+    <div class="contact__inner">
+      <p class="contact__prompt">For development inquiries.</p>
+      <a class="contact__email" href="mailto:hello@thecircuit.show">hello@thecircuit.show</a>
+      <p class="contact__detail">Available for screening upon request.</p>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       FOOTER
+       ============================================================ -->
+  <footer class="footer">
+    <span>The Circuit</span>
+    <span>&copy; 2026 &mdash; In Development</span>
+  </footer>
+
+  <!-- ============================================================
+       BIO DATA + INTERACTION
+       ============================================================ -->
+  <script>
+    /* Character bio data — single source of truth */
+    const BIOS = {
+      ward: {
+        name: "McLain Ward",
+        role: "The Elder Statesman",
+        meta: { home: "Brewster, New York", achievements: "5× Olympian · 5 Olympic medals" },
+        body: [
+          "Five-time Olympian. Five Olympic medals across six Games — the only American show jumper of his generation to compete at that altitude for that long. Won team gold in Beijing 2008 with Sapphire, the partnership that made him a household name inside the sport. Silver in Rio, Tokyo, and Paris.",
+          "McLain is the Roger Federer of American show jumping — quietly intense, almost monastic in his discipline, a perfectionist who has aged into a mentor. In 2026 he withdrew from the World Cup Final with a minor injury and his protégée Lillie Keenan replaced him; the symbolism was not lost on anyone in the sport. He is the bridge between the generation that built American show jumping and the one that will carry it to Los Angeles."
+        ],
+        fn: "The audience's first emotional door into the sport. Possibly competing in his seventh Olympics."
+      },
+      farrington: {
+        name: "Kent Farrington",
+        role: "The World Number One",
+        meta: { home: "Wellington, Florida", achievements: "2026 FEI World Cup Champion · World #1" },
+        body: [
+          "World number one. The most decorated American show jumper currently competing. Won the 2026 FEI World Cup Final in Fort Worth and won again in Kentucky the following week — the kind of streak that defines a career.",
+          "Farrington is the Cinderella story that the sport never advertises. He grew up middle-class in Chicago, started riding late by elite standards, and built one of the most analytical, cerebral programs in the world without family money or institutional support. He is famously private, famously meticulous, and famously not in the business of being likable for the cameras. Which is precisely why putting him on camera is a coup."
+        ],
+        fn: "The self-made champion. The counterweight to every billionaire's child in this cast."
+      },
+      kraut: {
+        name: "Laura Kraut",
+        role: "The Matriarch",
+        meta: { home: "Royal Palm Beach, Florida", achievements: "Olympic team gold (2008) · silver (2024)" },
+        body: [
+          "Olympic team gold (Beijing 2008), team silver (Paris 2024). The only female rider currently in the world top ten. Won her first international title nearly forty years ago and is still winning at the highest level today.",
+          "Kraut is married to Nick Skelton — the British rider who won individual Olympic gold in Rio at age 58 — and the two of them live a life that is essentially a moving conversation about horses. She is the most accessible of the legends: warm, candid, generous with younger riders. If McLain is the monk and Kent is the technician, Laura is the heart."
+        ],
+        fn: "The matriarch. The audience falls in love with her in episode one."
+      },
+      cook: {
+        name: "Karl Cook",
+        role: "The Bridge",
+        meta: { home: "Rancho Santa Fe, California", achievements: "Olympic team silver (Paris 2024)" },
+        body: [
+          "Olympic team silver (Paris 2024). Son of Intuit founder Scott Cook. Married to actress Kaley Cuoco. Has straddled three worlds — Silicon Valley wealth, Hollywood celebrity, and elite professional sport — without ever losing his standing among the working pros.",
+          "Karl is positioned uniquely in this ensemble: he could have been an heir, but he chose to be a professional. He has earned his Olympic spot through results, and his Paris medal was won on merit, not lineage. His presence destabilizes the easy dichotomy between &lsquo;legends&rsquo; and &lsquo;heirs&rsquo; — and that ambiguity is exactly why he matters here."
+        ],
+        fn: "The bridge character. Proof that the lines between camps are blurrier than they look."
+      },
+      springsteen: {
+        name: "Jessica Springsteen",
+        role: "The Olympic Silver Medalist",
+        meta: { home: "Colts Neck, NJ &amp; Wellington", achievements: "Tokyo 2020 team silver · Princeton" },
+        body: [
+          "Tokyo 2020 team silver medalist. Princeton graduate. Daughter of Bruce and Patti Scialfa.",
+          "Springsteen is the heir whose career most clearly justifies itself. She is a working international rider with a real Olympic medal, a long-running partnership with Don Juan Van De Donkhoeve, and a place in the U.S. selection conversation that has nothing to do with her last name. But of course, the last name is also the show. The collision between the workmanlike daughter and the iconic father — the world's most famous storyteller of working-class American life — is one of the richest texts in this entire cast."
+        ],
+        fn: "The most famous person in the sport. Also one of the most private."
+      },
+      jobs: {
+        name: "Eve Jobs",
+        role: "The Face of the New Generation",
+        meta: { home: "Palo Alto &amp; Wellington", achievements: "5* Grand Prix competitor · Stanford" },
+        body: [
+          "Stanford graduate. Top international show jumper. Model — runway for Coperni, campaigns for Glossier and Louis Vuitton. Daughter of Steve Jobs and Laurene Powell Jobs.",
+          "Jobs is the most aesthetically photogenic figure in the sport, and she knows it. She also rides at the genuine top level — competing in 5* Grand Prix classes alongside Olympians. Her storyline carries a particular gravity: her father shaped the modern world and is no longer here to see her ride. The presence of her mother Laurene at the ringside at major events is one of the more quietly affecting images in the sport."
+        ],
+        fn: "The face of the new generation. The visual hook for marketing."
+      },
+      gates: {
+        name: "Jennifer Gates Nassar",
+        role: "The Dynastic Marriage",
+        meta: { home: "New York, Wellington, Cairo", achievements: "Grand Prix rider · Stanford MD" },
+        body: [
+          "Stanford medical degree. Mother of two. Married to Egyptian Olympic show jumper Nayel Nassar, whom she met in the sport.",
+          "The Gates-Nassar marriage is the rare equestrian love story that played out entirely inside the circuit. Both are working Grand Prix riders. Nayel competes for Egypt — meaning their family is split across two Olympic teams, both heading to Los Angeles. Jennifer is reportedly stepping back from competition to focus on medicine and family, which makes the question of whether she rides at LA28 one of the quietly compelling threads of season two."
+        ],
+        fn: "The dynastic marriage. The window into the Middle Eastern wing of the sport."
+      },
+      bloomberg: {
+        name: "Georgina Bloomberg",
+        role: "The Conscience",
+        meta: { home: "New York City", achievements: "20+ years international · welfare advocate" },
+        body: [
+          "International show jumper for over twenty years. Author, philanthropist, animal welfare advocate. Daughter of Michael Bloomberg.",
+          "Bloomberg is the elder stateswoman of the heirs — she has been doing this longer than most of the people on this list, and she has used her platform to push the sport toward genuine reform on horse welfare, retirement, and adoption. She is also a single mother and has been candid about the demands of campaigning a string of horses while raising a son. The combination — heiress, athlete, advocate, parent — gives her a maturity the rest of the heirs are still growing into."
+        ],
+        fn: "The conscience of the heirs. The character who articulates what this life actually costs."
+      },
+      keenan: {
+        name: "Lillie Keenan",
+        role: "The Prot&eacute;g&eacute;e",
+        meta: { home: "New York &amp; Wellington", achievements: "World ranked top 30 · mentored by McLain Ward" },
+        body: [
+          "Twenty-nine years old. World ranked top thirty. Mentored by McLain Ward. Replaced McLain at the 2026 World Cup Final when he withdrew injured — a moment of dynastic transfer the sport noticed.",
+          "Keenan was one of the most decorated junior equitation riders in American history, and she has done the hardest thing in the sport: successfully translated a junior career into a senior one. She is articulate, intellectually engaged, openly cross-trains in dressage to improve her show jumping. If McLain represents the past of American show jumping, Lillie represents the future the federation is consciously building toward."
+        ],
+        fn: "The most likely first-time Olympian on the LA28 team."
+      },
+      moggre: {
+        name: "Brian Moggre",
+        role: "The Hometown Hero",
+        meta: { home: "Flower Mound, TX &amp; Wellington", achievements: "Maclay Final at 17 · World Cup at 19" },
+        body: [
+          "Mid-twenties. Won the Maclay Final at 17, the World Cup at 19. Has been the heir-apparent of American show jumping since he was a teenager.",
+          "Moggre is the rare Texan in a sport dominated by the East Coast and California — and the rare working-class kid in a generation of heirs. His parents drove him to lessons. He earned his rides through results. Now he campaigns top horses owned by patrons like Ann Thompson, and his trajectory has been carefully managed by mentors who see him as the long-term future of the U.S. team."
+        ],
+        fn: "The character whose Olympic selection battle in 2028 will be the most emotional in the cast."
+      },
+      gochman: {
+        name: "Mimi Gochman",
+        role: "The Phenom",
+        meta: { home: "New York &amp; Wellington", achievements: "Junior phenom · first years as professional" },
+        body: [
+          "Twenty-one years old. Daughter of Becky Gochman, one of the most successful patron-owners in American show jumping. Junior phenom, now in her first full years as a professional.",
+          "Mimi is the youngest figure in the central cast. She is also the most direct test case for the show's central tension: can a kid born inside the sport, with every advantage money can buy, become a great rider on her own merits? The honest answer is unknown — and watching her find out, in real time, with the LA Olympics as a backdrop, is one of the most compelling possible storylines in season two."
+        ],
+        fn: "The audience surrogate for the rising generation. Young enough to learn alongside the viewer."
+      },
+      ridland: {
+        name: "Robert Ridland",
+        role: "The Gatekeeper",
+        meta: { home: "United States Equestrian Federation", achievements: "U.S. Chef d'Equipe · former Olympic rider" },
+        body: [
+          "The U.S. Chef d'Equipe — the man who picks the American Olympic team. Former Olympic rider himself (Montreal 1976). Now in his second decade running American show jumping at the international level.",
+          "Ridland is the most powerful person in this entire ecosystem and the least famous. He sits in a folding chair at the warm-up ring at every major American team event, watches every round, and ultimately decides whose career-defining year ends in Los Angeles and whose ends in disappointment. His selection process is partly objective — the Rolex/USEF rankings — and partly discretionary, which is to say political, which is to say dramatic."
+        ],
+        fn: "Every season-two episode about selection is, fundamentally, about him."
+      },
+      tops: {
+        name: "Jan Tops",
+        role: "The European Impresario",
+        meta: { home: "Valkenswaard, Netherlands", achievements: "Olympic gold (1992) · Founder, LGCT" },
+        body: [
+          "Olympic team gold (Barcelona 1992). Founder and president of the Longines Global Champions Tour. Married to Australian Olympic rider Edwina Tops-Alexander. Built the Tops International Arena outside Amsterdam — one of the most photographed venues in the sport.",
+          "Tops is the closest thing equestrian has to a Bernie Ecclestone. He invented the most lucrative circuit in the sport, controls the calendar that the world's top thirty riders structure their year around, and lives at the intersection of athlete, businessman, and king-maker. He is European, polished, and slightly mysterious. He is also one of the great untold stories of modern sport — a former champion who built a billion-dollar circuit on his own land."
+        ],
+        fn: "The European wing of the show. The character who explains, by his very existence, why this sport is bigger than the audience realizes."
+      },
+      ferder: {
+        name: "Ilan Ferder",
+        role: "The Matchmaker",
+        meta: { home: "Wellington &amp; Brewster, NY", achievements: "Founder, Ilan Ferder Stables" },
+        body: [
+          "Israeli-born horse trader and trainer. Runs Ilan Ferder Stables. Among the most respected matchmakers in the global sport — the man wealthy clients call when they need an eight-figure horse and the right rider to put on it.",
+          "Ferder represents an entire layer of the sport the public never sees: the dealers, the brokers, the people who scout horses in Belgian fields and Dutch barns and quietly transact them for fortunes. He is the closest thing the show has to a Ray Donovan figure — discreet, well-traveled, with relationships that go back decades on three continents. The story of any single great horse in this sport is, somewhere in its history, a story about a man like Ilan."
+        ],
+        fn: "The window into the global horse trade — where the real money lives."
+      },
+      shulman: {
+        name: "Jill &amp; Sydney Shulman",
+        role: "The Operators",
+        meta: { home: "Greenwich, CT &amp; Wellington", achievements: "Back Country Farm, est. 1990 · Israeli international team" },
+        body: [
+          "Jill Shulman is the founder of Back Country Farm, established in Greenwich in 1990, with a seasonal Wellington operation. Third-generation horsewoman — her own mother rode Saddlebreds in the Midwest. Trainer, barn owner, mother of four.",
+          "Jill is the figure the cast was missing: the small-business operator who is the actual structural backbone of American show jumping. She does not ride at the Olympic level. She trains the riders who do. She buys the horses, imports them from Europe, develops them with junior and amateur clients, and produces a steady pipeline of decorated juniors who go on to the Maclay, the Medal, and beyond.",
+          "Sydney Shulman, her daughter, competes internationally for Israel. She has been ranked in the top 100 of the Rolex/USEF list since turning professional and has CSI5* wins in Major League Show Jumping. The mother-daughter dynamic — Jill the maker, Sydney the made — is one of the richest emotional throughlines available in the entire cast."
+        ],
+        fn: "The audience's access to the day-to-day mechanics of running a top program. The show's bridge between the elite circuit and the thousands of barns that feed it."
+      }
+    };
+
+    /* Build a single bio panel and inject it into the DOM after each cast group's grid */
+    document.querySelectorAll('[data-cast-grid]').forEach(grid => {
+      const panel = document.createElement('div');
+      panel.className = 'cast__card-bio';
+      panel.setAttribute('data-bio-panel-instance', '');
+      grid.parentNode.insertBefore(panel, grid.nextSibling);
+    });
+
+    /* Cast card interaction */
+    document.querySelectorAll('.cast__card').forEach(card => {
+      card.setAttribute('aria-expanded', 'false');
+
+      card.addEventListener('click', () => {
+        const key = card.getAttribute('data-card');
+        const bio = BIOS[key];
+        if (!bio) return;
+
+        const grid = card.closest('[data-cast-grid]');
+        const panel = grid.nextElementSibling;
+        const wasOpen = card.getAttribute('aria-expanded') === 'true';
+
+        /* Close all other cards in all groups */
+        document.querySelectorAll('.cast__card').forEach(c => c.setAttribute('aria-expanded', 'false'));
+        document.querySelectorAll('[data-bio-panel-instance]').forEach(p => {
+          p.classList.remove('is-open');
+          p.innerHTML = '';
+        });
+
+        if (wasOpen) return;
+
+        /* Render bio content */
+        const meta = Object.entries(bio.meta).map(([k, v]) =>
+          `<div><dt>${k}</dt><dd>${v}</dd></div>`
+        ).join('');
+
+        const bodyHtml = bio.body.map(p => `<p>${p}</p>`).join('');
+
+        panel.innerHTML = `
+          <div class="cast__card-bio-inner">
+            <dl class="cast__card-bio-meta">${meta}</dl>
+            ${bodyHtml}
+            <p class="function"><strong>Narrative function</strong>${bio.fn}</p>
+          </div>
+        `;
+        panel.classList.add('is-open');
+        card.setAttribute('aria-expanded', 'true');
+
+        /* Smooth scroll the card into the upper third of viewport */
+        setTimeout(() => {
+          const rect = card.getBoundingClientRect();
+          const targetY = window.scrollY + rect.top - 120;
+          window.scrollTo({ top: targetY, behavior: 'smooth' });
+        }, 50);
+      });
+    });
+
+    /* Scroll-triggered reveal observer */
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            io.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+
+      document.querySelectorAll('[data-reveal]').forEach(el => io.observe(el));
+    } else {
+      document.querySelectorAll('[data-reveal]').forEach(el => el.classList.add('is-visible'));
+    }
+  </script>
+
+</body>
+</html>
