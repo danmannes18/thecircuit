@@ -1,0 +1,610 @@
+---
+// CircuitMap — interactive world map showing The Circuit's 16 locations
+// Placed between <Logline /> and <World /> in index.astro
+---
+
+<section id="circuit-map" class="circuit-map">
+  <div class="circuit-map__header gutter-x">
+    <p class="meta circuit-map__eyebrow">The Circuit</p>
+    <h2 class="circuit-map__title">One world. <em>Twelve cities. Twelve months.</em></h2>
+    <p class="circuit-map__subtitle">From Wellington in January to Geneva in December — the same eighty faces chasing the same trophies across four continents.</p>
+  </div>
+
+  <div class="circuit-map__layout gutter-x">
+    <div class="circuit-map__map-wrap" id="map-container">
+      <svg id="world-map" aria-label="Interactive map of The Circuit show jumping locations" role="img"></svg>
+    </div>
+
+    <div class="circuit-map__panel" id="info-panel" role="region" aria-live="polite" aria-label="Location details">
+      <div class="panel-empty" id="panel-empty">Select a location</div>
+      <div class="panel-content" id="panel-content" aria-hidden="true">
+        <div class="panel-header">
+          <span class="panel-flag" id="panel-flag"></span>
+          <span class="panel-name" id="panel-name"></span>
+        </div>
+        <div class="panel-months" id="panel-months"></div>
+        <div class="panel-rule"></div>
+        <div class="panel-tagline" id="panel-tagline"></div>
+        <div class="panel-body" id="panel-body"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script is:inline>
+(async function () {
+  const locations = [
+    { id: 'wellington',   tier: 'ANCHOR', coords: [-80.25, 26.66], label: 'Wellington, FL',    months: 'January – April',   tagline: 'The American Mecca',         flag: '🇺🇸', body: '12 consecutive weeks. 14,000+ horses. The Winter Equestrian Festival is the social and competitive center of American show jumping. The Rolex Grand Prix — $500,000 — closes the season each April.' },
+    { id: 'aachen',       tier: 'ANCHOR', coords: [6.08, 50.77],   label: 'Aachen',             months: 'June – July',       tagline: 'The Wimbledon of Equestrian Sport', flag: '🇩🇪', body: 'CHIO Aachen. 200,000+ visitors. Royalty in the stands. The most prestigious horse show in the world — where the Grand Slam begins and national pride is everything. Germany treats this like a national holiday.' },
+    { id: 'geneva',       tier: 'ANCHOR', coords: [6.14, 46.20],   label: 'Geneva',             months: 'December',          tagline: "The Season's End",          flag: '🇨🇭', body: "CHI Geneva. A Grand Slam leg. The most elegant indoor show in the sport — where the year closes in Swiss luxury and final rankings are sealed. The FEI headquarters sits nearby in Lausanne." },
+    { id: 'spruce',       tier: 'ANCHOR', coords: [-114.07, 50.95], label: 'Spruce Meadows',    months: 'September',         tagline: 'The Grand Slam',             flag: '🇨🇦', body: 'The Spruce Meadows Masters. The third Grand Slam leg. One of the largest and most beloved outdoor horse shows in the world — set against the Canadian Rockies. The prize money and the prestige are both extraordinary.' },
+    { id: 'la2028',       tier: 'ANCHOR', coords: [-117.02, 33.60], label: 'Los Angeles 2028',  months: 'July 2028',         tagline: 'The Finale',                 flag: '🏅', body: 'Galway Downs, Temecula, California. The 2028 Olympic equestrian venue. The first home Olympics for American equestrians since 1984. Every decision on the circuit for two years feeds into this one stadium, this one weekend.' },
+    { id: 'hamptons',     tier: 'MAJOR',  coords: [-72.30, 40.93],  label: 'The Hampton Classic', months: 'August',           tagline: 'The Social Show',            flag: '🇺🇸', body: 'The intersection of elite show jumping and the Hamptons summer scene. Celebrities, media, fashion — and serious jumping. Enormously TV-friendly. The most photogenic show in America.' },
+    { id: 'lexington',    tier: 'MAJOR',  coords: [-84.50, 38.04],  label: 'Lexington, KY',    months: 'Spring & Fall',     tagline: 'The Horse Capital',          flag: '🇺🇸', body: 'The Kentucky Horse Park. Home of US National Championships, major hunter and jumper events, and the heart of American breeding country. Old horse country — the history runs centuries deep.' },
+    { id: 'denbosch',     tier: 'MAJOR',  coords: [5.30, 51.69],    label: 'Den Bosch',         months: 'March',             tagline: 'The Dutch Masters',          flag: '🇳🇱', body: 'A Grand Slam leg and major World Cup qualifier. The Netherlands is a show jumping superpower — Dutch and Belgian warmbloods power this sport. Den Bosch draws some of the largest crowds of the indoor season.' },
+    { id: 'windsor',      tier: 'MAJOR',  coords: [-0.61, 51.48],   label: 'Royal Windsor',     months: 'May',               tagline: 'In the Grounds of a Castle', flag: '🇬🇧', body: 'Show jumping in the shadow of Windsor Castle. British royalty in the stands. One of the most visually spectacular settings in the sport — a combination of institutional prestige and extraordinary scenery.' },
+    { id: 'barcelona',    tier: 'MAJOR',  coords: [2.15, 41.39],    label: 'Barcelona',         months: 'September',         tagline: 'CSIO Barcelona',             flag: '🇪🇸', body: "A top-tier Nations Cup show at one of Europe's most beautiful venues. Late September in Barcelona means the close of the outdoor European season — high stakes, high atmosphere." },
+    { id: 'rome',         tier: 'KEY',    coords: [12.49, 41.89],   label: 'Rome',              months: 'Spring',            tagline: 'Piazza di Siena',            flag: '🇮🇹', body: "The Piazza di Siena in Rome's Villa Borghese — one of the most photographed settings in all of equestrian sport. The Global Champions Tour stop in Rome is a highlight of the spring European circuit." },
+    { id: 'verona',       tier: 'KEY',    coords: [10.99, 45.43],   label: 'Verona',            months: 'November',          tagline: 'The Roman Arena',            flag: '🇮🇹', body: 'Jumping Verona. An indoor World Cup qualifier held in a Roman arena — one of the most dramatically cinematic venues in the sport. The ancient stones and modern sport create an unmistakable image.' },
+    { id: 'monaco',       tier: 'KEY',    coords: [7.42, 43.73],    label: 'Monaco',            months: 'Spring',            tagline: 'Global Champions Tour',      flag: '🇲🇨', body: "The Global Champions Tour brings show jumping to the world's wealthiest postcode. Monte Carlo harbor as backdrop. Sponsorship wealth on full display. The most glamorous stop on the European circuit." },
+    { id: 'hamburg',      tier: 'KEY',    coords: [9.99, 53.55],    label: 'Hamburg',           months: 'May',               tagline: 'Global Champions Tour',      flag: '🇩🇪', body: 'Derby Park — home of the Hamburg Derby, one of the most technically demanding courses in show jumping. A classic venue with deep history, now also a key GCT stop.' },
+    { id: 'thermal',      tier: 'KEY',    coords: [-116.14, 33.64], label: 'Thermal, CA',       months: 'January – March',   tagline: 'Desert International',       flag: '🇺🇸', body: 'The Desert International Horse Park in the Coachella Valley. The West Coast equivalent of Wellington — a growing hub for California\'s equestrian wealth and the tech and entertainment money that has moved into the sport.' },
+    { id: 'tryon',        tier: 'KEY',    coords: [-82.23, 35.20],  label: 'Tryon, NC',         months: 'Summer & Fall',     tagline: 'Tryon International',        flag: '🇺🇸', body: 'A massive purpose-built equestrian resort in the Blue Ridge Mountains. Hosted the 2018 World Equestrian Games. A key venue for US domestic championships — the anchor of the American Southeast circuit.' },
+  ];
+
+  const D3_URL = 'https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js';
+  const TOPOJSON_URL = 'https://cdnjs.cloudflare.com/ajax/libs/topojson/3.0.2/topojson.min.js';
+  const WORLD_URL = 'https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json';
+
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function loadScript(src) {
+    return new Promise((resolve, reject) => {
+      const s = document.createElement('script');
+      s.src = src;
+      s.onload = resolve;
+      s.onerror = reject;
+      document.head.appendChild(s);
+    });
+  }
+
+  let activeId = null;
+
+  function isMobile() {
+    return window.innerWidth < 768;
+  }
+
+  function updatePanel(loc) {
+    const emptyEl = document.getElementById('panel-empty');
+    const contentEl = document.getElementById('panel-content');
+    const flagEl = document.getElementById('panel-flag');
+    const nameEl = document.getElementById('panel-name');
+    const monthsEl = document.getElementById('panel-months');
+    const taglineEl = document.getElementById('panel-tagline');
+    const bodyEl = document.getElementById('panel-body');
+
+    if (!loc) {
+      emptyEl.style.display = 'flex';
+      contentEl.style.display = 'none';
+      contentEl.setAttribute('aria-hidden', 'true');
+      return;
+    }
+
+    flagEl.textContent = loc.flag;
+    nameEl.textContent = loc.label;
+    monthsEl.textContent = loc.months;
+    taglineEl.textContent = loc.tagline;
+    bodyEl.textContent = loc.body;
+
+    emptyEl.style.display = 'none';
+    contentEl.style.display = 'block';
+    contentEl.removeAttribute('aria-hidden');
+
+    if (!reducedMotion) {
+      contentEl.style.opacity = '0';
+      contentEl.style.transform = 'translateY(8px)';
+      requestAnimationFrame(() => {
+        contentEl.style.transition = 'opacity 0.25s ease, transform 0.25s ease';
+        contentEl.style.opacity = '1';
+        contentEl.style.transform = 'translateY(0)';
+      });
+    } else {
+      contentEl.style.opacity = '1';
+      contentEl.style.transform = 'translateY(0)';
+    }
+  }
+
+  function initMap() {
+    const container = document.getElementById('map-container');
+    const svg = d3.select('#world-map');
+
+    let width = container.clientWidth;
+    let height = container.clientHeight;
+
+    svg.attr('width', width).attr('height', height);
+
+    let projection, path, geoGenerator;
+
+    function setupProjection() {
+      width = container.clientWidth;
+      height = container.clientHeight;
+      svg.attr('width', width).attr('height', height);
+
+      projection = d3.geoNaturalEarth1()
+        .scale(1)
+        .translate([0, 0]);
+
+      const b = d3.geoPath().projection(projection).bounds({ type: 'Sphere' });
+      const scale = 0.95 / Math.max((b[1][0] - b[0][0]) / width, (b[1][1] - b[0][1]) / height);
+      const translate = [
+        (width - scale * (b[1][0] + b[0][0])) / 2,
+        (height - scale * (b[1][1] + b[0][1])) / 2
+      ];
+
+      projection.scale(scale).translate(translate);
+      path = d3.geoPath().projection(projection);
+    }
+
+    setupProjection();
+
+    // Film grain filter
+    const defs = svg.append('defs');
+    const filterId = 'film-grain';
+    const filter = defs.append('filter')
+      .attr('id', filterId)
+      .attr('x', '0%').attr('y', '0%')
+      .attr('width', '100%').attr('height', '100%');
+    filter.append('feTurbulence')
+      .attr('type', 'fractalNoise')
+      .attr('baseFrequency', '0.65')
+      .attr('numOctaves', '3')
+      .attr('stitchTiles', 'stitch');
+    filter.append('feColorMatrix')
+      .attr('type', 'saturate')
+      .attr('values', '0');
+
+    // Clip path for ocean rect
+    defs.append('clipPath')
+      .attr('id', 'sphere-clip')
+      .append('path')
+      .datum({ type: 'Sphere' })
+      .attr('d', path);
+
+    svg.selectAll('*:not(defs)').remove();
+
+    function draw(worldData) {
+      svg.selectAll('*:not(defs)').remove();
+
+      // Update sphere clip
+      svg.select('defs').select('#sphere-clip').select('path')
+        .datum({ type: 'Sphere' })
+        .attr('d', path);
+
+      // Ocean
+      svg.append('rect')
+        .attr('width', width)
+        .attr('height', height)
+        .attr('fill', '#0f1e3d')
+        .attr('clip-path', 'url(#sphere-clip)');
+
+      // Sphere border
+      svg.append('path')
+        .datum({ type: 'Sphere' })
+        .attr('d', path)
+        .attr('fill', 'none')
+        .attr('stroke', 'rgba(255,255,255,0.06)')
+        .attr('stroke-width', 0.5);
+
+      // Graticule
+      const graticule = d3.geoGraticule().step([10, 10]);
+      svg.append('path')
+        .datum(graticule())
+        .attr('d', path)
+        .attr('fill', 'none')
+        .attr('stroke', 'rgba(255,255,255,0.04)')
+        .attr('stroke-width', 0.5);
+
+      // Land
+      const countries = topojson.feature(worldData, worldData.objects.countries);
+      svg.append('path')
+        .datum(countries)
+        .attr('d', path)
+        .attr('fill', '#3f5f3f');
+
+      // Borders
+      const borders = topojson.mesh(worldData, worldData.objects.countries, (a, b) => a !== b);
+      svg.append('path')
+        .datum(borders)
+        .attr('d', path)
+        .attr('fill', 'none')
+        .attr('stroke', '#7b8c5c')
+        .attr('stroke-width', 0.3);
+
+      // Route arcs between all ANCHOR pairs
+      const anchors = locations.filter(l => l.tier === 'ANCHOR');
+      const arcGroup = svg.append('g').attr('class', 'arcs');
+      for (let i = 0; i < anchors.length; i++) {
+        for (let j = i + 1; j < anchors.length; j++) {
+          const line = {
+            type: 'LineString',
+            coordinates: [anchors[i].coords, anchors[j].coords]
+          };
+          arcGroup.append('path')
+            .datum(line)
+            .attr('d', path)
+            .attr('fill', 'none')
+            .attr('stroke', 'rgba(201,168,118,0.15)')
+            .attr('stroke-width', 0.75);
+        }
+      }
+
+      // Film grain overlay
+      svg.append('rect')
+        .attr('width', width)
+        .attr('height', height)
+        .attr('fill', 'rgba(0,0,0,0.25)')
+        .attr('filter', `url(#${filterId})`)
+        .attr('pointer-events', 'none');
+
+      // Pins
+      const mobile = isMobile();
+      const visibleLocations = mobile
+        ? locations.filter(l => l.tier === 'ANCHOR')
+        : locations;
+
+      const pinGroup = svg.append('g').attr('class', 'pins');
+
+      visibleLocations.forEach((loc, i) => {
+        const [px, py] = projection(loc.coords);
+        const pinRadius = loc.tier === 'ANCHOR' ? 8 : loc.tier === 'MAJOR' ? 6 : 4;
+        const pinFill = loc.tier === 'ANCHOR' ? '#c9a876' : loc.tier === 'MAJOR' ? 'rgba(201,168,118,0.7)' : 'rgba(201,168,118,0.4)';
+        const pinStroke = loc.tier === 'ANCHOR' ? 'white' : 'none';
+
+        const g = pinGroup.append('g')
+          .attr('class', `pin pin--${loc.tier.toLowerCase()}`)
+          .attr('data-id', loc.id)
+          .attr('transform', `translate(${px},${py})`)
+          .attr('tabindex', '0')
+          .attr('role', 'button')
+          .attr('aria-label', `View details for ${loc.label}`)
+          .style('cursor', 'pointer');
+
+        if (!reducedMotion) {
+          g.style('opacity', '0');
+        }
+
+        // Circle
+        g.append('circle')
+          .attr('r', pinRadius)
+          .attr('fill', pinFill)
+          .attr('stroke', pinStroke)
+          .attr('stroke-width', loc.tier === 'ANCHOR' ? 1 : 0);
+
+        // Pulse ring (hidden by default)
+        g.append('circle')
+          .attr('class', 'pulse-ring')
+          .attr('r', pinRadius)
+          .attr('fill', 'none')
+          .attr('stroke', '#c9a876')
+          .attr('stroke-width', 1.5)
+          .style('opacity', '0')
+          .style('pointer-events', 'none');
+
+        // Label (ANCHOR always, others on hover via CSS)
+        if (loc.tier === 'ANCHOR') {
+          g.append('text')
+            .attr('class', 'pin-label pin-label--always')
+            .attr('y', -(pinRadius + 4))
+            .attr('text-anchor', 'middle')
+            .attr('font-family', 'var(--font-mono, "JetBrains Mono Variable", monospace)')
+            .attr('font-size', '10px')
+            .attr('fill', '#e8d9bd')
+            .attr('letter-spacing', '0.08em')
+            .style('text-transform', 'uppercase')
+            .style('text-shadow', '0 1px 3px rgba(0,0,0,0.8)')
+            .style('pointer-events', 'none')
+            .text(loc.label.toUpperCase());
+        } else {
+          g.append('text')
+            .attr('class', 'pin-label pin-label--hover')
+            .attr('y', -(pinRadius + 4))
+            .attr('text-anchor', 'middle')
+            .attr('font-family', 'var(--font-mono, "JetBrains Mono Variable", monospace)')
+            .attr('font-size', '10px')
+            .attr('fill', '#e8d9bd')
+            .attr('letter-spacing', '0.08em')
+            .style('text-transform', 'uppercase')
+            .style('text-shadow', '0 1px 3px rgba(0,0,0,0.8)')
+            .style('pointer-events', 'none')
+            .style('opacity', '0')
+            .style('transition', reducedMotion ? 'none' : 'opacity 0.15s ease')
+            .text(loc.label.toUpperCase());
+        }
+
+        // Hover show label for non-ANCHOR
+        if (loc.tier !== 'ANCHOR') {
+          g.on('mouseenter', function () {
+            d3.select(this).select('.pin-label--hover').style('opacity', '1');
+          }).on('mouseleave', function () {
+            d3.select(this).select('.pin-label--hover').style('opacity', '0');
+          });
+        }
+
+        // Click handler
+        g.on('click', function () {
+          handlePinActivate(loc, g, pinRadius);
+        });
+
+        // Keyboard handler
+        g.on('keydown', function (event) {
+          if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            handlePinActivate(loc, g, pinRadius);
+          }
+        });
+
+        // Stagger fade-in
+        if (!reducedMotion) {
+          setTimeout(() => {
+            g.transition()
+              .duration(300)
+              .style('opacity', '1');
+          }, i * 80);
+        }
+      });
+    }
+
+    function handlePinActivate(loc, gSel, pinRadius) {
+      if (activeId === loc.id) {
+        // Close
+        activeId = null;
+        updatePanel(null);
+        // Reset all pin scales
+        svg.selectAll('.pin circle:first-child').attr('r', function () {
+          const pin = d3.select(this.parentNode);
+          const id = pin.attr('data-id');
+          const l = locations.find(x => x.id === id);
+          return l ? (l.tier === 'ANCHOR' ? 8 : l.tier === 'MAJOR' ? 6 : 4) : 4;
+        });
+      } else {
+        activeId = loc.id;
+        updatePanel(loc);
+
+        // Pulse animation
+        if (!reducedMotion) {
+          const ring = gSel.select('.pulse-ring');
+          ring.style('opacity', '1')
+            .attr('r', pinRadius);
+          ring.transition()
+            .duration(600)
+            .ease(d3.easeCubicOut)
+            .attr('r', 16)
+            .style('opacity', '0')
+            .on('end', function () {
+              d3.select(this).attr('r', pinRadius);
+            });
+        }
+      }
+    }
+
+    // Escape key to close panel
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && activeId !== null) {
+        activeId = null;
+        updatePanel(null);
+      }
+    });
+
+    // Fetch world data and draw
+    fetch(WORLD_URL)
+      .then(r => r.json())
+      .then(worldData => {
+        draw(worldData);
+
+        // Resize handler (debounced)
+        let resizeTimer;
+        window.addEventListener('resize', () => {
+          clearTimeout(resizeTimer);
+          resizeTimer = setTimeout(() => {
+            setupProjection();
+            draw(worldData);
+            if (activeId) {
+              const loc = locations.find(l => l.id === activeId);
+              if (loc) updatePanel(loc);
+            }
+          }, 150);
+        });
+      })
+      .catch(err => {
+        console.error('CircuitMap: failed to load world atlas', err);
+      });
+  }
+
+  // Load D3, then TopoJSON, then init
+  try {
+    await loadScript(D3_URL);
+    await loadScript(TOPOJSON_URL);
+    initMap();
+  } catch (err) {
+    console.error('CircuitMap: failed to load map libraries', err);
+  }
+})();
+</script>
+
+<style>
+  .circuit-map {
+    background: var(--color-bay-deep);
+    padding-top: var(--section-y);
+    padding-bottom: var(--section-y);
+  }
+
+  .circuit-map__header {
+    max-width: 72rem;
+    margin: 0 auto;
+    margin-bottom: clamp(2rem, 4vw, 3.5rem);
+  }
+
+  .circuit-map__eyebrow {
+    color: var(--color-sand-deep);
+    margin-bottom: 1.5rem;
+  }
+
+  .circuit-map__title {
+    font-family: var(--font-display);
+    font-weight: 300;
+    font-variation-settings: "opsz" 144, "SOFT" 30, "WONK" 0;
+    font-size: clamp(2.25rem, 1.5rem + 3vw, 4rem);
+    line-height: 1.1;
+    letter-spacing: -0.022em;
+    color: var(--color-paper);
+    margin: 0 0 1.25rem;
+  }
+
+  .circuit-map__title em {
+    font-style: italic;
+    font-variation-settings: "opsz" 144, "SOFT" 60, "WONK" 1;
+    color: var(--color-sand-deep);
+  }
+
+  .circuit-map__subtitle {
+    font-family: var(--font-body);
+    font-size: clamp(0.9375rem, 0.85rem + 0.4vw, 1.0625rem);
+    line-height: 1.6;
+    color: rgba(245, 241, 232, 0.7);
+    max-width: 52ch;
+    margin: 0;
+  }
+
+  /* Layout */
+  .circuit-map__layout {
+    max-width: 72rem;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 65fr 35fr;
+    gap: clamp(1rem, 2vw, 2rem);
+    align-items: start;
+  }
+
+  .circuit-map__map-wrap {
+    width: 100%;
+    height: 56vh;
+    min-height: 280px;
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  #world-map {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  /* Info panel */
+  .circuit-map__panel {
+    background: rgba(31, 15, 10, 0.9);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-top: 1px solid rgba(201, 168, 118, 0.2);
+    border-radius: 4px;
+    min-height: 120px;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-self: stretch;
+  }
+
+  .panel-empty {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: rgba(232, 217, 189, 0.3);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 80px;
+  }
+
+  .panel-content {
+    display: none;
+  }
+
+  .panel-header {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .panel-flag {
+    font-size: 1.25rem;
+    line-height: 1;
+  }
+
+  .panel-name {
+    font-family: var(--font-display);
+    font-size: clamp(1.2rem, 1rem + 1vw, 1.5rem);
+    font-weight: 300;
+    font-variation-settings: "opsz" 72, "SOFT" 20, "WONK" 0;
+    color: var(--color-sand-deep);
+    line-height: 1.2;
+  }
+
+  .panel-months {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: rgba(232, 217, 189, 0.6);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    margin-bottom: 0.875rem;
+  }
+
+  .panel-rule {
+    height: 1px;
+    background: rgba(201, 168, 118, 0.2);
+    margin-bottom: 0.875rem;
+  }
+
+  .panel-tagline {
+    font-family: var(--font-body);
+    font-style: italic;
+    font-size: 15px;
+    color: var(--color-sand);
+    margin-bottom: 0.75rem;
+    line-height: 1.4;
+  }
+
+  .panel-body {
+    font-family: var(--font-body);
+    font-size: 14px;
+    color: rgba(245, 241, 232, 0.75);
+    line-height: 1.6;
+    max-width: 52ch;
+  }
+
+  /* Tablet */
+  @media (max-width: 1024px) {
+    .circuit-map__layout {
+      grid-template-columns: 1fr;
+    }
+
+    .circuit-map__map-wrap {
+      height: 48vh;
+    }
+
+    .circuit-map__panel {
+      align-self: auto;
+    }
+  }
+
+  /* Mobile */
+  @media (max-width: 767px) {
+    .circuit-map__map-wrap {
+      height: 38vh;
+      min-height: 220px;
+    }
+  }
+</style>
