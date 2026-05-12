@@ -101,6 +101,7 @@ export const cast: CastMember[] = [
     narrativeFunction: "The matriarch. The audience falls in love with her in episode one.",
     group: "legends",
     discipline: "show-jumping",
+    instagram: "laurakraut",
     wikipedia: "https://en.wikipedia.org/wiki/Laura_Kraut",
   },
   {
@@ -116,7 +117,8 @@ export const cast: CastMember[] = [
     narrativeFunction: "The bridge character. Proof that the lines between camps are blurrier than they look.",
     group: "legends",
     discipline: "show-jumping",
-    wikipedia: "https://en.wikipedia.org/wiki/Karl_Cook_(equestrian)",
+    instagram: "mrtankcook",
+    wikipedia: "https://en.wikipedia.org/wiki/Karl_Cook",
   },
   // Dressage
   {
@@ -266,8 +268,7 @@ export const cast: CastMember[] = [
     narrativeFunction: "The dynastic marriage. Two nations, one roof, one Olympic year.",
     group: "heirs",
     discipline: "show-jumping",
-    instagram: "jennifergates",
-    wikipedia: "https://en.wikipedia.org/wiki/Jennifer_Gates",
+    instagram: "drjenngates",
   },
   {
     id: "bloomberg",
@@ -316,6 +317,8 @@ export const cast: CastMember[] = [
     narrativeFunction: "The protégée. Trained inside the legacy she is being asked to carry forward.",
     group: "rising",
     discipline: "show-jumping",
+    instagram: "lillieckeenan",
+    wikipedia: "https://en.wikipedia.org/wiki/Lillie_Keenan",
     keyHorse: "Argan de Beliard",
   },
   {
@@ -345,6 +348,7 @@ export const cast: CastMember[] = [
     narrativeFunction: "The long shot whose family has invested everything in giving her this moment.",
     group: "rising",
     discipline: "show-jumping",
+    instagram: "mimi.gochman",
   },
   {
     id: "vogel",
@@ -541,6 +545,7 @@ export const cast: CastMember[] = [
     narrativeFunction: "The gatekeeper. Every rider in groups I, II, and III is managing their relationship with this man.",
     group: "powerbrokers",
     discipline: "institutional",
+    wikipedia: "https://en.wikipedia.org/wiki/Robert_Ridland",
   },
   {
     id: "tops",
