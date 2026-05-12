@@ -9,6 +9,7 @@ import WorldGuide from '../components/WorldGuide.astro';
 import Cast from '../components/Cast.astro';
 import Arc from '../components/Arc.astro';
 import Look from '../components/Look.astro';
+import SwatchAccent from '../components/SwatchAccent.astro';
 import VideoReel from '../components/VideoReel.astro';
 import VideoRow from '../components/VideoRow.astro';
 import WhyNow from '../components/WhyNow.astro';
@@ -22,14 +23,21 @@ import Footer from '../components/Footer.astro';
   <main id="main" tabindex="-1">
     <Hero />
     <Logline />
+    <SwatchAccent swatches={[
+      "linear-gradient(135deg, #c9a876 0%, #8b6f47 100%)",
+      "linear-gradient(135deg, #b73239 0%, #6f1f24 100%)",
+      "linear-gradient(180deg, #3f5f3f 0%, #1f2f1f 100%)",
+      "linear-gradient(135deg, #0f1e3d 0%, #1f0f0a 100%)",
+      "linear-gradient(135deg, #e25822 0%, #a13a14 100%)",
+    ]} height="44px" />
     <CircuitMap />
     <World />
     <VideoRow srcs={[
       "/mp4/SnapInsta.to_AQMLgbsKUMqA2UrkijzBgE6hmm4nDrgcFUaRFZKm7QpMHhSBNcL2AxIN837yRAuMVbp8w-PiCojCzNeeTpc19ESellLPpqIWODFmCUQ.mp4",
-      "/mp4/SnapInsta.to_AQMLpm-xxb95KNPyM3VTISOp7s0_t20xwWF_w5j-7JWmUf4FueERGe9DHN61ONYA7L8d33JX68bxKxffTKAdbubLDufeyJPTmLo2SEw.mp4",
       "/mp4/SnapInsta.to_AQMel41TIusJohNlF3gDJAubwTjdajzqwHpo5OTdiscTPiZJaVRRcSIJtX9Zoww868nlHGkHfkORfwExTPq8sKPtC-rdvCyd7BaoaZc.mp4",
     ]} />
     <WorldGuide />
+    <SwatchAccent height="40px" />
     <Cast />
     <VideoRow srcs={[
       "/mp4/SnapInsta.to_AQMoxAO9szv1eiLIe2QwaeEtmo0-0I0fRV4bPgzfT1OAk90jOF_LfQUKrSUbWzU1lM9sllX0jDb5JWBRFw-IpHOCyppSZTb6AkircoM.mp4",
@@ -37,6 +45,14 @@ import Footer from '../components/Footer.astro';
       "/mp4/SnapInsta.to_AQNBNXR-wvbyYMHgytUc2c_90XOAlzNbcVeTuQ3N0ADUhWqobTwelGSyl0kSFel4SHIFRJ3RIeqEhxVQPR19WkG_bOdE2V_xBbFJCM4.mp4",
     ]} />
     <Arc />
+    <SwatchAccent swatches={[
+      "linear-gradient(180deg, #006039 0%, #003020 100%)",
+      "linear-gradient(180deg, #a8c5dc 0%, #6f8fa6 100%)",
+      "linear-gradient(135deg, #1f0f0a 0%, #5b3520 100%)",
+      "linear-gradient(135deg, #b73239 0%, #6f1f24 100%)",
+      "linear-gradient(180deg, #c9a876 0%, #5b3520 100%)",
+      "linear-gradient(135deg, #e25822 0%, #a13a14 100%)",
+    ]} height="40px" />
     <VideoRow srcs={[
       "/mp4/SnapInsta.to_AQNDLbiqbyeJBU7_3EYUJ0YwTru-qA3r2Rh4AZoAQx_EoerOiniQpjUqUsywiPfoSzZL04tKqlidsQSE3LGzKqO30mHFz2VTjXoNDAU.mp4",
       "/mp4/SnapInsta.to_AQNIUr06-Kp57rGbz76CT5jeVdePsaLARr6mzRfCPel4bro1zNa8xyaGC-rEdbleYBL6BSL8k9cHDaGXnGuRfB2hB12pLouvk-Inyhw.mp4",
@@ -44,6 +60,7 @@ import Footer from '../components/Footer.astro';
     ]} />
     <Look />
     <VideoReel />
+    <SwatchAccent height="44px" />
     <WhyNow />
     <Team />
     <Contact />
