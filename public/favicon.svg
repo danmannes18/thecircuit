@@ -1,4 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <rect width="32" height="32" fill="#1f0f0a"/>
-  <text x="16" y="23" text-anchor="middle" font-family="Georgia, serif" font-size="22" font-style="italic" fill="#c9a876">c</text>
+  <rect width="32" height="32" rx="3" fill="#1f0f0a"/>
+  <text
+    x="16"
+    y="22.5"
+    text-anchor="middle"
+    font-family="ui-serif, 'Iowan Old Style', 'Cormorant Garamond', Georgia, serif"
+    font-size="22"
+    font-weight="400"
+    font-style="italic"
+    fill="#c9a876"
+  >c</text>
 </svg>

@@ -90,6 +90,13 @@ img, picture, svg { max-width: 100%; display: block; }
 button { font: inherit; cursor: pointer; background: none; border: none; color: inherit; padding: 0; }
 a { color: inherit; text-decoration: none; }
 
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--color-sand-deep);
+  outline-offset: 3px;
+  border-radius: 1px;
+}
+
 ::selection {
   background: var(--color-bay-deep);
   color: var(--color-paper);
@@ -197,5 +204,11 @@ a { color: inherit; text-decoration: none; }
     opacity: 1;
     transform: none;
     transition: none;
+  }
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
   }
 }

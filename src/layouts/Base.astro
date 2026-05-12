@@ -8,6 +8,7 @@ const {
   title = 'The Circuit — A premium documentary series',
   description = 'Inside the billion-dollar world of international show jumping. Two seasons. The road to Los Angeles 2028.',
 } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site ?? 'https://thecircuit.show').toString();
 ---
 
 <!doctype html>
@@ -18,13 +19,21 @@ const {
     <title>{title}</title>
     <meta name="description" content={description} />
     <meta name="theme-color" content="#0a0a0a" />
+    <link rel="canonical" href={canonical} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
     <meta property="og:title" content="The Circuit" />
     <meta property="og:description" content="A premium documentary series. Two seasons. The road to Los Angeles 2028." />
     <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:site_name" content="The Circuit" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="The Circuit" />
+    <meta name="twitter:description" content="A premium documentary series. Two seasons. The road to Los Angeles 2028." />
   </head>
   <body>
+    <a class="skip-link" href="#main">Skip to content</a>
     <slot />
     <script>
       import { initReveal } from '../lib/reveal';
@@ -32,5 +41,28 @@ const {
       initReveal();
       initCast();
     </script>
+
+    <style>
+      .skip-link {
+        position: fixed;
+        top: 0.5rem;
+        left: 0.5rem;
+        z-index: 200;
+        padding: 0.5rem 0.875rem;
+        background: var(--color-bay-deep);
+        color: var(--color-paper);
+        font-family: var(--font-mono);
+        font-size: 0.7rem;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        transform: translateY(-150%);
+        transition: transform 200ms var(--ease-circuit);
+      }
+      .skip-link:focus {
+        transform: translateY(0);
+        outline: 2px solid var(--color-sand-deep);
+        outline-offset: 2px;
+      }
+    </style>
   </body>
 </html>

@@ -34,11 +34,11 @@ const bioData = Object.fromEntries(
 
     {castGroups.map((group) => (
       <article class="group" data-reveal>
-        <div class="group__label">
-          <span>{group.numeral}.</span>
-          <span>{group.name}</span>
+        <h3 class="group__label">
+          <span class="group__numeral">{group.numeral}.</span>
+          <span class="group__name">{group.name}</span>
           <span class="group__subtitle">{group.subtitle}</span>
-        </div>
+        </h3>
 
         <div class="grid" data-cast-grid={group.id}>
           {castByGroup(group.id).map((m) => (
@@ -81,17 +81,21 @@ const bioData = Object.fromEntries(
   }
   .group__label {
     font-family: var(--font-mono);
+    font-weight: 400;
     font-size: 0.7rem;
     letter-spacing: 0.18em;
     text-transform: uppercase;
     color: var(--color-ink-mute);
     padding-bottom: 1rem;
     border-bottom: 1px solid var(--rule);
-    margin-bottom: 0;
+    margin: 0 0 0;
     display: flex;
     align-items: baseline;
     flex-wrap: wrap;
     gap: 0.75rem 1rem;
+  }
+  .group__name {
+    color: var(--color-ink);
   }
   .group__subtitle {
     font-family: var(--font-display);
