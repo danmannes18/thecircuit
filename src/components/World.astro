@@ -1,5 +1,5 @@
 ---
-// Act Three — The World. Phase 2 will populate full prose.
+// Act Three — The World. Prose verbatim from /docs/01.
 ---
 
 <section class="world section-y gutter-x">
@@ -8,6 +8,7 @@
     <h2 class="display-md title" data-reveal>
       There is a world most people <em>have never seen.</em>
     </h2>
+
     <div class="prose" data-reveal>
       <p class="lede">
         It moves in a circle. Wellington in winter. Aachen in summer. The
@@ -15,12 +16,46 @@
         faces — the riders, the owners, the grooms, the families — show up at
         each stop, set up their barns, compete for millions, and leave for the
         next city. They live their entire lives inside this orbit. They call it
-        the circuit.
+        <em>the circuit.</em>
+      </p>
+
+      <p>
+        It is one of the wealthiest professional sports on earth, and one of
+        the least televised. A single horse can sell for fifteen million
+        dollars. A season campaigning at the top level costs more than a
+        Premier League salary. The grooms who care for these animals know them
+        better than any human in their lives. The riders are athletes, but they
+        are also showmen, businesspeople, and in many cases, the children of
+        the most powerful families in the world. Bruce Springsteen’s daughter
+        is on the U.S. Olympic team. Bill Gates’ daughter married an Egyptian
+        Olympian. Steve Jobs’ daughter is a working international rider. They
+        compete against the working professionals who built their careers from
+        nothing — McLain Ward, Kent Farrington, Laura Kraut — riders who have
+        spent thirty years getting to where the heirs arrived as teenagers.
+      </p>
+
+      <p>
+        In 2028, the Olympics come home. For the first time since 1984, the
+        equestrian Games will be held on American soil, at Galway Downs in
+        Southern California. American show jumping has not produced an
+        individual Olympic gold medalist since Joe Fargis won in Los Angeles
+        forty-four years earlier. Every rider on the circuit — American,
+        European, Middle Eastern, South American — is now building toward one
+        stadium and a single weekend in July 2028.
+      </p>
+
+      <p>
+        <em>The Circuit</em> treats show jumping the way <em>Drive to Survive</em>
+        treated Formula 1 and <em>Full Swing</em> treated the PGA Tour — not as
+        a niche curiosity, but as the front door to a world the audience never
+        realized was waiting for them. A world of generational wealth,
+        generational athletes, and the four-legged partners who carry both.
       </p>
     </div>
+
     <figure class="pull" data-reveal>
-      <blockquote class="display-md pull__quote">
-        The horse is the only Olympic athlete that doesn't know it's competing.
+      <blockquote class="pull__quote">
+        The horse is the only Olympic athlete that doesn’t know it’s competing.
         That, more than anything, is what makes this sport <em>cinema.</em>
       </blockquote>
     </figure>
@@ -39,25 +74,41 @@
     gap: 2.5rem;
   }
   .title {
-    font-size: clamp(2rem, 4vw, 3.5rem);
+    font-size: clamp(2rem, 4.5vw, 3.75rem);
+    max-width: 18ch;
   }
   .title em {
     color: var(--color-bay);
   }
   .prose {
     max-width: 65ch;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+  .prose p {
+    color: var(--color-ink-soft);
+  }
+  .prose em {
+    font-style: italic;
+    font-variation-settings: "opsz" 14, "SOFT" 50, "WONK" 1;
+    font-family: var(--font-display);
+    color: var(--color-bay);
   }
   .pull {
-    margin: 2rem 0 0;
+    margin: 1rem 0 0;
     padding: 2.5rem 0;
     border-top: 1px solid var(--rule);
     border-bottom: 1px solid var(--rule);
     text-align: center;
   }
   .pull__quote {
+    font-family: var(--font-display);
     font-style: italic;
     font-variation-settings: "opsz" 60, "SOFT" 50, "WONK" 1;
-    font-size: clamp(1.25rem, 2vw, 1.875rem);
+    font-weight: 350;
+    line-height: 1.25;
+    font-size: clamp(1.25rem, 2.4vw, 2rem);
     color: var(--color-ink-soft);
     max-width: 50ch;
     margin: 0 auto;

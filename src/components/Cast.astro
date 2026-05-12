@@ -1,7 +1,21 @@
 ---
-// Act Four — The Cast. Phase 2 populates from src/data/cast.ts. Phase 4 wires expansion.
+// Act Four — The Cast.
 import CastCard from './CastCard.astro';
-import { castGroups } from '../data/cast';
+import { castGroups, castByGroup, cast } from '../data/cast';
+
+const bioData = Object.fromEntries(
+  cast.map((m) => [
+    m.id,
+    {
+      name: m.name,
+      role: m.role,
+      home: m.home,
+      achievements: m.achievements,
+      bio: m.bio,
+      narrativeFunction: m.narrativeFunction,
+    },
+  ]),
+);
 ---
 
 <section id="cast" class="cast section-y gutter-x">
@@ -11,8 +25,9 @@ import { castGroups } from '../data/cast';
       Fifteen anchors. <em>Four archetypes. One world.</em>
     </h2>
     <p class="lede prose-measure">
-      A working ensemble — old American champions, billionaires' children,
-      European nobility, and the working-class crew that keeps it all running.
+      Old American champions, billionaires’ children, European nobility, and the
+      working-class crew that keeps it all running. The collision of these
+      worlds <em>is</em> the show.
     </p>
   </header>
 
@@ -23,16 +38,19 @@ import { castGroups } from '../data/cast';
         <h3 class="group__name display-md">{group.name}</h3>
         <span class="group__subtitle">{group.subtitle}</span>
       </header>
-      <div class="group__grid">
-        {/* Phase 2 will iterate real cast. Placeholder slots: */}
-        <CastCard number="01" name="—" role="placeholder" />
-        <CastCard number="02" name="—" role="placeholder" />
-        <CastCard number="03" name="—" role="placeholder" />
-        <CastCard number="04" name="—" role="placeholder" />
+
+      <div class="group__grid" data-cast-grid={group.id}>
+        {castByGroup(group.id).map((m) => (
+          <CastCard id={m.id} number={m.number} name={m.name} role={m.role} />
+        ))}
       </div>
+
+      <div class="group__bio" data-cast-bio={group.id} aria-live="polite"></div>
     </article>
   ))}
 </section>
+
+<script is:inline type="application/json" id="cast-bios" set:html={JSON.stringify(bioData)}></script>
 
 <style>
   .cast {
@@ -51,28 +69,47 @@ import { castGroups } from '../data/cast';
   .title em {
     color: var(--color-bay);
   }
+  .head .lede em {
+    font-variation-settings: "opsz" 60, "SOFT" 50, "WONK" 1;
+    color: var(--color-bay);
+  }
   .group {
-    margin-top: 3.5rem;
+    margin-top: 4rem;
   }
   .group__head {
     display: grid;
-    grid-template-columns: 3rem 1fr auto;
+    grid-template-columns: 3rem 1fr;
+    grid-auto-rows: auto;
     align-items: baseline;
-    gap: 1.5rem;
+    column-gap: 1.5rem;
+    row-gap: 0.25rem;
     padding-bottom: 1rem;
     margin-bottom: 1.5rem;
+  }
+  @media (min-width: 900px) {
+    .group__head {
+      grid-template-columns: 3rem auto 1fr;
+    }
   }
   .group__numeral {
     font-size: 0.85rem;
   }
   .group__name {
-    font-size: 1.75rem;
+    font-size: clamp(1.5rem, 2.5vw, 2rem);
   }
   .group__subtitle {
     font-family: var(--font-display);
     font-style: italic;
     font-variation-settings: "opsz" 60, "SOFT" 50, "WONK" 1;
     color: var(--color-ink-mute);
+    grid-column: 2 / -1;
+    font-size: 1rem;
+  }
+  @media (min-width: 900px) {
+    .group__subtitle {
+      grid-column: 3 / -1;
+      text-align: right;
+    }
   }
   .group__grid {
     display: grid;
@@ -84,5 +121,10 @@ import { castGroups } from '../data/cast';
   }
   @media (min-width: 1100px) {
     .group__grid { grid-template-columns: repeat(4, 1fr); }
+  }
+
+  .group__bio {
+    /* Phase 4 will animate height. Phase 2 ships closed. */
+    overflow: hidden;
   }
 </style>
