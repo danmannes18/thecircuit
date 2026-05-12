@@ -56,7 +56,10 @@
 
   const D3_URL = 'https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js';
   const TOPOJSON_URL = 'https://cdnjs.cloudflare.com/ajax/libs/topojson/3.0.2/topojson.min.js';
-  const WORLD_URL = 'https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json';
+  // 50m gives enough coastline detail to show the Great Lakes properly
+  const WORLD_URL  = 'https://cdn.jsdelivr.net/npm/world-atlas@2/countries-50m.json';
+  // US states in geographic coordinates (WGS84 GeoJSON)
+  const STATES_URL = 'https://cdn.jsdelivr.net/gh/PublicaMundi/MappingAPI/data/geojson/us-states.json';
 
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -72,18 +75,11 @@
 
   let activeId = null;
 
-  function isMobile() {
-    return window.innerWidth < 768;
-  }
+  function isMobile() { return window.innerWidth < 768; }
 
   function updatePanel(loc) {
-    const emptyEl = document.getElementById('panel-empty');
+    const emptyEl   = document.getElementById('panel-empty');
     const contentEl = document.getElementById('panel-content');
-    const flagEl = document.getElementById('panel-flag');
-    const nameEl = document.getElementById('panel-name');
-    const monthsEl = document.getElementById('panel-months');
-    const taglineEl = document.getElementById('panel-tagline');
-    const bodyEl = document.getElementById('panel-body');
 
     if (!loc) {
       emptyEl.style.display = 'flex';
@@ -92,11 +88,11 @@
       return;
     }
 
-    flagEl.textContent = loc.flag;
-    nameEl.textContent = loc.label;
-    monthsEl.textContent = loc.months;
-    taglineEl.textContent = loc.tagline;
-    bodyEl.textContent = loc.body;
+    document.getElementById('panel-flag').textContent    = loc.flag;
+    document.getElementById('panel-name').textContent    = loc.label;
+    document.getElementById('panel-months').textContent  = loc.months;
+    document.getElementById('panel-tagline').textContent = loc.tagline;
+    document.getElementById('panel-body').textContent    = loc.body;
 
     emptyEl.style.display = 'none';
     contentEl.style.display = 'block';
@@ -112,16 +108,18 @@
       });
     } else {
       contentEl.style.opacity = '1';
-      contentEl.style.transform = 'translateY(0)';
+      contentEl.style.transform = 'none';
     }
   }
 
   function initMap() {
     const container = document.getElementById('map-container');
-    const svgEl = document.getElementById('world-map');
-    const svg = d3.select(svgEl);
+    const svgEl     = document.getElementById('world-map');
+    const svg       = d3.select(svgEl);
 
     let width, height, projection, path;
+    // Pre-computed screen coords for each location at the base projection
+    let projPts = {};
 
     function setupDims() {
       width  = container.clientWidth;
@@ -130,7 +128,6 @@
     }
     setupDims();
 
-    // Projection fits the full world into the container — zoom/pan applied via <g> transform
     function setupProjection() {
       projection = d3.geoNaturalEarth1().scale(1).translate([0, 0]);
       const b = d3.geoPath().projection(projection).bounds({ type: 'Sphere' });
@@ -140,55 +137,71 @@
         (height - s * (b[1][1] + b[0][1])) / 2,
       ]);
       path = d3.geoPath().projection(projection);
+      // Cache screen positions at scale=1 zoom
+      projPts = {};
+      locations.forEach(l => { projPts[l.id] = projection(l.coords); });
     }
     setupProjection();
 
-    // ── Static layers (outside zoom group) ──────────────────────────
-    const defs = svg.append('defs');
-    const filter = defs.append('filter')
-      .attr('id', 'film-grain')
-      .attr('x', '0%').attr('y', '0%')
-      .attr('width', '100%').attr('height', '100%');
-    filter.append('feTurbulence')
-      .attr('type', 'fractalNoise').attr('baseFrequency', '0.65')
-      .attr('numOctaves', '3').attr('stitchTiles', 'stitch');
-    filter.append('feColorMatrix').attr('type', 'saturate').attr('values', '0');
-
+    // Background
     const bgRect = svg.append('rect')
       .attr('width', width).attr('height', height).attr('fill', '#0f1e3d');
 
-    // ── Zoomable group ───────────────────────────────────────────────
+    // Zoomable group — only map geography lives here
     const mapGroup = svg.append('g').attr('class', 'map-g');
 
-    // ── Grain overlay (above zoom group, pointer-events off) ─────────
-    const grainRect = svg.append('rect')
-      .attr('width', width).attr('height', height)
-      .attr('fill', 'rgba(0,0,0,0.22)')
-      .attr('filter', 'url(#film-grain)')
-      .attr('pointer-events', 'none');
+    // Pins live in a separate group that is NOT inside mapGroup.
+    // We manually reposition them on every zoom event so they stick to
+    // their geographic coordinates while staying a constant screen size.
+    const pinGroup = svg.append('g').attr('class', 'pin-group').attr('pointer-events', 'all');
 
-    // ── Zoom behaviour ───────────────────────────────────────────────
+    // Current zoom transform (kept in sync with zoom events)
+    let currentTransform = d3.zoomIdentity;
+
+    // Convert a base-projection point to current screen position
+    function toScreen(pt) {
+      return [
+        currentTransform.x + currentTransform.k * pt[0],
+        currentTransform.y + currentTransform.k * pt[1],
+      ];
+    }
+
+    // Batch-reposition all pins to match the current transform (single selection pass)
+    function repositionPins() {
+      pinGroup.selectAll('.pin').attr('transform', function() {
+        const pt = projPts[d3.select(this).attr('data-id')];
+        if (!pt) return null;
+        const [sx, sy] = toScreen(pt);
+        return `translate(${sx},${sy})`;
+      });
+    }
+
+    // Zoom behaviour
     const zoom = d3.zoom()
       .scaleExtent([0.5, 12])
-      .on('zoom', (event) => { mapGroup.attr('transform', event.transform); });
+      .on('zoom', (event) => {
+        currentTransform = event.transform;
+        mapGroup.attr('transform', currentTransform);
+        repositionPins();
+      });
 
-    svg.call(zoom).on('dblclick.zoom', null); // disable double-click zoom
+    svg.call(zoom).on('dblclick.zoom', null);
 
     function fitPins(animate) {
-      const mobile = isMobile();
+      // Always fit to ANCHOR cities — other tiers are discoverable by panning
       const pts = locations
-        .filter(l => !mobile || l.tier === 'ANCHOR')
-        .map(l => projection(l.coords))
+        .filter(l => l.tier === 'ANCHOR')
+        .map(l => projPts[l.id])
         .filter(Boolean);
-      const xs = pts.map(p => p[0]);
-      const ys = pts.map(p => p[1]);
-      const pad = Math.min(width, height) * 0.10;
-      const x0 = Math.min(...xs) - pad, x1 = Math.max(...xs) + pad;
-      const y0 = Math.min(...ys) - pad, y1 = Math.max(...ys) + pad;
-      const k  = Math.min(width / (x1 - x0), height / (y1 - y0));
-      const tx = width  / 2 - k * (x0 + x1) / 2;
-      const ty = height / 2 - k * (y0 + y1) / 2;
-      const t  = d3.zoomIdentity.translate(tx, ty).scale(k);
+      const xs  = pts.map(p => p[0]);
+      const ys  = pts.map(p => p[1]);
+      const pad = Math.min(width, height) * 0.14;
+      const x0  = Math.min(...xs) - pad, x1 = Math.max(...xs) + pad;
+      const y0  = Math.min(...ys) - pad, y1 = Math.max(...ys) + pad;
+      const k   = Math.min(width / (x1 - x0), height / (y1 - y0));
+      const tx  = width  / 2 - k * (x0 + x1) / 2;
+      const ty  = height / 2 - k * (y0 + y1) / 2;
+      const t   = d3.zoomIdentity.translate(tx, ty).scale(k);
       if (animate && !reducedMotion) {
         svg.transition().duration(600).ease(d3.easeCubicOut).call(zoom.transform, t);
       } else {
@@ -196,27 +209,40 @@
       }
     }
 
-    function draw(worldData) {
+    function drawMap(worldData, statesData) {
       mapGroup.selectAll('*').remove();
 
       // Graticule
       mapGroup.append('path')
         .datum(d3.geoGraticule().step([10, 10])())
         .attr('d', path).attr('fill', 'none')
-        .attr('stroke', 'rgba(255,255,255,0.04)').attr('stroke-width', 0.5);
+        .attr('stroke', 'rgba(255,255,255,0.05)').attr('stroke-width', 0.5);
 
-      // Land
+      // Land (countries-50m has enough resolution to show Great Lakes as water holes)
       mapGroup.append('path')
         .datum(topojson.feature(worldData, worldData.objects.countries))
         .attr('d', path).attr('fill', '#3f5f3f');
 
-      // Borders
+      // Country borders
       mapGroup.append('path')
         .datum(topojson.mesh(worldData, worldData.objects.countries, (a, b) => a !== b))
         .attr('d', path).attr('fill', 'none')
         .attr('stroke', '#7b8c5c').attr('stroke-width', 0.3);
 
-      // Route arcs — ANCHOR pairs
+      // US state borders — same visual weight as country borders but lighter
+      if (statesData) {
+        mapGroup.append('g').attr('class', 'states')
+          .selectAll('path')
+          .data(statesData.features)
+          .join('path')
+          .attr('d', path)
+          .attr('fill', 'none')
+          .attr('stroke', '#7b8c5c')
+          .attr('stroke-width', 0.2)
+          .attr('stroke-opacity', 0.55);
+      }
+
+      // Route arcs — great-circle lines between ANCHOR cities
       const anchors = locations.filter(l => l.tier === 'ANCHOR');
       const arcG = mapGroup.append('g').attr('class', 'arcs');
       for (let i = 0; i < anchors.length; i++) {
@@ -224,56 +250,63 @@
           arcG.append('path')
             .datum({ type: 'LineString', coordinates: [anchors[i].coords, anchors[j].coords] })
             .attr('d', path).attr('fill', 'none')
-            .attr('stroke', 'rgba(201,168,118,0.18)').attr('stroke-width', 0.75);
+            .attr('stroke', 'rgba(201,168,118,0.15)').attr('stroke-width', 0.6);
         }
       }
+    }
 
-      // Pins
-      const mobile = isMobile();
+    function drawPins() {
+      pinGroup.selectAll('*').remove();
+
+      const mobile  = isMobile();
       const visible = mobile ? locations.filter(l => l.tier === 'ANCHOR') : locations;
-      const pinG = mapGroup.append('g').attr('class', 'pins');
 
       visible.forEach((loc, i) => {
-        const [px, py] = projection(loc.coords);
+        const [sx, sy] = toScreen(projPts[loc.id]);
         const r    = loc.tier === 'ANCHOR' ? 6 : loc.tier === 'MAJOR' ? 4.5 : 3;
-        const fill = loc.tier === 'ANCHOR' ? '#c9a876' : loc.tier === 'MAJOR' ? 'rgba(201,168,118,0.75)' : 'rgba(201,168,118,0.45)';
+        const fill = loc.tier === 'ANCHOR' ? '#c9a876'
+                   : loc.tier === 'MAJOR'  ? 'rgba(201,168,118,0.75)'
+                   :                         'rgba(201,168,118,0.45)';
 
-        const g = pinG.append('g')
+        const g = pinGroup.append('g')
           .attr('class', `pin pin--${loc.tier.toLowerCase()}`)
           .attr('data-id', loc.id)
-          .attr('transform', `translate(${px},${py})`)
+          .attr('transform', `translate(${sx},${sy})`)
           .attr('tabindex', '0').attr('role', 'button')
           .attr('aria-label', `View details for ${loc.label}`)
           .style('cursor', 'pointer');
 
         if (!reducedMotion) g.style('opacity', '0');
 
-        g.append('circle').attr('r', r).attr('fill', fill)
+        // Invisible larger hit area
+        g.append('circle').attr('r', Math.max(r + 6, 12))
+          .attr('fill', 'transparent').attr('stroke', 'none');
+
+        // Main dot
+        g.append('circle').attr('class', 'dot').attr('r', r).attr('fill', fill)
           .attr('stroke', loc.tier === 'ANCHOR' ? 'rgba(255,255,255,0.8)' : 'none')
           .attr('stroke-width', loc.tier === 'ANCHOR' ? 0.8 : 0);
 
+        // Pulse ring (shown on click)
         g.append('circle').attr('class', 'pulse-ring').attr('r', r)
           .attr('fill', 'none').attr('stroke', '#c9a876').attr('stroke-width', 1.5)
           .style('opacity', '0').style('pointer-events', 'none');
 
-        // Label — ANCHOR always visible, others on hover
-        const lbl = g.append('text')
-          .attr('class', `pin-label${loc.tier === 'ANCHOR' ? ' pin-label--always' : ' pin-label--hover'}`)
-          .attr('y', -(r + 5)).attr('text-anchor', 'middle')
+        // Label — always visible for all tiers, larger for ANCHOR
+        const fontSize = loc.tier === 'ANCHOR' ? '9px' : loc.tier === 'MAJOR' ? '8px' : '7.5px';
+        const labelOpacity = loc.tier === 'ANCHOR' ? 1 : loc.tier === 'MAJOR' ? 0.85 : 0.7;
+        g.append('text')
+          .attr('class', 'pin-label')
+          .attr('y', -(r + 6)).attr('text-anchor', 'middle')
           .attr('font-family', 'var(--font-mono,"JetBrains Mono Variable",monospace)')
-          .attr('font-size', '9px').attr('fill', '#e8d9bd')
+          .attr('font-size', fontSize)
+          .attr('fill', '#e8d9bd')
+          .attr('fill-opacity', labelOpacity)
           .attr('letter-spacing', '0.07em')
           .style('text-transform', 'uppercase')
-          .style('text-shadow', '0 1px 4px rgba(0,0,0,0.9)')
+          .style('text-shadow', '0 1px 4px rgba(0,0,0,0.9), 0 0 8px rgba(0,0,0,0.6)')
           .style('pointer-events', 'none')
           .text(loc.label.toUpperCase());
-
-        if (loc.tier !== 'ANCHOR') {
-          lbl.style('opacity', '0')
-             .style('transition', reducedMotion ? 'none' : 'opacity 0.15s ease');
-          g.on('mouseenter', () => lbl.style('opacity', '1'))
-           .on('mouseleave', () => lbl.style('opacity', '0'));
-        }
 
         g.on('click', () => handlePin(loc, g, r));
         g.on('keydown', (e) => {
@@ -281,55 +314,71 @@
         });
 
         if (!reducedMotion) {
-          setTimeout(() => g.transition().duration(300).style('opacity', '1'), i * 60);
+          setTimeout(() => g.transition().duration(300).style('opacity', '1'), i * 50);
         }
       });
+    }
 
-      fitPins(false);
+    function deactivatePin(id) {
+      const prev = pinGroup.select(`[data-id="${id}"]`);
+      const prevLoc = locations.find(l => l.id === id);
+      if (prevLoc) prev.select('.dot').attr('stroke', prevLoc.tier === 'ANCHOR' ? 'rgba(255,255,255,0.8)' : 'none').attr('stroke-width', prevLoc.tier === 'ANCHOR' ? 0.8 : 0);
     }
 
     function handlePin(loc, gSel, r) {
+      if (activeId && activeId !== loc.id) deactivatePin(activeId);
+
       if (activeId === loc.id) {
         activeId = null;
         updatePanel(null);
+        deactivatePin(loc.id);
       } else {
         activeId = loc.id;
         updatePanel(loc);
+        gSel.select('.dot').attr('stroke', '#c9a876').attr('stroke-width', 1.5);
+
         if (!reducedMotion) {
           const ring = gSel.select('.pulse-ring');
           ring.attr('r', r).style('opacity', '1')
             .transition().duration(600).ease(d3.easeCubicOut)
-            .attr('r', r + 10).style('opacity', '0')
+            .attr('r', r + 12).style('opacity', '0')
             .on('end', function() { d3.select(this).attr('r', r); });
         }
       }
     }
 
     document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && activeId !== null) { activeId = null; updatePanel(null); }
+      if (e.key === 'Escape' && activeId !== null) {
+        deactivatePin(activeId);
+        activeId = null;
+        updatePanel(null);
+      }
     });
 
-    fetch(WORLD_URL)
-      .then(r => r.json())
-      .then(worldData => {
-        draw(worldData);
+    // Load world and states in parallel
+    Promise.all([
+      fetch(WORLD_URL).then(r => r.json()),
+      fetch(STATES_URL).then(r => r.json()).catch(() => null),
+    ]).then(([worldData, statesData]) => {
+      drawMap(worldData, statesData);
+      fitPins(false);
+      drawPins();
 
-        let resizeTimer;
-        window.addEventListener('resize', () => {
-          clearTimeout(resizeTimer);
-          resizeTimer = setTimeout(() => {
-            setupDims();
-            bgRect.attr('width', width).attr('height', height);
-            grainRect.attr('width', width).attr('height', height);
-            setupProjection();
-            draw(worldData);
-          }, 150);
-        });
-      })
-      .catch(err => console.error('CircuitMap: failed to load world atlas', err));
+      let resizeTimer;
+      window.addEventListener('resize', () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+          setupDims();
+          bgRect.attr('width', width).attr('height', height);
+          setupProjection();
+          drawMap(worldData, statesData);
+          fitPins(false);
+          drawPins();
+        }, 150);
+      });
+    }).catch(err => console.error('CircuitMap: failed to load map data', err));
   }
 
-  // Load D3, then TopoJSON, then init
   try {
     await loadScript(D3_URL);
     await loadScript(TOPOJSON_URL);
