@@ -1,13 +1,63 @@
 ---
-// Sticky chrome. mix-blend-mode: difference so it inverts against any section.
+// Sticky chrome. Transparent + mix-blend: difference over hero.
+// Once hero leaves viewport, gains frosted background.
+const navLinks = [
+  { href: '#world', label: 'The World' },
+  { href: '#cast',  label: 'The Cast'  },
+  { href: '#arc',   label: 'The Arc'   },
+  { href: '#look',  label: 'The Look'  },
+  { href: '#why',   label: 'The Case'  },
+  { href: '#team',  label: 'The Team'  },
+  { href: '#contact', label: 'Contact' },
+];
 ---
 
-<header class="site-header">
+<header class="site-header" id="site-header">
   <a href="#top" class="brand">The Circuit</a>
-  <nav class="nav">
-    <a href="#contact" class="nav-link">Contact</a>
+  <nav class="nav" aria-label="Site sections">
+    {navLinks.map(({ href, label }) => (
+      <a href={href} class="nav-link">{label}</a>
+    ))}
   </nav>
+  <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="nav-menu">
+    <span></span><span></span>
+  </button>
 </header>
+
+<script>
+  const header = document.getElementById('site-header') as HTMLElement;
+  const toggle = header.querySelector('.nav-toggle') as HTMLButtonElement;
+  const nav    = header.querySelector('.nav') as HTMLElement;
+
+  function updateScrolled() {
+    const hero = document.getElementById('top');
+    const threshold = hero ? hero.offsetTop + hero.offsetHeight - 60 : window.innerHeight - 60;
+    header.classList.toggle('scrolled', window.scrollY > threshold);
+  }
+
+  let ticking = false;
+  window.addEventListener('scroll', () => {
+    if (!ticking) {
+      requestAnimationFrame(() => { updateScrolled(); ticking = false; });
+      ticking = true;
+    }
+  }, { passive: true });
+
+  updateScrolled();
+
+  toggle?.addEventListener('click', () => {
+    const open = toggle.getAttribute('aria-expanded') === 'true';
+    toggle.setAttribute('aria-expanded', String(!open));
+    nav.classList.toggle('nav--open', !open);
+  });
+
+  nav?.querySelectorAll('.nav-link').forEach(link => {
+    link.addEventListener('click', () => {
+      toggle.setAttribute('aria-expanded', 'false');
+      nav.classList.remove('nav--open');
+    });
+  });
+</script>
 
 <style>
   .site-header {
@@ -18,27 +68,116 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    transition:
+      background-color 350ms var(--ease-circuit),
+      backdrop-filter  350ms var(--ease-circuit),
+      color            350ms var(--ease-circuit);
+    /* Over hero: difference blend auto-inverts against any bg */
     mix-blend-mode: difference;
     color: var(--color-paper);
     pointer-events: none;
   }
+
+  .site-header.scrolled {
+    mix-blend-mode: normal;
+    color: var(--color-paper);
+    background-color: color-mix(in srgb, var(--color-ink) 72%, transparent);
+    backdrop-filter: blur(12px) saturate(150%);
+    -webkit-backdrop-filter: blur(12px) saturate(150%);
+    border-bottom: 1px solid color-mix(in srgb, var(--color-paper) 10%, transparent);
+  }
+
   .brand,
-  .nav-link {
+  .nav-link,
+  .nav-toggle {
     pointer-events: auto;
   }
+
   .brand {
     font-family: var(--font-display);
     font-weight: 400;
     font-size: 1.0625rem;
     font-variation-settings: "opsz" 14;
     letter-spacing: 0.01em;
+    flex-shrink: 0;
   }
+
+  .nav {
+    display: flex;
+    align-items: center;
+    gap: clamp(1rem, 2vw, 2rem);
+  }
+
   .nav-link {
     font-family: var(--font-mono);
-    font-size: 0.7rem;
+    font-size: 0.65rem;
     letter-spacing: 0.18em;
     text-transform: uppercase;
-    transition: opacity 400ms var(--ease);
+    opacity: 0.75;
+    transition: opacity 300ms var(--ease);
+    white-space: nowrap;
   }
-  .nav-link:hover { opacity: 0.7; }
+  .nav-link:hover { opacity: 1; }
+
+  .nav-toggle {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    color: inherit;
+  }
+  .nav-toggle span {
+    display: block;
+    width: 22px;
+    height: 1px;
+    background: currentColor;
+    transition: transform 250ms var(--ease), opacity 250ms var(--ease);
+  }
+  .nav-toggle[aria-expanded="true"] span:first-child {
+    transform: translateY(6px) rotate(45deg);
+  }
+  .nav-toggle[aria-expanded="true"] span:last-child {
+    transform: translateY(-6px) rotate(-45deg);
+  }
+
+  /* ── Mobile ── */
+  @media (max-width: 860px) {
+    .nav-toggle { display: flex; }
+
+    .nav {
+      position: fixed;
+      inset: 0 0 auto 0;
+      top: 0;
+      padding: 5rem var(--gutter) 2rem;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1.5rem;
+      background-color: color-mix(in srgb, var(--color-ink) 92%, transparent);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      pointer-events: none;
+      opacity: 0;
+      transform: translateY(-8px);
+      transition: opacity 250ms var(--ease), transform 250ms var(--ease);
+    }
+    .nav.nav--open {
+      pointer-events: auto;
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .nav-link {
+      font-size: 0.8rem;
+      opacity: 1;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .site-header,
+    .nav {
+      transition: none;
+    }
+  }
 </style>
