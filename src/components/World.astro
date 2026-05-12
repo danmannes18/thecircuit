@@ -1,5 +1,6 @@
 ---
 // Act Three — The World. Prose verbatim from /docs/01.
+const VIDEO_SRC = "/mp4/SnapInsta.to_AQMLpm-xxb95KNPyM3VTISOp7s0_t20xwWF_w5j-7JWmUf4FueERGe9DHN61ONYA7L8d33JX68bxKxffTKAdbubLDufeyJPTmLo2SEw.mp4";
 ---
 
 <section id="world" class="world">
@@ -11,58 +12,66 @@
       </h2>
     </header>
 
-    <div class="prose" data-reveal>
-      <p>
-        It moves in a circle. Wellington in winter. Aachen in summer. The
-        Hamptons in late August. Geneva by Christmas. The same eighty or so
-        faces — the riders, the owners, the grooms, the families — show up at
-        each stop, set up their barns, compete for millions, and leave for the
-        next city. They live their entire lives inside this orbit. They call
-        it <em>the circuit.</em>
-      </p>
+    <div class="body" data-reveal>
+      <div class="prose">
+        <p>
+          It moves in a circle. Wellington in winter. Aachen in summer. The
+          Hamptons in late August. Geneva by Christmas. The same eighty or so
+          faces — the riders, the owners, the grooms, the families — show up at
+          each stop, set up their barns, compete for millions, and leave for the
+          next city. They live their entire lives inside this orbit. They call
+          it <em>the circuit.</em>
+        </p>
 
-      <p>
-        It is one of the wealthiest professional sports on earth, and one of
-        the least televised. A single horse can sell for fifteen million
-        dollars. A season campaigning at the top level costs more than a
-        Premier League salary. The grooms who care for these animals know them
-        better than any human in their lives. The riders are athletes, but
-        they are also showmen, businesspeople, and in many cases, the children
-        of the most powerful families in the world. Bruce Springsteen’s
-        daughter is on the U.S. Olympic team. Bill Gates’ daughter married an
-        Egyptian Olympian. Steve Jobs’ daughter is a working international
-        rider. They compete against the working professionals who built their
-        careers from nothing — McLain Ward, Kent Farrington, Laura Kraut —
-        riders who have spent thirty years getting to where the heirs arrived
-        as teenagers.
-      </p>
+        <p>
+          It is one of the wealthiest professional sports on earth, and one of
+          the least televised. A single horse can sell for fifteen million
+          dollars. A season campaigning at the top level costs more than a
+          Premier League salary. The grooms who care for these animals know them
+          better than any human in their lives. The riders are athletes, but
+          they are also showmen, businesspeople, and in many cases, the children
+          of the most powerful families in the world. Bruce Springsteen’s
+          daughter is on the U.S. Olympic team. Bill Gates’ daughter married an
+          Egyptian Olympian. Steve Jobs’ daughter is a working international
+          rider. They compete against the working professionals who built their
+          careers from nothing — McLain Ward, Kent Farrington, Laura Kraut —
+          riders who have spent thirty years getting to where the heirs arrived
+          as teenagers.
+        </p>
 
-      <p>
-        In 2028, the Olympics come home. For the first time since 1984, the
-        equestrian Games will be held on American soil, at Santa Anita Park in
-        Arcadia, California. American equestrian sport has not produced an
-        individual show jumping gold medalist since Joe Fargis won in Los Angeles
-        forty-four years earlier. Boyd Martin is chasing the first US individual
-        eventing gold in over two decades. Every rider on the circuit — American,
-        European, Middle Eastern, South American — is now building toward one
-        stadium and a single weekend in July 2028.
-      </p>
+        <p>
+          In 2028, the Olympics come home. For the first time since 1984, the
+          equestrian Games will be held on American soil, at Santa Anita Park in
+          Arcadia, California. American equestrian sport has not produced an
+          individual show jumping gold medalist since Joe Fargis won in Los Angeles
+          forty-four years earlier. Boyd Martin is chasing the first US individual
+          eventing gold in over two decades. Every rider on the circuit — American,
+          European, Middle Eastern, South American — is now building toward one
+          stadium and a single weekend in July 2028.
+        </p>
 
-      <p>
-        <em>The Circuit</em> is an unscripted cinematic series in the lineage of
-        <em>The Last Dance</em>, <em>Free Solo</em>, and <em>Buck</em> — real
-        people, real barns, real horses, real stakes. It moves at the speed of
-        a season, a career, a horse's lifetime.
-      </p>
+        <p>
+          <em>The Circuit</em> is an unscripted cinematic series in the lineage of
+          <em>The Last Dance</em>, <em>Free Solo</em>, and <em>Buck</em> — real
+          people, real barns, real horses, real stakes. It moves at the speed of
+          a season, a career, a horse’s lifetime.
+        </p>
 
-      <p>
-        The circuit is three worlds at once. The show jumpers chase prize money
-        and podiums across the LGCT and the World Cup circuit. The dressage
-        riders move through a slower, more internal world of partnership and
-        precision, where the most celebrated horse alive can have a state funeral
-        when she retires. The eventers live closest to the sport's oldest
-        question: what does it cost a human to ask this of an animal?
-      </p>
+        <p>
+          The circuit is three worlds at once. The show jumpers chase prize money
+          and podiums across the LGCT and the World Cup circuit. The dressage
+          riders move through a slower, more internal world of partnership and
+          precision, where the most celebrated horse alive can have a state funeral
+          when she retires. The eventers live closest to the sport’s oldest
+          question: what does it cost a human to ask this of an animal?
+        </p>
+      </div>
+
+      <aside class="video-aside">
+        <video class="aside-video" muted loop playsinline preload="none" data-lazy-video>
+          <source data-src={VIDEO_SRC} type="video/mp4" />
+        </video>
+      </aside>
     </div>
 
     <blockquote class="pull" data-reveal>
@@ -78,7 +87,7 @@
     background: var(--color-paper-warm);
   }
   .inner {
-    max-width: 64rem;
+    max-width: 80rem;
     margin: 0 auto;
   }
   .head {
@@ -86,9 +95,13 @@
     flex-direction: column;
     gap: 1rem;
     margin-bottom: 4rem;
+    max-width: 48rem;
   }
-  .prose {
-    max-width: var(--measure);
+  .body {
+    display: grid;
+    grid-template-columns: 1fr 260px;
+    gap: 4rem;
+    align-items: start;
   }
   .prose p {
     margin-bottom: 1.5em;
@@ -106,6 +119,18 @@
     font-family: var(--font-display);
     font-variation-settings: "opsz" 14, "SOFT" 50, "WONK" 1;
     color: var(--color-bay);
+  }
+  .video-aside {
+    position: sticky;
+    top: 6rem;
+  }
+  .aside-video {
+    width: 100%;
+    aspect-ratio: 1 / 2;
+    object-fit: cover;
+    display: block;
+    border-radius: 2px;
+    background: #1a1008;
   }
   .pull {
     font-family: var(--font-display);
@@ -125,5 +150,14 @@
   }
   .pull em {
     color: var(--color-bay);
+  }
+  @media (max-width: 860px) {
+    .body {
+      grid-template-columns: 1fr;
+    }
+    .video-aside {
+      position: static;
+      max-width: 320px;
+    }
   }
 </style>

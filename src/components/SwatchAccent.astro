@@ -1,0 +1,38 @@
+---
+// A compact horizontal strip of colour swatches used as a visual divider.
+// Pass a subset of the palette or leave empty for the full 9.
+interface Props {
+  swatches?: string[];
+  height?: string;
+}
+const defaultSwatches = [
+  "linear-gradient(135deg, #c9a876 0%, #8b6f47 100%)",
+  "linear-gradient(180deg, #3f5f3f 0%, #1f2f1f 100%)",
+  "linear-gradient(135deg, #b73239 0%, #6f1f24 100%)",
+  "linear-gradient(135deg, #1f0f0a 0%, #5b3520 100%)",
+  "linear-gradient(180deg, #a8c5dc 0%, #6f8fa6 100%)",
+  "linear-gradient(135deg, #e25822 0%, #a13a14 100%)",
+  "linear-gradient(180deg, #c9a876 0%, #5b3520 100%)",
+  "linear-gradient(135deg, #0f1e3d 0%, #1f0f0a 100%)",
+  "linear-gradient(180deg, #006039 0%, #003020 100%)",
+];
+const { swatches = defaultSwatches, height = "56px" } = Astro.props;
+---
+
+<div class="swatch-accent" style={`--chip-h: ${height};`}>
+  {swatches.map((g) => (
+    <span class="chip" style={`background: ${g};`}></span>
+  ))}
+</div>
+
+<style>
+  .swatch-accent {
+    display: flex;
+    width: 100%;
+  }
+  .chip {
+    flex: 1;
+    height: var(--chip-h, 56px);
+    display: block;
+  }
+</style>
