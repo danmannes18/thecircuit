@@ -41,6 +41,33 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? 'https://thecircuit.
       initReveal();
       initCast();
     </script>
+    <script>
+      // Lazy-load all videos with data-lazy-video attribute.
+      // Sets source src from data-src, loads, and plays when entering viewport.
+      // Pauses when leaving viewport to save CPU/battery.
+      const obs = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            const video = entry.target as HTMLVideoElement;
+            if (entry.isIntersecting) {
+              video.querySelectorAll<HTMLSourceElement>('source[data-src]').forEach((s) => {
+                s.src = s.dataset.src!;
+                delete s.dataset.src;
+              });
+              if (video.readyState === 0) video.load();
+              video.play().catch(() => {});
+            } else {
+              video.pause();
+            }
+          });
+        },
+        { rootMargin: '300px 0px' },
+      );
+
+      document.querySelectorAll<HTMLVideoElement>('video[data-lazy-video]').forEach((v) => {
+        obs.observe(v);
+      });
+    </script>
 
     <style>
       .skip-link {
