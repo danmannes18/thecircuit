@@ -21,7 +21,7 @@ export const seasons: Season[] = [
     year: 2027,
     title: 'The Circuit',
     summary:
-      'Eight episodes following the year on the road. Wellington, Wellington Nations Cup, the Atlantic crossing, CHIO Aachen, the Hampton Classic, Spruce Meadows, and CHI Geneva. The audience meets the cast, learns the world, and watches the rivalries take shape — with the Olympic year now visible on the horizon.',
+      'Eight episodes following the year on the road across all three disciplines. Wellington in winter. The European spring. CHIO Aachen. The Hampton Classic. Spruce Meadows. CHI Geneva. The audience meets the full cast — show jumpers, dressage riders, eventers — learns the world, and watches the rivalries take shape as the Premier Jumping League arrives and the road to LA28 comes into focus.',
     episodes: [
       {
         number: '01',
@@ -46,7 +46,7 @@ export const seasons: Season[] = [
       {
         number: '05',
         title: 'Aachen',
-        synopsis: 'The Americans on the world’s most iconic grass arena.',
+        synopsis: "The Americans on the world’s most iconic grass arena.",
       },
       {
         number: '06',
@@ -70,7 +70,7 @@ export const seasons: Season[] = [
     year: 2028,
     title: 'Road to Los Angeles',
     summary:
-      'Eight episodes. Same characters, narrowing focus. Selection trials. Partnerships under pressure. Injuries, withdrawals, last-minute substitutions. The finale is the 2028 Los Angeles Olympic Games at Galway Downs, California — the first home Olympics for American equestrians in forty-four years.',
+      'Eight episodes. Same characters across all three disciplines, narrowing focus. Team selection. Partnerships under pressure. Injuries, withdrawals, last-minute substitutions. The finale is the 2028 Los Angeles Olympic Games at Santa Anita Park, Arcadia, California — the first home Olympics for American equestrians in forty-four years. Six gold medals. Every episode since Wellington has been pointing here.',
     episodes: [
       {
         number: '01',
@@ -105,13 +105,13 @@ export const seasons: Season[] = [
       {
         number: '07',
         title: 'Los Angeles',
-        synopsis: 'Arrival at Galway Downs. The opening ceremony.',
+        synopsis: 'Arrival at Santa Anita Park. The opening ceremony.',
       },
       {
         number: '08',
         title: 'Gold',
         synopsis:
-          'The Olympic show jumping competition. The first American home Games for the sport since 1984.',
+          'The Olympic equestrian competition. Six gold medals. Three disciplines. Santa Anita Park, July 2028.',
       },
     ],
   },

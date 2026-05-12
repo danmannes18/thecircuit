@@ -1,7 +1,8 @@
 ---
 // Act Four — The Cast.
-import CastCard from './CastCard.astro';
-import { castGroups, castByGroup, cast } from '../data/cast';
+import CastCard from "./CastCard.astro";
+import { castGroups, castByGroup, cast } from "../data/cast";
+import type { Discipline, CastMember } from "../data/cast";
 
 const bioData = Object.fromEntries(
   cast.map((m) => [
@@ -13,9 +14,45 @@ const bioData = Object.fromEntries(
       achievements: m.achievements,
       bio: m.bio,
       narrativeFunction: m.narrativeFunction,
+      discipline: m.discipline,
+      instagram: m.instagram,
+      wikipedia: m.wikipedia,
     },
   ]),
 );
+
+const DISCIPLINE_LABELS: Record<Discipline, string> = {
+  "show-jumping": "Show Jumping",
+  "dressage": "Dressage",
+  "eventing": "Eventing",
+  "institutional": "",
+};
+
+const NEXT_WAVE_IDS = new Set(["eisner", "propp", "wireman", "torano", "bockmann"]);
+
+type DividerItem = { type: "divider"; label: string };
+type CardItem = { type: "card"; member: CastMember };
+type GridItem = DividerItem | CardItem;
+
+function buildGridItems(members: CastMember[], withDividers: boolean): GridItem[] {
+  if (!withDividers) return members.map((m) => ({ type: "card" as const, member: m }));
+  const items: GridItem[] = [];
+  let lastLabel = "";
+  for (const m of members) {
+    const label = NEXT_WAVE_IDS.has(m.id) ? "Next Wave" : (DISCIPLINE_LABELS[m.discipline] || "");
+    if (label && label !== lastLabel) {
+      lastLabel = label;
+      items.push({ type: "divider" as const, label: label.toUpperCase() });
+    }
+    items.push({ type: "card" as const, member: m });
+  }
+  return items;
+}
+
+const groupGrids = castGroups.map((group) => ({
+  group,
+  items: buildGridItems(castByGroup(group.id), group.id === "legends" || group.id === "rising"),
+}));
 ---
 
 <section id="cast" class="cast">
@@ -23,16 +60,16 @@ const bioData = Object.fromEntries(
     <header class="head" data-reveal>
       <p class="meta">The Cast</p>
       <h2 class="section-title">
-        Fifteen anchors. <em>Four archetypes. One world.</em>
+        Thirty-five anchors. <em>Four groups. Three disciplines.</em>
       </h2>
       <p class="intro">
         Old American champions, billionaires’ children, European nobility, and
-        the working-class crew that keeps it all running. The collision of
-        these worlds is the show.
+        the working-class crew that keeps it all running — across show jumping,
+        dressage, and eventing. The collision of these worlds is the show.
       </p>
     </header>
 
-    {castGroups.map((group) => (
+    {groupGrids.map(({ group, items }) => (
       <article class="group" data-reveal>
         <h3 class="group__label">
           <span class="group__numeral">{group.numeral}.</span>
@@ -41,9 +78,11 @@ const bioData = Object.fromEntries(
         </h3>
 
         <div class="grid" data-cast-grid={group.id}>
-          {castByGroup(group.id).map((m) => (
-            <CastCard id={m.id} number={m.number} name={m.name} role={m.role} />
-          ))}
+          {items.map((item) =>
+            item.type === "divider"
+              ? <div class="discipline-divider" role="separator"><span>{item.label}</span></div>
+              : <CastCard id={item.member.id} number={item.member.number} name={item.member.name} role={item.member.role} discipline={item.member.discipline} />
+          )}
         </div>
 
         <div class="bio-panel" data-cast-bio={group.id} aria-live="polite"></div>
@@ -113,6 +152,19 @@ const bioData = Object.fromEntries(
     gap: 0;
     border-top: 1px solid var(--rule);
     border-left: 1px solid var(--rule);
+  }
+  .discipline-divider {
+    grid-column: 1 / -1;
+    padding: 0.75rem 1.5rem;
+    border-right: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    background: transparent;
+  }
+  .discipline-divider span {
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    letter-spacing: 0.18em;
+    color: var(--color-ink-mute);
   }
   .bio-panel {
     overflow: hidden;
@@ -199,5 +251,24 @@ const bioData = Object.fromEntries(
     color: var(--color-ink-mute);
     display: block;
     margin-bottom: 0.5rem;
+  }
+  .bio-panel :global(.bio__social) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.5rem;
+    padding: 1rem 0;
+    margin: 0.5rem 0;
+    border-top: 1px solid var(--rule);
+  }
+  .bio-panel :global(.bio__social-link) {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    color: var(--color-ink-mute);
+    text-decoration: none;
+    transition: color 200ms var(--ease);
+  }
+  .bio-panel :global(.bio__social-link:hover) {
+    color: var(--color-ink);
   }
 </style>
