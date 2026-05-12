@@ -1,5 +1,5 @@
-// Cast-card expand/collapse. One bio open globally at a time.
-// Bios live in a JSON <script id="cast-bios"> emitted by Cast.astro.
+// Cast-card expand/collapse. Bio panel inserts inline in the grid,
+// directly below the clicked card's row.
 
 interface Bio {
   name: string;
@@ -66,12 +66,22 @@ function renderBio(bio: Bio): string {
   `;
 }
 
-function closeAll(panels: NodeListOf<HTMLElement>, cards: NodeListOf<HTMLButtonElement>) {
-  panels.forEach((p) => {
+// Returns the last card in the same visual row as the clicked card.
+// We insert the bio panel after this element so it appears below the full row.
+function getLastCardInRow(card: HTMLButtonElement, grid: HTMLElement): HTMLElement {
+  const clickedTop = card.getBoundingClientRect().top;
+  const allCards = [...grid.querySelectorAll<HTMLButtonElement>('[data-card]')];
+  const rowCards = allCards.filter(
+    (c) => Math.abs(c.getBoundingClientRect().top - clickedTop) < 4,
+  );
+  return rowCards[rowCards.length - 1] ?? card;
+}
+
+function closeAll(cards: NodeListOf<HTMLButtonElement>) {
+  document.querySelectorAll<HTMLElement>('.bio-panel').forEach((p) => {
     p.classList.remove('is-open');
-    // Clear after the transition so the DOM stays light.
     window.setTimeout(() => {
-      if (!p.classList.contains('is-open')) p.innerHTML = '';
+      if (!p.classList.contains('is-open')) p.remove();
     }, 650);
   });
   cards.forEach((c) => c.setAttribute('aria-expanded', 'false'));
@@ -89,14 +99,7 @@ export function initCast() {
   }
 
   const cards = document.querySelectorAll<HTMLButtonElement>('[data-card]');
-  const panels = document.querySelectorAll<HTMLElement>('[data-cast-bio]');
-  if (!cards.length || !panels.length) return;
-
-  const panelByGroup = new Map<string, HTMLElement>();
-  panels.forEach((p) => {
-    const id = p.getAttribute('data-cast-bio');
-    if (id) panelByGroup.set(id, p);
-  });
+  if (!cards.length) return;
 
   const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -107,34 +110,40 @@ export function initCast() {
       const bio = bios[key];
       if (!bio) return;
 
-      const grid = card.closest('[data-cast-grid]') as HTMLElement | null;
-      const groupId = grid?.getAttribute('data-cast-grid');
-      const panel = groupId ? panelByGroup.get(groupId) : null;
-      if (!panel) return;
+      const grid = card.closest<HTMLElement>('[data-cast-grid]');
+      if (!grid) return;
 
       const wasOpen = card.getAttribute('aria-expanded') === 'true';
 
-      closeAll(panels, cards);
+      closeAll(cards);
       if (wasOpen) return;
 
+      // Find the last card in the same visual row so the panel spans below it
+      const anchor = getLastCardInRow(card, grid);
+
+      const panel = document.createElement('div');
+      panel.className = 'bio-panel';
+      panel.setAttribute('aria-live', 'polite');
       panel.innerHTML = renderBio(bio);
-      // Force layout then open — keeps the transition smooth.
-      void panel.offsetHeight;
+
+      anchor.insertAdjacentElement('afterend', panel);
+      void panel.offsetHeight; // force layout before transition
       panel.classList.add('is-open');
       card.setAttribute('aria-expanded', 'true');
 
-      // Auto-scroll the card to upper third of viewport.
-      window.setTimeout(
-        () => {
-          const rect = card.getBoundingClientRect();
-          const targetY = window.scrollY + rect.top - Math.max(96, window.innerHeight * 0.18);
-          window.scrollTo({
-            top: targetY,
-            behavior: prefersReduced ? 'auto' : 'smooth',
-          });
-        },
-        prefersReduced ? 0 : 60,
-      );
+      // Only scroll if the panel is already below the fold — don't move the
+      // viewport when the expansion is already visible.
+      if (!prefersReduced) {
+        window.setTimeout(() => {
+          const panelRect = panel.getBoundingClientRect();
+          if (panelRect.top > window.innerHeight - 80) {
+            window.scrollTo({
+              top: window.scrollY + panelRect.top - 120,
+              behavior: 'smooth',
+            });
+          }
+        }, 60);
+      }
     });
   });
 
@@ -143,7 +152,7 @@ export function initCast() {
     if (e.key === 'Escape') {
       const anyOpen = document.querySelector('[data-card][aria-expanded="true"]');
       if (anyOpen) {
-        closeAll(panels, cards);
+        closeAll(cards);
         (anyOpen as HTMLElement).focus();
       }
     }

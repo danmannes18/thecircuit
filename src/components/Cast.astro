@@ -85,7 +85,6 @@ const groupGrids = castGroups.map((group) => ({
           )}
         </div>
 
-        <div class="bio-panel" data-cast-bio={group.id} aria-live="polite"></div>
       </article>
     ))}
   </div>
@@ -166,7 +165,9 @@ const groupGrids = castGroups.map((group) => ({
     letter-spacing: 0.18em;
     color: var(--color-ink-mute);
   }
-  .bio-panel {
+  /* Bio panel is injected dynamically by JS — must be :global */
+  :global(.bio-panel) {
+    grid-column: 1 / -1;
     overflow: hidden;
     max-height: 0;
     border-left: 1px solid var(--rule);
@@ -175,19 +176,18 @@ const groupGrids = castGroups.map((group) => ({
     transition: max-height 600ms var(--ease);
     background: var(--color-paper-warm);
   }
-  .bio-panel.is-open {
+  :global(.bio-panel.is-open) {
     max-height: 2400px;
   }
   @media (prefers-reduced-motion: reduce) {
-    .bio-panel { transition: none; }
+    :global(.bio-panel) { transition: none; }
   }
-
-  .bio-panel :global(.bio__inner) {
+  :global(.bio-panel .bio__inner) {
     padding: 2.75rem var(--gutter);
     max-width: 56rem;
     margin: 0 auto;
   }
-  .bio-panel :global(.bio__name) {
+  :global(.bio-panel .bio__name) {
     font-family: var(--font-display);
     font-weight: 350;
     font-variation-settings: "opsz" 144, "SOFT" 30, "WONK" 0;
@@ -197,7 +197,7 @@ const groupGrids = castGroups.map((group) => ({
     color: var(--color-ink);
     margin-bottom: 1.5rem;
   }
-  .bio-panel :global(.bio__meta) {
+  :global(.bio-panel .bio__meta) {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
     gap: 1.25rem 2rem;
@@ -205,7 +205,7 @@ const groupGrids = castGroups.map((group) => ({
     padding-bottom: 2rem;
     border-bottom: 1px solid var(--rule);
   }
-  .bio-panel :global(.bio__meta-row dt) {
+  :global(.bio-panel .bio__meta-row dt) {
     font-family: var(--font-mono);
     font-size: 0.65rem;
     letter-spacing: 0.18em;
@@ -213,7 +213,7 @@ const groupGrids = castGroups.map((group) => ({
     color: var(--color-ink-mute);
     margin-bottom: 0.4rem;
   }
-  .bio-panel :global(.bio__meta-row dd) {
+  :global(.bio-panel .bio__meta-row dd) {
     font-family: var(--font-display);
     font-weight: 350;
     font-size: 0.9375rem;
@@ -221,15 +221,15 @@ const groupGrids = castGroups.map((group) => ({
     color: var(--color-ink);
     margin: 0;
   }
-  .bio-panel :global(.bio__body p) {
+  :global(.bio-panel .bio__body p) {
     font-size: 1.0625rem;
     line-height: 1.65;
     color: var(--color-ink-soft);
     margin-bottom: 1.25em;
     max-width: var(--measure);
   }
-  .bio-panel :global(.bio__body p:last-child) { margin-bottom: 0; }
-  .bio-panel :global(.bio__function) {
+  :global(.bio-panel .bio__body p:last-child) { margin-bottom: 0; }
+  :global(.bio-panel .bio__function) {
     font-family: var(--font-display);
     font-style: italic;
     font-variation-settings: "opsz" 24, "SOFT" 50, "WONK" 1;
@@ -241,7 +241,7 @@ const groupGrids = castGroups.map((group) => ({
     border-top: 1px solid var(--rule);
     max-width: var(--measure);
   }
-  .bio-panel :global(.bio__function-label) {
+  :global(.bio-panel .bio__function-label) {
     font-family: var(--font-mono);
     font-weight: 400;
     font-style: normal;
@@ -252,7 +252,7 @@ const groupGrids = castGroups.map((group) => ({
     display: block;
     margin-bottom: 0.5rem;
   }
-  .bio-panel :global(.bio__social) {
+  :global(.bio-panel .bio__social) {
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem 1.5rem;
@@ -260,7 +260,7 @@ const groupGrids = castGroups.map((group) => ({
     margin: 0.5rem 0;
     border-top: 1px solid var(--rule);
   }
-  .bio-panel :global(.bio__social-link) {
+  :global(.bio-panel .bio__social-link) {
     font-family: var(--font-mono);
     font-size: 0.7rem;
     letter-spacing: 0.1em;
@@ -268,7 +268,7 @@ const groupGrids = castGroups.map((group) => ({
     text-decoration: none;
     transition: color 200ms var(--ease);
   }
-  .bio-panel :global(.bio__social-link:hover) {
+  :global(.bio-panel .bio__social-link:hover) {
     color: var(--color-ink);
   }
 </style>
