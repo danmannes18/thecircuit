@@ -5,19 +5,21 @@
 <section id="top" class="hero">
   <div class="hero__bg" aria-hidden="true"></div>
 
-  <div class="hero__center">
-    <h1 class="hero__title display" data-anim="title">
+  <div class="hero__content">
+    <h1 class="hero__title" data-anim="title">
       The <em>Circuit</em>
     </h1>
-    <p class="hero__subtitle display-italic" data-anim="subtitle">
+    <p class="hero__subtitle" data-anim="subtitle">
       A premium documentary series.
     </p>
   </div>
 
-  <div class="hero__meta" data-anim="meta">
-    <span>Two seasons</span>
-    <span>The road to Los Angeles 2028</span>
+  <div class="hero__meta">
+    <span class="hero__meta-item" data-anim="meta">Two seasons</span>
+    <span class="hero__meta-item" data-anim="meta">The road to Los Angeles 2028</span>
   </div>
+
+  <span class="hero__scroll" aria-hidden="true" data-anim="meta">Scroll</span>
 </section>
 
 <style>
@@ -26,7 +28,7 @@
     min-height: 100vh;
     min-height: 100svh;
     display: grid;
-    grid-template-rows: 1fr auto;
+    grid-template-rows: 1fr auto auto 1fr;
     padding: 6rem var(--gutter) 2.5rem;
     background: var(--color-bay-deep);
     color: var(--color-paper);
@@ -44,56 +46,109 @@
       radial-gradient(ellipse at 30% 70%, rgba(201, 168, 118, 0.35) 0%, transparent 60%),
       linear-gradient(135deg, #2a1a0e 0%, #1a0f08 100%);
   }
-  .hero__center {
+  .hero__bg::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.5 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.4'/></svg>");
+    opacity: 0.35;
+    mix-blend-mode: overlay;
+    pointer-events: none;
+  }
+
+  .hero__content {
     position: relative;
     z-index: 1;
+    grid-row: 2 / 4;
+    max-width: 1400px;
+    margin: 0 auto;
+    width: 100%;
     align-self: center;
-    display: flex;
-    flex-direction: column;
-    gap: 1.25rem;
   }
   .hero__title {
+    font-family: var(--font-display);
+    font-weight: 300;
+    font-variation-settings: "opsz" 144, "SOFT" 30, "WONK" 0;
     font-size: clamp(4rem, 14vw, 14rem);
-    color: var(--color-sand-deep);
+    line-height: 0.9;
+    letter-spacing: -0.04em;
+    margin-bottom: 1.5rem;
+    color: var(--color-paper);
   }
   .hero__title em {
+    font-style: italic;
+    font-variation-settings: "opsz" 144, "SOFT" 60, "WONK" 1;
     color: var(--color-sand-deep);
   }
   .hero__subtitle {
     font-family: var(--font-display);
-    font-size: clamp(1.25rem, 2vw, 1.75rem);
-    color: rgba(245, 241, 232, 0.75);
-    font-variation-settings: "opsz" 60, "SOFT" 50, "WONK" 1;
     font-style: italic;
-    font-weight: 350;
+    font-variation-settings: "opsz" 60, "SOFT" 60, "WONK" 1;
+    font-weight: 300;
+    font-size: clamp(1.125rem, 1rem + 0.6vw, 1.5rem);
+    color: rgba(245, 241, 232, 0.75);
+    max-width: 32rem;
   }
   .hero__meta {
     position: relative;
     z-index: 1;
+    grid-row: 4;
+    align-self: end;
     display: flex;
     justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 1rem;
+    align-items: end;
+    gap: 2rem;
+    max-width: 1400px;
+    width: 100%;
+    margin: 0 auto;
+    padding-top: 3rem;
+  }
+  .hero__meta-item {
     font-family: var(--font-mono);
     font-size: 0.7rem;
     letter-spacing: 0.18em;
     text-transform: uppercase;
-    color: rgba(245, 241, 232, 0.55);
+    color: rgba(245, 241, 232, 0.7);
+  }
+  .hero__scroll {
+    position: absolute;
+    right: var(--gutter);
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 2;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(245, 241, 232, 0.5);
+    writing-mode: vertical-rl;
+  }
+  @media (max-width: 720px) {
+    .hero__scroll { display: none; }
+    .hero__meta { flex-direction: column; align-items: flex-start; gap: 0.75rem; }
   }
 
-  /* Staggered entrance — Phase 4 will polish */
+  /* Staggered entrance */
   [data-anim] {
     opacity: 0;
-    transform: translateY(1rem);
-    animation: rise 1.2s var(--ease) forwards;
+    animation: rise 1.2s var(--ease-circuit) forwards;
   }
   [data-anim="title"]    { animation-delay: 0.1s; }
   [data-anim="subtitle"] { animation-delay: 0.5s; }
   [data-anim="meta"]     { animation-delay: 0.9s; }
   @keyframes rise {
-    to { opacity: 1; transform: none; }
+    from { opacity: 0; transform: translateY(1.5rem); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .hero__scroll[data-anim="meta"] {
+    animation-name: rise-scroll;
+  }
+  @keyframes rise-scroll {
+    from { opacity: 0; transform: translateY(calc(-50% + 1rem)); }
+    to   { opacity: 0.5; transform: translateY(-50%); }
   }
   @media (prefers-reduced-motion: reduce) {
     [data-anim] { opacity: 1; transform: none; animation: none; }
+    .hero__scroll[data-anim] { opacity: 0.5; }
   }
 </style>

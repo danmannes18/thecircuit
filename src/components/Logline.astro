@@ -1,14 +1,14 @@
 ---
-// Act Two — Logline. Phase 2 will drop in final prose.
+// Act Two — Logline. Prose verbatim from /docs/01.
 ---
 
-<section class="logline section-y gutter-x">
+<section class="logline">
   <div class="inner" data-reveal>
-    <p class="meta">Logline</p>
-    <p class="logline__copy display-md">
+    <p class="meta logline__eyebrow">Logline</p>
+    <p class="logline__text">
       Inside the billion-dollar world of international show jumping — where
       Olympic athletes, dynastic heirs, and the <em>horses that bind them</em>
-      chase the sport's ultimate prize across a year on the road to the 2028
+      chase the sport’s ultimate prize across a year on the road to the 2028
       Los Angeles Games.
     </p>
   </div>
@@ -16,22 +16,31 @@
 
 <style>
   .logline {
+    padding: var(--section-y) var(--gutter);
     background: var(--color-paper);
-    min-height: 70vh;
     display: grid;
     place-items: center;
+    min-height: 70vh;
   }
   .inner {
     max-width: 56rem;
     text-align: center;
-    display: flex;
-    flex-direction: column;
-    gap: 2.5rem;
   }
-  .logline__copy {
-    font-size: clamp(1.75rem, 3vw, 3rem);
+  .logline__eyebrow {
+    margin-bottom: 3rem;
   }
-  .logline__copy em {
+  .logline__text {
+    font-family: var(--font-display);
+    font-weight: 300;
+    font-variation-settings: "opsz" 144, "SOFT" 40, "WONK" 0;
+    font-size: clamp(1.75rem, 1.2rem + 2.5vw, 3.25rem);
+    line-height: 1.15;
+    letter-spacing: -0.022em;
+    color: var(--color-ink);
+  }
+  .logline__text em {
+    font-style: italic;
+    font-variation-settings: "opsz" 144, "SOFT" 70, "WONK" 1;
     color: var(--color-bay);
   }
 </style>

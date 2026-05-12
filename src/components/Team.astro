@@ -2,16 +2,16 @@
 // Act Eight — The Team. Prose verbatim from /docs/06.
 ---
 
-<section class="team section-y gutter-x">
+<section class="team">
   <div class="inner">
-    <header data-reveal>
+    <header class="head" data-reveal>
       <p class="meta">The Team</p>
-      <h2 class="display-md title">
+      <h2 class="section-title">
         From the people <em>building it.</em>
       </h2>
     </header>
 
-    <div class="prose lede" data-reveal>
+    <div class="body" data-reveal>
       <p>
         The Circuit is in development with creative leadership being assembled
         with care. The project is being structured for partnership with a
@@ -22,7 +22,7 @@
         Access conversations are underway with the cast members listed above
         and with the federations that govern the sport. The two-season
         structure is designed to align with the FEI competition calendar and
-        the IOC's broadcast windows around the 2028 Los Angeles Games.
+        the IOC’s broadcast windows around the 2028 Los Angeles Games.
       </p>
       <p>
         Inquiries from streamers, production partners, and creative
@@ -33,15 +33,25 @@
 </section>
 
 <style>
-  .team { background: var(--color-paper); }
+  .team {
+    padding: var(--section-y) var(--gutter);
+    background: var(--color-paper);
+  }
   .inner {
     max-width: 56rem;
     margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    gap: 2.5rem;
   }
-  .title { font-size: clamp(2rem, 4vw, 3.25rem); }
-  .title em { color: var(--color-bay); }
-  .prose { display: flex; flex-direction: column; gap: 1.25rem; }
+  .head {
+    margin-bottom: 3rem;
+  }
+  .head .meta {
+    margin-bottom: 1rem;
+  }
+  .body p {
+    font-size: 1.0625rem;
+    line-height: 1.65;
+    color: var(--color-ink-soft);
+    margin-bottom: 1.5em;
+    max-width: var(--measure);
+  }
 </style>

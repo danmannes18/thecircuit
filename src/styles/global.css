@@ -100,21 +100,38 @@ a { color: inherit; text-decoration: none; }
    components. Tailwind utilities cover layout; the type voice lives here.
    ------------------------------------------------------------------ */
 
+/* Display large — hero, contact prompt */
 .display {
   font-family: var(--font-display);
-  font-weight: 350;
+  font-weight: 300;
   font-variation-settings: "opsz" 144, "SOFT" 30, "WONK" 0;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.025em;
   line-height: 1.02;
 }
-
 .display em,
 .display-italic {
   font-style: italic;
-  font-variation-settings: "opsz" 144, "SOFT" 50, "WONK" 1;
-  font-weight: 350;
+  font-variation-settings: "opsz" 144, "SOFT" 60, "WONK" 1;
+  font-weight: 300;
 }
 
+/* Section titles — World, Cast, Arc, Look, WhyNow, Team */
+.section-title {
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-variation-settings: "opsz" 144, "SOFT" 30, "WONK" 0;
+  font-size: clamp(2.25rem, 1.5rem + 3vw, 4rem);
+  line-height: 1;
+  letter-spacing: -0.025em;
+  color: var(--color-ink);
+}
+.section-title em {
+  font-style: italic;
+  font-variation-settings: "opsz" 144, "SOFT" 60, "WONK" 1;
+  color: var(--color-bay);
+}
+
+/* Medium display — used inside cards and rows */
 .display-md {
   font-family: var(--font-display);
   font-weight: 350;
@@ -122,7 +139,6 @@ a { color: inherit; text-decoration: none; }
   letter-spacing: -0.015em;
   line-height: 1.1;
 }
-
 .display-md em {
   font-style: italic;
   font-variation-settings: "opsz" 60, "SOFT" 50, "WONK" 1;
