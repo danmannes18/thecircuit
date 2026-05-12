@@ -1,15 +1,15 @@
 ---
-// Act Six — The Look. Bento moodboard with real footage.
+// Act Six — The Look. Organized 3×3 colour palette grid.
 const tiles = [
-  { caption: 'Wellington — golden hour', src: '/mp4/SnapInsta.to_AQMLgbsKUMqA2UrkijzBgE6hmm4nDrgcFUaRFZKm7QpMHhSBNcL2AxIN837yRAuMVbp8w-PiCojCzNeeTpc19ESellLPpqIWODFmCUQ.mp4' },
-  { caption: 'Aachen — grass',           src: '/mp4/SnapInsta.to_AQMLpm-xxb95KNPyM3VTISOp7s0_t20xwWF_w5j-7JWmUf4FueERGe9DHN61ONYA7L8d33JX68bxKxffTKAdbubLDufeyJPTmLo2SEw.mp4' },
-  { caption: 'Scarlet rails',            src: '/mp4/SnapInsta.to_AQMel41TIusJohNlF3gDJAubwTjdajzqwHpo5OTdiscTPiZJaVRRcSIJtX9Zoww868nlHGkHfkORfwExTPq8sKPtC-rdvCyd7BaoaZc.mp4' },
-  { caption: 'Bay coat, bay mane',       src: '/mp4/SnapInsta.to_AQMoxAO9szv1eiLIe2QwaeEtmo0-0I0fRV4bPgzfT1OAk90jOF_LfQUKrSUbWzU1lM9sllX0jDb5JWBRFw-IpHOCyppSZTb6AkircoM.mp4' },
-  { caption: 'Sky — Geneva morning',     src: '/mp4/SnapInsta.to_AQMplqwR-85xKJItpwirX1_P-qb6Bm01RJWh_z5zaZX5kFhWy1rlLudZjH3nZciV-vMCAMGlHOSb71vxWBBRqwk-xNyH2vXRlsAxLAc.mp4' },
-  { caption: 'Hermès warm-up',           src: '/mp4/SnapInsta.to_AQNBNXR-wvbyYMHgytUc2c_90XOAlzNbcVeTuQ3N0ADUhWqobTwelGSyl0kSFel4SHIFRJ3RIeqEhxVQPR19WkG_bOdE2V_xBbFJCM4.mp4' },
-  { caption: 'Sand at dusk',             src: '/mp4/SnapInsta.to_AQNDLbiqbyeJBU7_3EYUJ0YwTru-qA3r2Rh4AZoAQx_EoerOiniQpjUqUsywiPfoSzZL04tKqlidsQSE3LGzKqO30mHFz2VTjXoNDAU.mp4' },
-  { caption: 'FEI navy — team kit',      src: '/mp4/SnapInsta.to_AQNIUr06-Kp57rGbz76CT5jeVdePsaLARr6mzRfCPel4bro1zNa8xyaGC-rEdbleYBL6BSL8k9cHZDxNGuRfB2hB12pLouvk-Inyhw.mp4' },
-  { caption: 'Rolex green — the Major',  src: '/mp4/SnapInsta.to_AQNK_dwvmFGZekiIrIotKdCxj4C0ceUFyNmRw4G_Y26ECPp73Ql8C6mIK2oQ6uOb75HLKRiuOiPvlDYFVm3RiA0oatMrskxxAi3tDwc.mp4' },
+  { caption: 'Wellington — golden hour', color: 'linear-gradient(135deg, #c9a876 0%, #8b6f47 100%)' },
+  { caption: 'Aachen — grass',           color: 'linear-gradient(180deg, #3f5f3f 0%, #1f2f1f 100%)' },
+  { caption: 'Scarlet rails',            color: 'linear-gradient(135deg, #b73239 0%, #6f1f24 100%)' },
+  { caption: 'Bay coat, bay mane',       color: 'linear-gradient(135deg, #1f0f0a 0%, #5b3520 100%)' },
+  { caption: 'Sky — Geneva morning',     color: 'linear-gradient(180deg, #a8c5dc 0%, #6f8fa6 100%)' },
+  { caption: 'Hermès warm-up',           color: 'linear-gradient(135deg, #e25822 0%, #a13a14 100%)' },
+  { caption: 'Sand at dusk',             color: 'linear-gradient(180deg, #c9a876 0%, #5b3520 100%)' },
+  { caption: 'FEI navy — team kit',      color: 'linear-gradient(135deg, #0f1e3d 0%, #1f0f0a 100%)' },
+  { caption: 'Rolex green — the Major',  color: 'linear-gradient(180deg, #006039 0%, #003020 100%)' },
 ];
 ---
 
@@ -28,11 +28,8 @@ const tiles = [
     </header>
 
     <div class="moodboard" data-reveal>
-      {tiles.map((t, i) => (
-        <figure class={`mood mood--${i + 1}`}>
-          <video class="mood__video" muted loop playsinline preload="none" data-lazy-video>
-            <source data-src={t.src} type="video/mp4" />
-          </video>
+      {tiles.map((t) => (
+        <figure class="mood" style={`background:${t.color};`}>
           <div class="mood__fill">
             <figcaption class="mood__caption">{t.caption}</figcaption>
           </div>
@@ -75,24 +72,15 @@ const tiles = [
 
   .moodboard {
     display: grid;
-    grid-template-columns: repeat(12, 1fr);
-    gap: 0.875rem;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.75rem;
     margin-bottom: 5rem;
   }
   .mood {
     position: relative;
-    aspect-ratio: 4 / 5;
+    aspect-ratio: 4 / 3;
     overflow: hidden;
     border-radius: 2px;
-    background: #1a1008;
-  }
-  .mood__video {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    z-index: 0;
   }
   .mood::after {
     content: "";
@@ -109,8 +97,7 @@ const tiles = [
     display: flex;
     align-items: flex-end;
     padding: 1rem;
-    z-index: 2;
-    background: linear-gradient(to top, rgba(10,5,3,0.55) 0%, transparent 50%);
+    z-index: 1;
   }
   .mood__caption {
     font-family: var(--font-mono);
@@ -121,21 +108,8 @@ const tiles = [
     mix-blend-mode: difference;
   }
 
-  .mood--1 { grid-column: span 5; aspect-ratio: 16 / 11; }
-  .mood--2 { grid-column: span 4; aspect-ratio: 3 / 4;   }
-  .mood--3 { grid-column: span 3; aspect-ratio: 1 / 1;   }
-  .mood--4 { grid-column: span 3; aspect-ratio: 1 / 1;   }
-  .mood--5 { grid-column: span 5; aspect-ratio: 5 / 3;   }
-  .mood--6 { grid-column: span 4; aspect-ratio: 4 / 5;   }
-  .mood--7 { grid-column: span 4; aspect-ratio: 4 / 3;   }
-  .mood--8 { grid-column: span 4; aspect-ratio: 1 / 1;   }
-  .mood--9 { grid-column: span 4; aspect-ratio: 4 / 5;   }
-
   @media (max-width: 720px) {
-    .moodboard { grid-template-columns: repeat(6, 1fr); }
-    .mood--1, .mood--5 { grid-column: span 6; }
-    .mood--2, .mood--6, .mood--7, .mood--9 { grid-column: span 3; }
-    .mood--3, .mood--4, .mood--8 { grid-column: span 2; }
+    .moodboard { grid-template-columns: repeat(2, 1fr); }
   }
 
   .claim {
