@@ -1,0 +1,631 @@
+---
+import Base from '../layouts/Base.astro';
+
+const stats = [
+  { n: '2', label: 'Seasons' },
+  { n: '16', label: 'Episodes' },
+  { n: '3', label: 'Olympic disciplines' },
+  { n: '6', label: 'Gold medals' },
+];
+
+const cast = [
+  {
+    group: 'The Legends',
+    names: 'McLain Ward · Kent Farrington · Laura Kraut · Karl Cook · Isabell Werth · Cathrine Laudrup-Dufour · Charlotte Fry · Boyd Martin · Michael Jung · Tom McEwen',
+  },
+  {
+    group: 'The Heirs',
+    names: 'Jessica Springsteen · Eve Jobs · Jennifer Gates Nassar · Georgina Bloomberg · Carlos Hank Guerreiro',
+  },
+  {
+    group: 'The Rising',
+    names: 'Lillie Keenan · Brian Moggre · Mimi Gochman · Richard Vogel · Adrienne Lyle · Yasmin Ingham · Laura Collett · Cosby Green · Skylar Wireman · Calvin Böckmann',
+  },
+  {
+    group: 'The Power Brokers',
+    names: 'Robert Ridland · Jan Tops · Ilan Ferder · Jill & Sydney Shulman · Andre Dignelli',
+  },
+];
+
+const arc = [
+  {
+    n: '01',
+    title: 'The Circuit',
+    meta: '2027 · Eight episodes',
+    body: 'The year on the road across all three disciplines. Wellington in winter, the European spring, CHIO Aachen, the Hampton Classic, Spruce Meadows, CHI Geneva. The audience meets the cast, learns the world, and watches the rivalries take shape as the Premier Jumping League arrives.',
+  },
+  {
+    n: '02',
+    title: 'Road to Los Angeles',
+    meta: '2028 · Eight episodes',
+    body: 'The same characters, narrowing focus. Team selection trials, partnerships under pressure, injuries and late substitutions — and a finale inside the Olympic stadium at Santa Anita Park.',
+  },
+];
+
+const cities = [
+  'Wellington', 'Den Bosch', 'Rome', 'Royal Windsor', 'Aachen', 'The Hampton Classic',
+  'Spruce Meadows', 'Barcelona', 'Verona', 'Monaco', 'Lexington', 'Geneva',
+];
+
+const plates = [
+  {
+    src: '/exec/plate-arena.jpg',
+    alt: 'A horse and rider over a flower-banked oxer in a grass arena, crowds along the rail',
+    pos: '50% 55%',
+  },
+  {
+    src: '/exec/plate-rider.jpg',
+    alt: 'A rider and horse in profile beneath stadium lights',
+    pos: '35% 45%',
+  },
+];
+---
+
+<Base
+  title="Executive Summary — The Circuit"
+  description="A one-page executive summary of The Circuit, a two-season premium documentary series on the road to the 2028 Los Angeles Games."
+>
+  <main id="main" tabindex="-1" class="exec-wrap">
+    <div class="exec-stack">
+      <div class="exec-bar exec-screen-only">
+        <a class="exec-btn exec-btn--ghost" href="/">
+          <span aria-hidden="true">←</span> Back <span class="hide-sm">to the site</span>
+        </a>
+        <button class="exec-btn exec-btn--solid" id="exec-print" type="button">
+          Download PDF <span aria-hidden="true">↓</span>
+        </button>
+      </div>
+
+      <article class="exec-sheet">
+        <header class="exec-band exec-band--top">
+          <div class="exec-band__inner">
+            <p class="exec-band__brand">The <em>Circuit</em></p>
+            <div class="exec-band__meta">
+              <span class="exec-band__label">Executive Summary</span>
+              <span class="exec-band__sub">A premium documentary series · 2027–2028</span>
+            </div>
+          </div>
+        </header>
+
+        <div class="exec-body">
+          <p class="exec-logline">
+            Inside the billion-dollar world of elite equestrian sport — where Olympic
+            athletes, dynastic heirs, and the <em>horses that define them</em> chase the
+            sport's ultimate prize across a year on the road to the 2028 Los Angeles Games.
+          </p>
+
+          <div class="exec-stats">
+            {stats.map((s) => (
+              <div class="exec-stat">
+                <span class="exec-stat__n">{s.n}</span>
+                <span class="exec-stat__label">{s.label}</span>
+              </div>
+            ))}
+          </div>
+
+          <div class="exec-cols">
+            <div class="exec-col">
+              <section class="exec-section">
+                <h2 class="exec-h"><span class="exec-h__rule" aria-hidden="true"></span>The World</h2>
+                <p class="exec-p">
+                  It moves in a circle. Wellington in winter, Aachen in summer, the Hamptons
+                  in late August, Geneva by Christmas. The same eighty or so faces — riders,
+                  owners, grooms, families — set up their barns at each stop, compete for
+                  millions, and leave for the next city. It is one of the wealthiest
+                  professional sports on earth, and one of the least televised. A single
+                  horse can sell for fifteen million dollars.
+                </p>
+              </section>
+
+              <section class="exec-section">
+                <h2 class="exec-h"><span class="exec-h__rule" aria-hidden="true"></span>The Cast</h2>
+                <p class="exec-p">
+                  Show jumping, dressage, and eventing — the working professionals who built
+                  their careers from nothing, against the children of the families who built
+                  modern America. The collision is the show.
+                </p>
+                <dl class="exec-cast">
+                  {cast.map((c) => (
+                    <div class="exec-cast__row">
+                      <dt class="exec-cast__group">{c.group}</dt>
+                      <dd class="exec-cast__names">{c.names}</dd>
+                    </div>
+                  ))}
+                </dl>
+              </section>
+
+              <div class="exec-plates">
+                {plates.map((p) => (
+                  <img class="exec-plate" src={p.src} alt={p.alt} style={`object-position:${p.pos}`} />
+                ))}
+              </div>
+            </div>
+
+            <div class="exec-col">
+              <section class="exec-section">
+                <h2 class="exec-h"><span class="exec-h__rule" aria-hidden="true"></span>The Case · Why Now</h2>
+                <p class="exec-p">
+                  The character-driven sports documentary has become the most reliable
+                  subscriber-driver in streaming, and equestrian sport has never been given
+                  the premium treatment. In March 2027, Frank McCourt's $300M, 16-team
+                  Premier Jumping League launches with the team behind <em>Drive to Survive</em>
+                  producing the broadcast — the sport's mass-market entry point. In July 2028,
+                  the Olympics come home for the first time since 1984: three disciplines, six
+                  gold medals, a fixed and marketable finale. The cast is already famous, and
+                  the access runs on relationships. Whoever gets in first owns this story.
+                </p>
+              </section>
+
+              <section class="exec-section">
+                <h2 class="exec-h"><span class="exec-h__rule" aria-hidden="true"></span>The Arc</h2>
+                {arc.map((s) => (
+                  <div class="exec-arc">
+                    <div class="exec-arc__head">
+                      <span class="exec-arc__n">{s.n}</span>
+                      <span class="exec-arc__title">{s.title}</span>
+                      <span class="exec-arc__meta">{s.meta}</span>
+                    </div>
+                    <p class="exec-arc__body">{s.body}</p>
+                  </div>
+                ))}
+              </section>
+
+              <section class="exec-section">
+                <h2 class="exec-h"><span class="exec-h__rule" aria-hidden="true"></span>The Calendar</h2>
+                <p class="exec-cities">{cities.join(' · ')}</p>
+                <p class="exec-caption">Twelve cities, twelve months, four continents — ending at Santa Anita Park, July 2028</p>
+              </section>
+
+              <section class="exec-section">
+                <h2 class="exec-h"><span class="exec-h__rule" aria-hidden="true"></span>The Team &amp; Contact</h2>
+                <p class="exec-p">
+                  The Circuit is in development, structured for partnership with a premium
+                  documentary production company in the tradition of Imagine Documentaries,
+                  Religion of Sports, and Words + Pictures. Access conversations are underway
+                  with the cast and the federations that govern the sport. The two-season
+                  structure aligns with the FEI calendar and the IOC's broadcast windows
+                  around the 2028 Games.
+                </p>
+                <p class="exec-contact">
+                  <a href="mailto:hello@thecircuit.show">hello@thecircuit.show</a>
+                  <span class="exec-caption">Sizzle available for screening upon request</span>
+                </p>
+              </section>
+            </div>
+          </div>
+        </div>
+
+        <footer class="exec-band exec-band--bottom">
+          <div class="exec-band__inner exec-band__inner--footer">
+            <span class="exec-foot__brand">The <em>Circuit</em></span>
+            <span class="exec-foot__meta">A premium documentary series · Two seasons · The road to Los Angeles 2028</span>
+          </div>
+        </footer>
+      </article>
+
+      <a class="exec-btn exec-btn--ghost exec-screen-only" href="/">
+        <span aria-hidden="true">←</span> Back <span class="hide-sm">to the site</span>
+      </a>
+    </div>
+  </main>
+
+  <script>
+    document.getElementById('exec-print')?.addEventListener('click', () => window.print());
+  </script>
+</Base>
+
+<style is:global>
+  /* ------------------------------------------------------------------
+     Screen frame — the sheet floats on the show's darkest ground
+     ------------------------------------------------------------------ */
+  .exec-wrap {
+    min-height: 100vh;
+    background: var(--color-bay-deep);
+    padding: clamp(1.5rem, 4vw, 3rem) clamp(1rem, 4vw, 2rem);
+  }
+  .exec-stack {
+    max-width: 8.5in;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.5rem;
+  }
+  .exec-bar {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+  .exec-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.7rem;
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    padding: 0.7rem 1.2rem;
+    border: 1px solid var(--color-sand-deep);
+    color: var(--color-sand-deep);
+    background: transparent;
+    transition: background 200ms var(--ease-circuit), color 200ms var(--ease-circuit);
+  }
+  .exec-btn--solid {
+    background: var(--color-sand-deep);
+    color: var(--color-bay-deep);
+  }
+  @media (hover: hover) {
+    .exec-btn--ghost:hover { background: var(--color-sand-deep); color: var(--color-bay-deep); }
+    .exec-btn--solid:hover { background: var(--color-sand); border-color: var(--color-sand); }
+  }
+
+  /* ------------------------------------------------------------------
+     The sheet — 8.5 × 11 in
+     ------------------------------------------------------------------ */
+  .exec-sheet {
+    width: 8.5in;
+    max-width: 100%;
+    min-height: 11in;
+    display: flex;
+    flex-direction: column;
+    background: #fdfcf8;
+    color: var(--color-ink);
+    color-scheme: light;
+    box-shadow: 0 40px 80px rgba(0, 0, 0, 0.55);
+  }
+
+  /* Bands */
+  .exec-band {
+    position: relative;
+    overflow: hidden;
+    color: var(--color-paper);
+    background-color: #1f0f0a;
+    background-image:
+      radial-gradient(ellipse at 12% 120%, rgba(201, 168, 118, 0.34) 0%, rgba(201, 168, 118, 0) 62%),
+      radial-gradient(ellipse at 88% -20%, rgba(91, 53, 32, 0.55) 0%, rgba(91, 53, 32, 0) 60%),
+      linear-gradient(105deg, #1f0f0a 0%, #2c150c 55%, #140a06 100%);
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .exec-band__inner {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0 0.55in;
+    height: 1.55in;
+  }
+  .exec-band--bottom .exec-band__inner {
+    height: 0.82in;
+  }
+  .exec-band__inner--footer {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+  .exec-band__brand {
+    font-family: var(--font-display);
+    font-weight: 300;
+    font-variation-settings: "opsz" 144, "SOFT" 30, "WONK" 0;
+    font-size: 44px;
+    line-height: 0.95;
+    letter-spacing: -0.035em;
+    color: var(--color-paper);
+  }
+  .exec-band__brand em {
+    font-style: italic;
+    font-variation-settings: "opsz" 144, "SOFT" 60, "WONK" 1;
+    color: var(--color-sand-deep);
+  }
+  .exec-band__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.9rem;
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+  }
+  .exec-band__label {
+    font-size: 9px;
+    letter-spacing: 0.3em;
+    color: var(--color-paper);
+  }
+  .exec-band__sub {
+    font-size: 8.5px;
+    letter-spacing: 0.22em;
+    color: rgba(245, 241, 232, 0.62);
+  }
+  .exec-foot__brand {
+    font-family: var(--font-display);
+    font-weight: 300;
+    font-variation-settings: "opsz" 60, "SOFT" 30, "WONK" 0;
+    font-size: 17px;
+    letter-spacing: -0.02em;
+    color: var(--color-paper);
+  }
+  .exec-foot__brand em {
+    font-style: italic;
+    font-variation-settings: "opsz" 60, "SOFT" 60, "WONK" 1;
+    color: var(--color-sand-deep);
+  }
+  .exec-foot__meta {
+    font-family: var(--font-mono);
+    font-size: 8px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(245, 241, 232, 0.62);
+    text-align: right;
+  }
+
+  /* Body */
+  .exec-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 0.32in 0.55in 0.38in;
+  }
+  .exec-logline {
+    font-family: var(--font-display);
+    font-weight: 350;
+    font-variation-settings: "opsz" 60, "SOFT" 30, "WONK" 0;
+    font-size: 15.5px;
+    line-height: 1.28;
+    letter-spacing: -0.015em;
+    color: var(--color-ink);
+  }
+  .exec-logline em {
+    font-style: italic;
+    font-variation-settings: "opsz" 60, "SOFT" 60, "WONK" 1;
+    color: var(--color-bay);
+  }
+
+  .exec-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    margin-top: 0.16in;
+    background: rgba(10, 10, 10, 0.14);
+    border-top: 1px solid rgba(10, 10, 10, 0.14);
+    border-bottom: 1px solid rgba(10, 10, 10, 0.14);
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .exec-stat {
+    display: flex;
+    align-items: baseline;
+    gap: 0.45rem;
+    padding: 7px 10px;
+    background: #f4efe3;
+  }
+  .exec-stat__n {
+    font-family: var(--font-display);
+    font-weight: 350;
+    font-variation-settings: "opsz" 60, "SOFT" 30, "WONK" 0;
+    font-size: 20px;
+    line-height: 1;
+    color: var(--color-ink);
+  }
+  .exec-stat__label {
+    font-family: var(--font-mono);
+    font-size: 7.5px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-ink-mute);
+  }
+
+  .exec-cols {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 0.42in;
+    margin-top: 0.22in;
+  }
+  .exec-col {
+    display: flex;
+    flex-direction: column;
+    gap: 0.19in;
+  }
+
+  .exec-h {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-mono);
+    font-size: 8.5px;
+    font-weight: 500;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--color-ink-mute);
+  }
+  .exec-h__rule {
+    display: block;
+    height: 1px;
+    width: 22px;
+    background: var(--color-bay);
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .exec-p {
+    margin-top: 6px;
+    font-size: 10.2px;
+    line-height: 1.5;
+    color: var(--color-ink-soft);
+  }
+  .exec-p em {
+    font-style: italic;
+  }
+
+  /* Cast */
+  .exec-cast {
+    margin-top: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  .exec-cast__row {
+    border-left: 2px solid var(--color-bay);
+    background: #f4efe3;
+    padding: 5px 9px;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .exec-cast__group {
+    font-family: var(--font-body);
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-ink);
+  }
+  .exec-cast__names {
+    margin: 1px 0 0;
+    font-size: 8.6px;
+    line-height: 1.42;
+    color: var(--color-ink-mute);
+  }
+
+  /* Plates */
+  .exec-plates {
+    display: grid;
+    grid-template-columns: 1.35fr 1fr;
+    gap: 4px;
+    margin-top: auto;
+    padding-top: 0.16in;
+  }
+  .exec-plate {
+    width: 100%;
+    height: 1.18in;
+    object-fit: cover;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* Arc */
+  .exec-arc {
+    margin-top: 7px;
+    border-left: 2px solid var(--color-bay);
+    background: #f4efe3;
+    padding: 6px 9px;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .exec-arc__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0 8px;
+  }
+  .exec-arc__n {
+    font-family: var(--font-display);
+    font-weight: 350;
+    font-size: 14px;
+    line-height: 1;
+    color: var(--color-ink);
+  }
+  .exec-arc__title {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: var(--color-ink);
+  }
+  .exec-arc__meta {
+    margin-left: auto;
+    font-family: var(--font-mono);
+    font-size: 7.5px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-ink-mute);
+  }
+  .exec-arc__body {
+    margin-top: 3px;
+    font-size: 9.4px;
+    line-height: 1.45;
+    color: var(--color-ink-soft);
+  }
+
+  /* Calendar */
+  .exec-cities {
+    margin-top: 7px;
+    font-size: 9.6px;
+    line-height: 1.55;
+    color: var(--color-ink-soft);
+  }
+  .exec-caption {
+    display: block;
+    margin-top: 4px;
+    font-family: var(--font-mono);
+    font-size: 7.5px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-ink-mute);
+  }
+
+  .exec-contact {
+    margin-top: 8px;
+  }
+  .exec-contact a {
+    font-family: var(--font-display);
+    font-weight: 350;
+    font-variation-settings: "opsz" 60, "SOFT" 30, "WONK" 0;
+    font-size: 15px;
+    letter-spacing: -0.015em;
+    color: var(--color-bay);
+  }
+
+  /* ------------------------------------------------------------------
+     Small screens — the sheet becomes a fluid document
+     ------------------------------------------------------------------ */
+  @media screen and (max-width: 880px) {
+    .exec-sheet { width: 100%; min-height: 0; }
+    .exec-band__inner { height: auto; padding: 1.5rem 1.25rem; }
+    .exec-band--bottom .exec-band__inner { height: auto; padding: 1.25rem; }
+    .exec-band__inner--footer { flex-direction: column; align-items: flex-start; }
+    .exec-foot__meta { text-align: left; }
+    .exec-band__brand { font-size: 38px; }
+    .exec-body { padding: 1.5rem 1.25rem 2rem; }
+    .exec-logline { font-size: 17px; }
+    .exec-cols { grid-template-columns: 1fr; gap: 0.19in; margin-top: 1.25rem; }
+    .exec-col { gap: 1.4rem; }
+    .exec-stats { grid-template-columns: repeat(2, 1fr); }
+    .exec-p { font-size: 13px; line-height: 1.6; }
+    .exec-cast__names { font-size: 11px; }
+    .exec-arc__body { font-size: 12px; }
+    .exec-cities { font-size: 12px; }
+    .exec-plates { margin-top: 0; padding-top: 0; }
+    .exec-plate { height: 108px; }
+    .exec-h, .exec-caption, .exec-arc__meta { font-size: 9px; }
+    .exec-stat__label { font-size: 8.5px; }
+    .exec-cast__group { font-size: 10.5px; }
+    .exec-arc__title { font-size: 11.5px; }
+    .hide-sm { display: none; }
+  }
+
+  /* ------------------------------------------------------------------
+     Print — one letter page, edge to edge
+     ------------------------------------------------------------------ */
+  @page {
+    size: letter;
+    margin: 0;
+  }
+  @media print {
+    html, body {
+      background: #fff !important;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    .skip-link { display: none !important; }
+    .exec-screen-only { display: none !important; }
+    .exec-wrap { padding: 0 !important; background: #fff !important; min-height: 0; }
+    .exec-stack { max-width: none; gap: 0; }
+    .exec-sheet {
+      width: 100% !important;
+      min-height: auto !important;
+      height: 11in;
+      box-shadow: none !important;
+    }
+  }
+</style>
