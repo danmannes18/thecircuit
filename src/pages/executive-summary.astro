@@ -32,7 +32,7 @@ const arc = [
     n: '01',
     title: 'The Circuit',
     meta: '2027 · Eight episodes',
-    body: 'The year on the road across all three disciplines. Wellington in winter, the European spring, CHIO Aachen, the Hampton Classic, Spruce Meadows, CHI Geneva. The audience meets the cast, learns the world, and watches the rivalries take shape as the Premier Jumping League arrives.',
+    body: 'The year on the road across all three disciplines — Wellington, the European spring, CHIO Aachen, the Hampton Classic, Spruce Meadows, CHI Geneva. The audience meets the cast, learns the world, and watches the rivalries take shape as the Premier Jumping League arrives.',
   },
   {
     n: '02',
@@ -51,13 +51,30 @@ const plates = [
   {
     src: '/exec/plate-arena.jpg',
     alt: 'A horse and rider over a flower-banked oxer in a grass arena, crowds along the rail',
-    pos: '50% 55%',
+    pos: '50% 58%',
   },
   {
     src: '/exec/plate-rider.jpg',
     alt: 'A rider and horse in profile beneath stadium lights',
     pos: '35% 45%',
   },
+  {
+    src: '/exec/plate-sky.jpg',
+    alt: 'A horse and rider silhouetted against open sky between the fences',
+    pos: '55% 42%',
+  },
+];
+
+const swatches = [
+  { c: 'linear-gradient(135deg, #c9a876 0%, #8b6f47 100%)', label: 'Wellington — golden hour' },
+  { c: 'linear-gradient(180deg, #3f5f3f 0%, #1f2f1f 100%)', label: 'Aachen — grass' },
+  { c: 'linear-gradient(135deg, #b73239 0%, #6f1f24 100%)', label: 'Scarlet rails' },
+  { c: 'linear-gradient(135deg, #1f0f0a 0%, #5b3520 100%)', label: 'Bay coat, bay mane' },
+  { c: 'linear-gradient(180deg, #a8c5dc 0%, #6f8fa6 100%)', label: 'Sky — Geneva morning' },
+  { c: 'linear-gradient(135deg, #e25822 0%, #a13a14 100%)', label: 'Hermès warm-up' },
+  { c: 'linear-gradient(180deg, #c9a876 0%, #5b3520 100%)', label: 'Sand at dusk' },
+  { c: 'linear-gradient(135deg, #0f1e3d 0%, #1f0f0a 100%)', label: 'FEI navy — team kit' },
+  { c: 'linear-gradient(180deg, #006039 0%, #003020 100%)', label: 'Rolex green — the Major' },
 ];
 ---
 
@@ -78,6 +95,8 @@ const plates = [
 
       <article class="exec-sheet">
         <header class="exec-band exec-band--top">
+          <img class="exec-band__img" src="/exec/band-top.jpg" alt="" aria-hidden="true" />
+          <div class="exec-band__scrim exec-band__scrim--top" aria-hidden="true"></div>
           <div class="exec-band__inner">
             <p class="exec-band__brand">The <em>Circuit</em></p>
             <div class="exec-band__meta">
@@ -111,9 +130,8 @@ const plates = [
                   It moves in a circle. Wellington in winter, Aachen in summer, the Hamptons
                   in late August, Geneva by Christmas. The same eighty or so faces — riders,
                   owners, grooms, families — set up their barns at each stop, compete for
-                  millions, and leave for the next city. It is one of the wealthiest
-                  professional sports on earth, and one of the least televised. A single
-                  horse can sell for fifteen million dollars.
+                  millions, and leave for the next city. One of the wealthiest professional
+                  sports on earth, and one of the least televised.
                 </p>
               </section>
 
@@ -122,7 +140,7 @@ const plates = [
                 <p class="exec-p">
                   Show jumping, dressage, and eventing — the working professionals who built
                   their careers from nothing, against the children of the families who built
-                  modern America. The collision is the show.
+                  modern America.
                 </p>
                 <dl class="exec-cast">
                   {cast.map((c) => (
@@ -134,25 +152,33 @@ const plates = [
                 </dl>
               </section>
 
-              <div class="exec-plates">
-                {plates.map((p) => (
-                  <img class="exec-plate" src={p.src} alt={p.alt} style={`object-position:${p.pos}`} />
-                ))}
-              </div>
+              <section class="exec-section">
+                <h2 class="exec-h"><span class="exec-h__rule" aria-hidden="true"></span>The Look</h2>
+                <p class="exec-p">
+                  Warm, clean, colorful, luxurious — shot in late light. The visual language
+                  pulls from Slim Aarons' Palm Beach, Sebastião Salgado's reverence for labor,
+                  and the restraint of contemporary prestige television.
+                </p>
+                <div class="exec-swatches">
+                  {swatches.map((w) => (
+                    <span class="exec-swatch" style={`background:${w.c}`} title={w.label}></span>
+                  ))}
+                </div>
+              </section>
             </div>
 
             <div class="exec-col">
               <section class="exec-section">
                 <h2 class="exec-h"><span class="exec-h__rule" aria-hidden="true"></span>The Case · Why Now</h2>
                 <p class="exec-p">
-                  The character-driven sports documentary has become the most reliable
-                  subscriber-driver in streaming, and equestrian sport has never been given
-                  the premium treatment. In March 2027, Frank McCourt's $300M, 16-team
-                  Premier Jumping League launches with the team behind <em>Drive to Survive</em>
-                  producing the broadcast — the sport's mass-market entry point. In July 2028,
-                  the Olympics come home for the first time since 1984: three disciplines, six
-                  gold medals, a fixed and marketable finale. The cast is already famous, and
-                  the access runs on relationships. Whoever gets in first owns this story.
+                  The character-driven sports documentary is streaming's most reliable
+                  subscriber-driver, and equestrian sport has never had the premium treatment.
+                  In March 2027, Frank McCourt's $300M, 16-team Premier Jumping League launches
+                  with the team behind <em>Drive to Survive</em> producing the broadcast — the
+                  sport's mass-market entry point. In July 2028, the Olympics come home for the
+                  first time since 1984: three disciplines, six gold medals, a fixed and
+                  marketable finale. The access runs on relationships; whoever gets in first
+                  owns this story.
                 </p>
               </section>
 
@@ -171,20 +197,13 @@ const plates = [
               </section>
 
               <section class="exec-section">
-                <h2 class="exec-h"><span class="exec-h__rule" aria-hidden="true"></span>The Calendar</h2>
-                <p class="exec-cities">{cities.join(' · ')}</p>
-                <p class="exec-caption">Twelve cities, twelve months, four continents — ending at Santa Anita Park, July 2028</p>
-              </section>
-
-              <section class="exec-section">
                 <h2 class="exec-h"><span class="exec-h__rule" aria-hidden="true"></span>The Team &amp; Contact</h2>
                 <p class="exec-p">
-                  The Circuit is in development, structured for partnership with a premium
-                  documentary production company in the tradition of Imagine Documentaries,
-                  Religion of Sports, and Words + Pictures. Access conversations are underway
-                  with the cast and the federations that govern the sport. The two-season
-                  structure aligns with the FEI calendar and the IOC's broadcast windows
-                  around the 2028 Games.
+                  In development, structured for partnership with a premium documentary
+                  production company in the tradition of Imagine Documentaries, Religion of
+                  Sports, and Words + Pictures. Access conversations are underway with the cast
+                  and the sport's governing federations; the two-season structure aligns with
+                  the FEI calendar and the IOC's 2028 broadcast windows.
                 </p>
                 <p class="exec-contact">
                   <a href="mailto:hello@thecircuit.show">hello@thecircuit.show</a>
@@ -193,9 +212,25 @@ const plates = [
               </section>
             </div>
           </div>
+
+          <div class="exec-calendar">
+            <h2 class="exec-h exec-h--inline"><span class="exec-h__rule" aria-hidden="true"></span>The Calendar</h2>
+            <div class="exec-calendar__body">
+              <p class="exec-cities">{cities.join(' · ')}</p>
+              <p class="exec-caption">Twelve months · Four continents · Ending at Santa Anita Park, July 2028</p>
+            </div>
+          </div>
+
+          <div class="exec-plates">
+            {plates.map((p) => (
+              <img class="exec-plate" src={p.src} alt={p.alt} style={`object-position:${p.pos}`} />
+            ))}
+          </div>
         </div>
 
         <footer class="exec-band exec-band--bottom">
+          <img class="exec-band__img" src="/exec/band-bottom.jpg" alt="" aria-hidden="true" />
+          <div class="exec-band__scrim exec-band__scrim--bottom" aria-hidden="true"></div>
           <div class="exec-band__inner exec-band__inner--footer">
             <span class="exec-foot__brand">The <em>Circuit</em></span>
             <span class="exec-foot__meta">A premium documentary series · Two seasons · The road to Los Angeles 2028</span>
@@ -289,16 +324,44 @@ const plates = [
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
   }
+  .exec-band__img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .exec-band__img { object-position: 50% 50%; }
+  .exec-band__scrim {
+    position: absolute;
+    inset: 0;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .exec-band__scrim--top {
+    background:
+      linear-gradient(100deg, rgba(15, 7, 4, 0.95) 0%, rgba(15, 7, 4, 0.86) 30%, rgba(15, 7, 4, 0.5) 58%, rgba(15, 7, 4, 0.22) 100%),
+      linear-gradient(180deg, rgba(15, 7, 4, 0.42) 0%, rgba(15, 7, 4, 0.1) 45%, rgba(15, 7, 4, 0.55) 100%),
+      radial-gradient(ellipse at 8% 110%, rgba(201, 168, 118, 0.3) 0%, rgba(201, 168, 118, 0) 58%);
+  }
+  .exec-band__scrim--bottom {
+    background:
+      linear-gradient(100deg, rgba(15, 7, 4, 0.9) 0%, rgba(15, 7, 4, 0.58) 48%, rgba(15, 7, 4, 0.72) 100%),
+      linear-gradient(180deg, rgba(15, 7, 4, 0.28) 0%, rgba(15, 7, 4, 0.5) 100%);
+  }
   .exec-band__inner {
+    position: relative;
     display: flex;
     flex-direction: column;
     justify-content: center;
     gap: 0.5rem;
     padding: 0 0.55in;
-    height: 1.55in;
+    height: 1.45in;
   }
   .exec-band--bottom .exec-band__inner {
-    height: 0.82in;
+    height: 0.8in;
   }
   .exec-band__inner--footer {
     flex-direction: row;
@@ -310,7 +373,7 @@ const plates = [
     font-family: var(--font-display);
     font-weight: 300;
     font-variation-settings: "opsz" 144, "SOFT" 30, "WONK" 0;
-    font-size: 44px;
+    font-size: 42px;
     line-height: 0.95;
     letter-spacing: -0.035em;
     color: var(--color-paper);
@@ -365,14 +428,14 @@ const plates = [
     flex: 1;
     display: flex;
     flex-direction: column;
-    padding: 0.32in 0.55in 0.38in;
+    padding: 0.27in 0.55in 0.25in;
   }
   .exec-logline {
     font-family: var(--font-display);
     font-weight: 350;
     font-variation-settings: "opsz" 60, "SOFT" 30, "WONK" 0;
-    font-size: 15.5px;
-    line-height: 1.28;
+    font-size: 14.6px;
+    line-height: 1.26;
     letter-spacing: -0.015em;
     color: var(--color-ink);
   }
@@ -421,12 +484,13 @@ const plates = [
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 0 0.42in;
-    margin-top: 0.22in;
+    margin-top: 0.13in;
   }
   .exec-col {
     display: flex;
     flex-direction: column;
-    gap: 0.19in;
+    justify-content: space-between;
+    gap: 0.14in;
   }
 
   .exec-h {
@@ -450,8 +514,8 @@ const plates = [
   }
   .exec-p {
     margin-top: 6px;
-    font-size: 10.2px;
-    line-height: 1.5;
+    font-size: 10.4px;
+    line-height: 1.52;
     color: var(--color-ink-soft);
   }
   .exec-p em {
@@ -468,7 +532,7 @@ const plates = [
   .exec-cast__row {
     border-left: 2px solid var(--color-bay);
     background: #f4efe3;
-    padding: 5px 9px;
+    padding: 4px 9px;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
   }
@@ -487,17 +551,30 @@ const plates = [
     color: var(--color-ink-mute);
   }
 
+  /* Look — palette strip */
+  .exec-swatches {
+    display: grid;
+    grid-template-columns: repeat(9, 1fr);
+    gap: 3px;
+    margin-top: 8px;
+  }
+  .exec-swatch {
+    display: block;
+    height: 0.2in;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
   /* Plates */
   .exec-plates {
     display: grid;
-    grid-template-columns: 1.35fr 1fr;
+    grid-template-columns: 1.3fr 1fr 1fr;
     gap: 4px;
-    margin-top: auto;
-    padding-top: 0.16in;
+    margin-top: 0.13in;
   }
   .exec-plate {
     width: 100%;
-    height: 1.18in;
+    height: 0.9in;
     object-fit: cover;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
@@ -505,10 +582,10 @@ const plates = [
 
   /* Arc */
   .exec-arc {
-    margin-top: 7px;
+    margin-top: 6px;
     border-left: 2px solid var(--color-bay);
     background: #f4efe3;
-    padding: 6px 9px;
+    padding: 5px 9px;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
   }
@@ -547,7 +624,32 @@ const plates = [
     color: var(--color-ink-soft);
   }
 
-  /* Calendar */
+  /* Calendar — full-width bar */
+  .exec-calendar {
+    display: flex;
+    align-items: baseline;
+    gap: 0 0.24in;
+    margin-top: 0.12in;
+    padding: 6px 10px;
+    border-top: 1px solid rgba(10, 10, 10, 0.14);
+    border-bottom: 1px solid rgba(10, 10, 10, 0.14);
+    background: #f4efe3;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .exec-h--inline {
+    flex: none;
+    white-space: nowrap;
+  }
+  .exec-calendar__body {
+    flex: 1;
+  }
+  .exec-calendar .exec-cities {
+    margin-top: 0;
+  }
+  .exec-calendar .exec-caption {
+    margin-top: 3px;
+  }
   .exec-cities {
     margin-top: 7px;
     font-size: 9.6px;
@@ -585,7 +687,8 @@ const plates = [
     .exec-band--bottom .exec-band__inner { height: auto; padding: 1.25rem; }
     .exec-band__inner--footer { flex-direction: column; align-items: flex-start; }
     .exec-foot__meta { text-align: left; }
-    .exec-band__brand { font-size: 38px; }
+    .exec-band__brand { font-size: 40px; }
+    .exec-band--top .exec-band__img { object-position: 12% 50%; }
     .exec-body { padding: 1.5rem 1.25rem 2rem; }
     .exec-logline { font-size: 17px; }
     .exec-cols { grid-template-columns: 1fr; gap: 0.19in; margin-top: 1.25rem; }
@@ -595,7 +698,10 @@ const plates = [
     .exec-cast__names { font-size: 11px; }
     .exec-arc__body { font-size: 12px; }
     .exec-cities { font-size: 12px; }
-    .exec-plates { margin-top: 0; padding-top: 0; }
+    .exec-calendar { flex-direction: column; align-items: flex-start; gap: 6px; }
+    .exec-plates { margin-top: 1.5rem; grid-template-columns: 1fr 1fr; }
+    .exec-plates .exec-plate:first-child { grid-column: 1 / -1; }
+    .exec-swatch { height: 34px; }
     .exec-plate { height: 108px; }
     .exec-h, .exec-caption, .exec-arc__meta { font-size: 9px; }
     .exec-stat__label { font-size: 8.5px; }
